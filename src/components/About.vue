@@ -9,7 +9,7 @@
       </h3>
       <h2>What's Biltz?</h2>
       <p>Biltz is a free online chess platform.</p>
-      <p>I do this for fun. If you like please let me know as it would make me very happy.</p>
+      <p>I do this for fun. If you like it please let me know as it would make me happy.</p>
       <p><a href="mailto:overlemonsoft@gmail.com?Subject=Hi, I like Biltz" class="button is-success is-rounded">Let know the author of this application that I like it</a></p>
       <h4>Want to know more or be part of the dev team?</h4>
       <p>If you are a digital developer and love chess and somehow want to participate in this project please let me know.</p>
