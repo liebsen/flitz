@@ -1,0 +1,205 @@
+$blue: #4183d7;
+
+.chart-container {
+    min-height: 50px;
+    position: relative;
+    .chart-indicator {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: transparent;
+    }
+    .chart {
+        width:100%;
+        height:50px;
+    }   
+}
+
+.clock-text {
+    font-family: BlinkMacSystemFont,-apple-system,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 500;
+}
+
+.status {
+    display: inline-block;
+    padding: 0.25rem;
+    width: 100%;
+    position: fixed;  
+    z-index: 10;
+    bottom: 0;
+}
+
+.thinking {
+    background-color: transparent;
+    border: none;
+    display: inline;
+}
+
+#board {
+    min-width: 100%;
+}
+
+.board-assistant {
+    margin-top: 0.75rem;
+    max-width: 350px;
+}
+
+.board-container {
+    .white {
+        margin: 0.25rem;
+        margin-bottom: 0;
+    }
+
+    .black {
+        margin: 0.25rem; 
+    }
+    
+    .icon {
+        height: auto;
+    }
+    .board {
+        position: relative;
+        .score-container {
+            position: absolute;
+            top: 0;
+            left: -9px;
+            width: 6px;
+            height: 100%;
+            border-radius: 5px;
+            .score {
+                -webkit-border-top-left-radius: 5px;
+                -webkit-border-top-right-radius: 5px;
+                -moz-border-radius-topleft: 5px;
+                -moz-border-radius-topright: 5px;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+                width: 6px;
+                max-height: 49%;
+                height: 100%;
+                transition: max-height ease-in 0.25s;
+            }
+        }
+    }
+
+    .board.black {
+        .score-container {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.bar {
+    position: relative;
+    z-index: 99;
+    border-radius: 5px;
+    cursor: pointer;
+    .bar-progress {
+        height: 6px;
+        border-radius: 5px;
+        width: 0;
+    }  
+    .bar-progress.paused {
+        opacity: 0.5;
+    } 
+}
+
+.highlight-move {
+  backdrop-filter: saturate(400%) brightness(120%);
+  --webkit-backdrop-filter: saturate(400%) brightness(120%);
+}
+
+@supports not (backdrop-filter: saturate(400%)) {
+  .highlight-move {
+    background-color: rgba(255,255,0,0.5)!important
+  }
+}
+
+.in-check {
+  box-shadow: 0 0 50px red inset;
+}
+
+.movesTableContainer {
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+    overflow-y: auto;
+    text-align: left;
+}
+.movesTable {
+    display: table;
+    position: absolute;
+    width: 100%;
+    font-size: 14px;
+    border-spacing: 0;
+}
+.moveRow {
+    display: table-row;
+}
+.moveCell {
+    display: table-cell;
+    width: 15%;
+    padding: 4px 3px;
+    vertical-align: middle;    
+}
+.moveCell.active {
+    animation:.25s ease;
+    filter: saturate(400%) brightness(120%);
+}
+
+.moveNumCell {
+    display: table-cell;
+    width: 1%;
+    text-align: center;
+    padding: 4px 0;
+    font-size: 13px;
+    vertical-align: middle;
+}
+.moveb {
+    text-shadow: 0 0 1px rgba(0,0,0,0.4);
+}
+.movew {
+    background-color: transparent;
+    text-shadow: 0 0 1px rgba(255,255,255,0.4);   
+}
+.moveSAN {
+    font-weight: 600;
+}
+
+@media screen and (max-width: 769px) {
+    .is-player-info {
+        position: absolute; 
+        left: 0; 
+        right: 0; 
+        bottom: 0;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .board-b72b1 {
+        border-radius: 5px;
+        .row-5277c {
+            &:first-child {
+                .square-55d63 {
+                    &:first-child {
+                        border-top-left-radius: 5px;
+                    }
+                    &:nth-last-child(2) {
+                        border-top-right-radius: 5px;
+                    }
+                }
+            }
+            &:last-child {
+                .square-55d63 {
+                    &:first-child {
+                        border-bottom-left-radius: 5px;
+                    }
+                    &:nth-last-child(2) {
+                        border-bottom-right-radius: 5px;
+                    }
+                }
+            }
+        }
+    }
+}

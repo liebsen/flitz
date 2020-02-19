@@ -1,0 +1,144 @@
+<template>
+  <div class="container is-widescreen">
+    <div class="content column fadeIn">
+      <h3>
+        <span class="icon">
+          <span class="fas fa-fire"></span> 
+        </span>
+        <span>Live</span>
+      </h3>
+      <form @submit.prevent="submit">
+        <div class="field has-addons">
+          <div class="control">
+            <input ref="input" v-model="query" class="input is-rounded is-success" type="text" placeholder="Event, site, date, player or PGN" autofocus>
+          </div>
+          <div class="control">
+            <button v-show="query.length" type="button" @click="clear" class="button is-rounded is-danger">
+              <span class="icon">
+                <span class="fas fa-times"></span>
+              </span>
+            </button>
+            <button v-show="!query.length" type="submit" id="searchbtn" class="button is-rounded is-success">
+              <span class="icon">
+                <span class="fas fa-search"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>   
+      <div v-if="Object.keys(data).length" class="has-text-left">
+        <table class="table">
+          <thead>
+            <th>Table</th>
+            <th>Event</th>
+            <th>White</th>
+            <th>Black</th>
+            <th>Plys</th>
+          </thead>
+          <tbody>
+            <tr v-for="item in data.games">
+              <td>
+                <router-link :to="'/watch/'+item._id">
+                  <span class="icon">
+                    <span class="fa fa-play"></span>
+                  </span>
+                </router-link>
+              </td>
+              <td>
+                <span v-html="item.event"></span>
+              </td>
+              <td>
+                <span v-html="item.white"></span>
+              </td>
+              <td>
+                <span v-html="item.black"></span>
+              </td>
+              <td>
+                <span v-html="$root.countMoves(item.pgn)"></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">
+      <!--a class="pagination-previous">Previous</a>
+      <a class="pagination-next">Next page</a-->
+      <ul class="pagination-list">
+        <li v-for="(page, index) in pages">
+          <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Ir a página ' + index"></router-link>
+        </li>
+      </ul>
+    </nav>     
+  </div>
+</template>
+
+<script>
+
+  import axios from 'axios'
+  import snackbar from '../components/Snackbar';
+  export default {
+    name: 'live',
+    watch: {
+      '$route': function () {
+        this.triggerSearch()
+      }
+    },
+    mounted: function(){
+      this.triggerSearch()
+    },
+    methods : {
+      clear: function(){
+        this.query = ''
+        this.submit()
+      },
+      triggerSearch: function(){
+        if(this.$route.query.q){
+          this.query = this.$route.query.q
+        }
+        if(this.$route.query.offset){
+          this.offset = parseInt(this.$route.query.offset)
+        }
+        this.$nextTick(() => this.$refs.input.focus())
+        this.search()
+      },
+      search: function() {
+        this.$root.loading = true
+        axios.post( this.$root.endpoint + '/online', {query:this.query,offset:this.offset,limit:this.limit} ).then((res) => {
+          this.data = res.data
+
+          var pages = []
+          if(res.data.error){
+            if(res.data.error==='not_enough_params'){
+              snackbar('info','Search for event, site, player or PGN.', 15000);  
+            }
+          } else {
+            if(res.data.count===0){
+              snackbar('danger','No games found', 5000);
+            } else {
+              var numPages = Math.ceil(res.data.count/this.limit)
+              for(var i=0;i< numPages;i++){
+                pages[i] = i*this.limit
+              }
+              snackbar('success','We found ' + this.data.count  +  ' game' + (this.data.count>1?'s':'')  + '. Showing results from ' + (this.offset + 1) + ' to ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit ), 5000);
+            }
+          }
+          this.pages = pages
+          this.$root.loading = false
+        })       
+      },
+      submit: function(){
+        this.$router.push('/live?q=' + this.query.trim())
+      }    
+    },
+    data () {
+      return {
+        data:{},
+        pages:{},
+        query:'',
+        limit:10,
+        offset:0
+      }
+    }
+  }
+</script>

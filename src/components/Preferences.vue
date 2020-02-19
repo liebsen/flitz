@@ -1,0 +1,275 @@
+<template>
+  <div class="container is-widescreen">
+    <section class="content column fadeIn">
+      <h3 class="title">
+        <span class="icon">
+          <span class="fas fa-paint-brush"></span>
+        </span> 
+        <span>Settings</span>
+      </h3>
+      <div class="columns is-marginless">
+        <div class="column">
+          <div class="board-container preservefilter">
+            <div id="board" :class="boardColor"></div>
+          </div>
+        </div>
+        <div class="column">
+          <form @submit.prevent="submit"> 
+            <div class="field is-horizontal">
+              <div class="field-body">
+                <div class="field">
+                  <label class="label">Board theme</label>
+                  <div class="select is-fullwidth">
+                    <select v-model="data.board" id="tablero" title="Elegí el tema de tablero">
+                      <option value="classic">Classic</option>
+                      <option value="bases">Bases</option>
+                      <option value="bit">8 Bit</option>
+                      <option value="blue">Blue</option>
+                      <option value="bubblegum">Bubblegum</option>
+                      <option value="burled-wood">Burled wood</option>
+                      <option value="dark-wood">Dark wood</option>
+                      <option value="dash">Dash</option>
+                      <option value="glass">Glass</option>
+                      <option value="graffiti">Graffiti</option>
+                      <option value="green">Green</option>
+                      <option value="green-plastic">Plastic green</option>
+                      <option value="ocean">Ocean</option>
+                      <option value="lolz">Lolz</option>
+                      <option value="marble">Marble</option>
+                      <option value="metal">Metal</option>
+                      <option value="neon">Neon</option>
+                      <option value="newspaper">Newspaper</option>
+                      <option value="orange">Orange</option>
+                      <option value="overlay">Overlay</option>
+                      <option value="parchment">Parchment</option>
+                      <option value="pink">Pink</option>
+                      <option value="purple">Purple</option>
+                      <option value="red">Red</option>
+                      <option value="sand">Sand</option>
+                      <option value="sky">Sky</option>
+                      <option value="stone">Stone</option>
+                      <option value="tan">Tan</option>
+                      <option value="tournament">Tournament</option>
+                      <option value="translucent">Translucent</option>
+                      <option value="turquoise">Turquoise</option>
+                      <option value="walnut">Walnut</option>
+                    </select>
+                  </div>
+                </div>
+                <span></span>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <label class="label">Piece theme</label>
+                  <div class="select is-fullwidth">
+                    <select v-model="data.pieces" id="piezas" title="Elegí estilo de piezas">
+                      <option value="classic">Classic</option>
+                      <option value="neo">Neo</option>
+                      <option value="neo_wood">Neo wood</option>
+                      <option value="wood">Wood</option>
+                      <option value="bases">Bases</option>
+                      <option value="uscf">USCF</option>
+                      <option value="chess24">Chess24</option>
+                      <option value="leipzig">Leipzig</option>
+                      <option value="book">Book</option>
+                      <option value="cases">Cases</option>
+                      <option value="newspaper">Newspaper</option>
+                      <option value="maya">Maya</option>
+                      <option value="glass">Glass</option>
+                      <option value="gothic">Gothic</option>
+                      <option value="light">Light</option>
+                      <option value="lolz">Lolz</option>
+                      <option value="tigers">Tigers</option>
+                      <option value="condal">Condal</option>
+                      <option value="marble">Marble</option>
+                      <option value="modern">Modern</option>
+                      <option value="club">Club</option>
+                      <option value="neon">Neon</option>
+                      <option value="magi">Magi</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <label class="label">Your nick</label>
+                <input type="text" v-model="data.code" class="input" maxlength="10" title="Ingresa tu nombre!" required>
+              </div>
+            </div>
+            <div class="field">
+              <div class="field-group">
+                <label class="label">General settings</label>
+                <div class="field-body">
+                  <div class="control has-checkradio" title="Desactiva notificaciones sonoras">
+                    <input v-model="data.sound" class="is-checkradio has-background-color is-white" id="sound" type="checkbox" @click="previewSound">
+                    <label class="label" for="sound">Sound</label>
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="control has-checkradio" title="Notificaciones hiper-visibles">
+                    <input v-model="data.strongnotification" class="is-checkradio has-background-color is-white" id="strongnotification" type="checkbox" @click="previewStrongNotification">
+                    <label class="label" for="strongnotification">Big notification</label>
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="control has-checkradio" title="Activa visión nocturna">
+                    <input v-model="data.darkmode" class="is-checkradio has-background-color is-white" id="darkmode" type="checkbox" @click="previewDarkmode">
+                    <label class="label" for="darkmode">Dark mode</label>
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="control has-checkradio" title="No disponible para jugar en línea">
+                    <input v-model="data.observe" class="is-checkradio has-background-color is-white" id="observe" type="checkbox">
+                    <label class="label" for="observe">Watch mode</label>
+                    <!--p class="notification is-warning">
+                      <small>No disponible para jugar en línea</small>
+                    </p-->
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="control has-checkradio" title="Aceptar automáticamente todas las invitaciones para jugar">
+                    <input v-model="data.autoaccept" class="is-checkradio has-background-color is-white" id="autoaccept" type="checkbox">
+                    <label class="label" for="autoaccept">Auto-accept invitations to play</label>
+                    <!--p class="notification is-warning">
+                      <small>Aceptar automáticamente todas las invitaciones para jugar</small>
+                    </p-->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field has-text-centered">
+              <div class="column">
+                <button type="submit" class="button is-rounded is-success" :class="{ 'is-loading' : $root.saving }">Update settings</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script>
+
+  import Chess from 'chess.js'
+  import Chessboard from '../../static/js/chessboard'
+  import snackbar from '../components/Snackbar'
+  import playSound from '../components/playSound'
+
+  export default {
+    name: 'preferences',
+    watch: {
+      'data.pieces': function (val) {
+        this.pieceColor = val
+        this.drawBoard()
+      },
+      'data.board': function (val) {
+        this.bordColor = val
+        this.drawBoard()
+      }
+    },
+    mounted: function(){
+      const saved = localStorage.getItem('player')
+      if(saved){
+        this.data = JSON.parse(saved)
+        this.saved = JSON.parse(saved)
+      }
+      setTimeout(() => {
+        this.drawBoard()  
+      },250)
+    },
+    beforeDestroy: function() {
+      const player = JSON.parse(localStorage.getItem('player'))
+      if(player.strongnotification){
+        document.querySelector('.ui-snackbar').classList.add('is-strong')
+      } else {
+        document.querySelector('.ui-snackbar').classList.remove('is-strong')
+      }
+      if(player.darkmode){
+        document.documentElement.classList.add('dark-mode')
+      } else {
+        document.documentElement.classList.remove('dark-mode')
+      }
+    },
+    methods: {
+      previewSound: function(){
+        setTimeout(() => {
+          if(this.data.sound){
+            playSound('check.ogg')
+          }
+        },100)
+      },
+      previewStrongNotification: function(){
+        var contains = document.querySelector('.ui-snackbar').classList.contains('is-strong')
+        var snackbarBar = document.querySelector('.ui-snackbar')
+        snackbarBar.classList.remove('ui-snackbar--is-active')
+        snackbarBar.classList.add('ui-snackbar--is-inactive')
+        setTimeout(() => {
+          if(this.data.strongnotification){
+            snackbarBar.classList.add('is-strong')
+            snackbar('default','Notificación gigante',3000)
+          } else {
+            snackbarBar.classList.remove('is-strong')
+            snackbar('default','Notificación normal',3000)
+          }
+        },100)
+      },
+      previewDarkmode: function(){
+        setTimeout(() => {
+          if(this.data.darkmode){
+            document.documentElement.classList.add('dark-mode')
+          } else {
+            document.documentElement.classList.remove('dark-mode')
+          }
+        },100)
+      },
+      drawBoard:function(){
+        this.boardEl = document.getElementById('board')
+        this.game = new Chess()
+
+        if(this.data.pieces){
+          this.boardCfg.pieceTheme = '/static/img/chesspieces/' + this.data.pieces + '/{piece}.png'
+          this.boardColor = this.data.board
+          this.pieceColor = this.data.pieces
+        }
+
+        this.board = Chessboard('board', this.boardCfg)      
+        this.board.resize()
+        document.querySelector('.square-b5').classList.add('highlight-move')
+        document.querySelector('.square-f1').classList.add('highlight-move')
+
+        $(window).resize(() => {
+          this.board.resize()
+          document.querySelector('.square-b5').classList.add('highlight-move')
+          document.querySelector('.square-f1').classList.add('highlight-move')
+        })
+      },
+      submit: function(){
+        this.$socket.emit('lobby_leave', this.$root.player) 
+        this.$socket.emit('lobby_leave', this.data) 
+        this.$root.saving = true
+        this.data.ref = this.$root.player.code
+        this.$socket.emit('preferences', this.data)  
+        this.saved = {}
+      }
+    },
+    data () {
+      return {
+        boardCfg: {
+          position: 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R',
+          pieceTheme:'/static/img/chesspieces/classic/{piece}.png',
+          draggable: false
+        },
+        data:{},
+        saved:{},
+        nick:null,
+        boardColor:null,
+        boardEl:null,
+        game:null,
+        loading: false
+      }
+    }
+  }
+</script>
