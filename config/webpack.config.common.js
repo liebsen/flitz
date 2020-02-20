@@ -1,6 +1,7 @@
 'use strict';
 
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const VueLoaderPlugin      = require('vue-loader/lib/plugin');
 const HtmlPlugin           = require('html-webpack-plugin');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
@@ -58,6 +59,7 @@ const webpackConfig = {
     },
     plugins: [
         new VueLoaderPlugin(),
+        new CleanWebpackPlugin(),
         new HtmlPlugin({ template: 'index.html', chunksSortMode: 'dependency' }),
         new CopyWebpackPlugin([
             {

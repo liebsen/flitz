@@ -174,7 +174,7 @@
                     <form @submit.prevent="sendChat">
                       <div class="field has-addons has-text-centered is-flex-centered">
                         <div class="control">
-                          <input class="input is-rounded" v-model="chat" type="text" placeholder="Ingresa tu mensaje" />
+                          <input class="input is-rounded" v-model="chat" type="text" placeholder="Enter your message" />
                         </div>
                         <div class="control">
                           <button type="submit" class="button is-info is-rounded">

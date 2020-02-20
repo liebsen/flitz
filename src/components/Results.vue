@@ -10,7 +10,7 @@
       <form @submit.prevent="submit">
         <div class="field has-addons">
           <div class="control">
-            <input ref="input" v-model="query" class="input is-rounded is-success" type="text" placeholder="Evento, lugar, fecha, jugador o PGN" autofocus>
+            <input ref="input" v-model="query" class="input is-rounded is-success" type="text" placeholder="Event, site, date, player or PGN" autofocus>
           </div>
           <div class="control">
             <button v-show="this.$route.query.q.length" type="button" @click="clear" class="button is-rounded is-danger">

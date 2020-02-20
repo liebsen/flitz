@@ -54,9 +54,9 @@ new Vue({
     },
     onLine(status) {
       if(status){
-        snackbar('success','Se restauró la conexión a internet.')
+        snackbar('success','Internet connection is back')
       } else {
-        snackbar('error','No hay conexión a internet. Por favor revise la configuración de la red.')
+        snackbar('error','No internet connection')
       }
     }
   },

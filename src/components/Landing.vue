@@ -28,7 +28,7 @@
               </div>
               <div class="field has-addons is-hidden-tablet is-flex-centered">
                 <div class="control">
-                  <input v-model="query" class="input is-rounded" name="query" type="text" placeholder="Evento, jugador o PGN" autofocus>
+                  <input v-model="query" class="input is-rounded" name="query" type="text" placeholder="Event, player or PGN" autofocus>
                 </div>
                 <div class="control">
                   <button type="submit" id="searchbtn" class="button is-rounded is-white">
