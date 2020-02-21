@@ -12,8 +12,7 @@ import snackbar from './components/Snackbar';
 import playSound from './components/playSound'
 import '../static/js/fontawesome_all.js'
 
-const endpoint='https://ajedrezenvivoapi.herokuapp.com'
-//const endpoint='https://ajedrezenvivoapidev.herokuapp.com'
+const endpoint='https://biltzapi.herokuapp.com'
 //const endpoint='http://localhost:4000'
 
 require('../static/css/main.scss')
