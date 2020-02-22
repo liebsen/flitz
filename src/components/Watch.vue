@@ -516,7 +516,7 @@
           if(!isNaN(this.selectedIndex) && !this.paused) {
             this.gamePause()
           }
-        }, 10)
+        },10)
       },
       gamePos:function(pos){
         if(pos > this.gameMoves.length){
