@@ -47,16 +47,17 @@ $blue: #4183d7;
 }
 
 .board-container {
-    .white {
+
+    h6:first-child {
+        margin: 0.25rem; 
+        margin-top: 0.5rem;
+    }
+
+    h6:last-child {
         margin: 0.25rem;
         margin-bottom: 0;
     }
 
-    .black {
-        margin: 0.25rem; 
-        margin-top: 0.5rem;
-    }
-    
     .icon {
         height: auto;
     }

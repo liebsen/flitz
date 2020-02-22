@@ -12,7 +12,7 @@
             <div class="board-container">
               <h6 class="black has-text-left is-hidden-mobile" v-show="game">
                 <span v-show="data.result==='0-1'" class="icon">
-                  <span class="fa fa-trophy has-text-warning"></span>
+                  <span class="fa fa-trophy is-size-7 has-text-warning"></span>
                 </span>
                 <span class="is-size-6">
                   <span v-html="data.black"></span> 
@@ -27,7 +27,7 @@
               </div>
               <h6 class="white has-text-right is-hidden-mobile" v-show="game">
                 <span v-show="data.result==='1-0'" class="icon">
-                  <span class="fa fa-trophy has-text-warning"></span>
+                  <span class="fa fa-trophy is-size-7 has-text-warning"></span>
                 </span>
                 <span class="is-size-6">
                   <span v-html="data.white"></span> 
@@ -40,7 +40,7 @@
             <div class="board-assistant" v-if="Object.keys(data).length">
               <div class="columns has-text-centered">
                 <div class="column has-text-left">
-                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Girar tablero">
+                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Flip board">
                     <span class="icon">
                       <span class="fa fa-retweet"></span>
                     </span>
@@ -234,7 +234,7 @@
   </div>
 </div>`)
         swal({
-          title: 'Copiar PGN',
+          title: 'Copy PGN',
           content: {
             element: 'div',
             attributes: {
@@ -465,10 +465,11 @@
         }
       },
       gameFlip: function(){
-        this.board.flip()
-        this.orientation = this.board.orientation()
         const white = document.querySelector('.board-container .white').innerHTML
         const black = document.querySelector('.board-container .black').innerHTML
+
+        this.board.flip()
+        this.orientation = this.board.orientation()
         document.querySelector('.board-container .white').innerHTML = black
         document.querySelector('.board-container .black').innerHTML = white
         this.highlightLastMove()

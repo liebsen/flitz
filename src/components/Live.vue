@@ -10,7 +10,7 @@
       <form @submit.prevent="submit">
         <div class="field has-addons">
           <div class="control">
-            <input ref="input" v-model="query" class="input is-rounded is-success" type="text" placeholder="Event, site, date, player or PGN" autofocus>
+            <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" placeholder="Event, site, date, player or PGN" autofocus>
           </div>
           <div class="control">
             <button v-show="query.length" type="button" @click="clear" class="button is-rounded is-danger">
@@ -88,6 +88,12 @@
       this.triggerSearch()
     },
     methods : {
+      inputTrigger: function(){
+        if(clock) clearInterval(clock)
+        var clock = setTimeout(() => {
+          this.triggerSearch()
+        },500)
+      },
       clear: function(){
         this.query = ''
         this.submit()

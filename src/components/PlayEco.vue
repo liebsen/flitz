@@ -10,6 +10,11 @@
         <div class="columns is-marginless-top fadeIn">
           <div class="column">
             <div class="board-container">
+              <h6 class="black has-text-left">
+                <span class="is-size-6">
+                  <span>&nbsp;</span> 
+                </span>
+              </h6>
               <div class="board preservefilter">
                 <div class="score-container">
                   <div class="score" :style="'max-height:' + vscore + '%'"></div>
@@ -22,7 +27,7 @@
             <div class="board-assistant" v-if="Object.keys(data).length">
               <div class="columns has-text-centered">
                 <div class="column preservefilter">
-                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Girar tablero">
+                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Flip board">
                     <span class="icon">
                       <span class="fa fa-retweet"></span>
                     </span>
@@ -36,24 +41,6 @@
                 <div class="column">
                   <strong v-html="data.eco" class=""></strong>
                   <span v-html="data.name" class="has-text-black"></span>
-                </div>
-              </div>
-              <div class="columns is-desktop">
-                <div v-show="Object.keys(prevEco).length" class="column">
-                  <router-link :to="'/eco/'+prevEco.eco" class="button is-text">
-                    <span class="icon">
-                      <span class="fa fa-chevron-left"></span>
-                    </span>
-                    <span v-html="prevEco.name"></span>
-                  </router-link>
-                </div>
-                <div v-show="Object.keys(nextEco).length" class="column">
-                  <router-link :to="'/eco/'+nextEco.eco" class="button is-text">
-                    <span v-html="nextEco.name"></span>
-                    <span class="icon">
-                      <span class="fa fa-chevron-right"></span>
-                    </span>
-                  </router-link>
                 </div>
               </div>
               <div class="columns is-hidden-mobile">
@@ -297,7 +284,7 @@
   </div>
 </div>`)
         swal({
-          title: 'Copiar PGN',
+          title: 'Copy PGN',
           content: {
             element: 'div',
             attributes: {
@@ -312,24 +299,16 @@
       },    
       gameStart: function(){
         this.$root.loading = true
-        axios.get( '/static/json/eco.json').then((res) => {
+        axios.post( this.$root.endpoint + '/eco/search', {
+          query:this.$route.params.name,
+          limit:1,
+          offset:0
+        }).then((res) => {
           if(!Object.keys(res.data).length) return location.href="/404"
-          var game = null
+          var game = res.data.games[0]
           const pref = JSON.parse(localStorage.getItem('player'))||{}
-
-          res.data.forEach((item,i) => {
-            if(this.$route.params.name===item.eco){
-              game = item    
-              if(res.data[i-1]){
-                this.prevEco = res.data[i-1]
-              }
-              if(res.data[i+1]){
-                this.nextEco = res.data[i+1]
-              }
-            }
-          })
-          
           const totalms = this.$root.countMoves(game.pgn) * this.speed
+
           this.gameMoves = this.gamePGN(game.pgn)
           this.pgnIndex = this.gamePGNIndex(game.pgn)
           this.data = game
@@ -518,8 +497,6 @@
     },
     data () {
       return {
-        prevEco:{},
-        nextEco:{},
         chart:{
           width: 100,
           height: 50,
