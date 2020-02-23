@@ -646,17 +646,42 @@
                   }
                 })
               } else {
-                swal({
-                  title: "Win!",
-                  text: 'You defeated Stockfish. Want a rematch?',
-                  icon: "success",
-                  buttons: ["Cancel", "Yes"]
-                })
-                .then(accept => {
-                  if (accept) {
-                    t.gameRestart()
-                  } else {
-                    console.log('Clicked on cancel')
+                swal('Win! You defeated Stockfish.', {
+                  buttons: {
+                    cancel: 'Go back',
+                    catch: {
+                      text: 'Play again',
+                      value: 'catch',
+                    },
+                    defeat: 'Save this game',
+                  },
+                }).then((value) => {
+                  switch (value) {
+                 
+                    case "defeat":
+                      let opponent = 'Stockfish level ' + (this.time.level / 2)
+                      let white = this.playerColor==='white' ? this.$root.player.code : opponent
+                      let black = this.playerColor==='black' ? this.$root.player.code : opponent
+                      axios.post( this.$root.endpoint + '/save', {
+                        white: white,
+                        black: black,
+                        orientation: this.board.orientation(),
+                        pgn: this.game.pgn()
+                      }).then((response) => {
+                        if(response.data.status === 'success'){
+                          swal("Saved", 'This game was successfully stored')
+                        } else {
+                          snackbar('danger','The game could not be saved')
+                        }        
+                      })
+                      break;
+                 
+                    case "catch":
+                      this.gameRestart()
+                      break;
+                 
+                    default:
+                      this.$router.push('/')
                   }
                 })
               }

@@ -1,6 +1,6 @@
 <template>
   <div class="container is-widescreen">
-    <div class="content column fadeIn">
+    <div class="content column">
       <h3>
         <span class="icon">
           <span class="fas fa-book"></span>
@@ -105,7 +105,6 @@
       },
       search: function() {
         this.$root.loading = true
-        console.log(this.query)
         axios.post( this.$root.endpoint + '/eco/search', {query:this.query,offset:this.offset,limit:this.limit} ).then((res) => {
           this.data = res.data
 
@@ -135,7 +134,10 @@
     },
     data () {
       return {
-        data:{count:0,games:[]},
+        data:{
+          count:0,
+          games:[]
+        },
         pages:{},
         query:'',
         limit:10,

@@ -12,15 +12,12 @@ import snackbar from './components/Snackbar';
 import playSound from './components/playSound'
 import '../static/js/fontawesome_all.js'
 
-const endpoint='https://biltzapi.herokuapp.com'
-//const endpoint='http://localhost:4000'
-
 require('../static/css/main.scss')
 require('../static/css/chessboard.scss')
 
 Vue.use(new VueSocketIO({
-  //debug: true,
-  connection: endpoint
+  debug: process.env.NODE_ENV!=='production',
+  connection: process.env.ENDPOINT
 }))
 
 const generateRandomCode = (() => {
@@ -583,7 +580,7 @@ new Vue({
     },
   	countMoves: (pgn) => {
 	    if(pgn && pgn.indexOf('.')){
-	      return pgn.split('.').length
+	      return pgn.split('.').length - 1
 	    }
 	  },
     msToTime(duration){
@@ -606,7 +603,7 @@ new Vue({
     }
   },
   data:{
-    endpoint:endpoint,
+    endpoint:process.env.ENDPOINT,
     onLine: navigator.onLine,
     loading:true,
     saving:false,

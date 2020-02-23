@@ -8,6 +8,7 @@
         <span>Live</span>
       </h3>
       <form @submit.prevent="submit">
+        <label class="label"><span v-html="eco.name" class="has-text-grey"></span></label>
         <div class="field has-addons">
           <div class="control">
             <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" placeholder="Event, site, date, player or PGN" autofocus>
@@ -89,10 +90,10 @@
     },
     methods : {
       inputTrigger: function(){
-        if(clock) clearInterval(clock)
-        var clock = setTimeout(() => {
-          this.triggerSearch()
-        },500)
+        if(this.interval) clearInterval(this.interval)
+        this.interval = setTimeout(() => {
+          this.$router.push({ path: 'live', query: { q: this.query }})
+        },1500)
       },
       clear: function(){
         this.query = ''
@@ -131,6 +132,11 @@
           }
           this.pages = pages
           this.$root.loading = false
+          axios.post(this.$root.endpoint + '/eco/search', {query: this.query}).then((res2) => {
+            if(res2.data.games[0]){
+              t.eco = res2.data.games[0]
+            }
+          })
         })       
       },
       submit: function(){
@@ -141,6 +147,7 @@
       return {
         data:{},
         pages:{},
+        eco: {},
         query:'',
         limit:10,
         offset:0
