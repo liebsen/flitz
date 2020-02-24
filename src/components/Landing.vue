@@ -106,14 +106,22 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'landing',
-  mounted: function(){
+  mounted: function() {
+    var t = this
     const saved = JSON.parse(localStorage.getItem('player'))
     const board = document.querySelector('.fakeboard')
     board.classList = []
     board.classList.add('fakeboard')
     board.classList.add(saved.board)
+    axios.post(this.$root.endpoint + '/eco/pgn/random', {}).then((res) => {
+      if(res.data.pgn){
+        t.eco = res.data
+        t.query = res.data.pgn
+      }
+    })
     document.querySelectorAll('.pieces li').forEach(e => {
       let li = window.getComputedStyle(e);
       e.style.backgroundImage = li.getPropertyValue('background-image').replace('classic',saved.pieces)
