@@ -134,8 +134,8 @@
           this.pages = pages
           this.$root.loading = false
           axios.post(this.$root.endpoint + '/eco/search', {query: this.query}).then((res2) => {
-            if(res2.data.games[0]){
-              t.eco = res2.data.games[0]
+            if(res2.data){
+              t.eco = res2.data
             }
           })
         })       
