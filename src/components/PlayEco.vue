@@ -50,7 +50,7 @@
                   </div>
                 </div>
               </div>
-              <div class="columns">
+              <div class="columns is-hidden-mobile">
                 <div class="movesTableContainer preservefilter">
                   <div class="movesTable">
                     <div class="moveRow" v-for="(move,index) in pgnIndex">
