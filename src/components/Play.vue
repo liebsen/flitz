@@ -565,7 +565,7 @@
             t.announced_game_over = true
             snackbar('success',"This game has finished")
           } else {
-            playSound('game-start.mp3')
+            playSound('start.ogg')
           }
           
           if(t.data.pgn){

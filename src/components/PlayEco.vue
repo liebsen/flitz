@@ -334,7 +334,7 @@
               this.$root.fullscreenBoard()
             })
 
-            playSound('game-start.mp3')
+            playSound('start.ogg')
 
             const offset = 200
             setTimeout(() => {

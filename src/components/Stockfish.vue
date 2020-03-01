@@ -361,8 +361,8 @@
             setTimeout(() => {
               t.stockfishMoved = true
               t.prepareMove()
-            },t.ucitime)
-          } 
+            },t.ucitime * 3)
+          }
         }
         
         t.uciCmd('uci')
@@ -393,7 +393,6 @@
           }
 
           // resize event handling
-
           $(window).resize(() => {
             t.$root.fullscreenBoard()
             t.board.resize()
@@ -402,7 +401,7 @@
           })
 
           t.$root.loading = false
-          playSound('game-start.mp3')
+          playSound('start.ogg')
           t.boardTaps()
         },100)
       },   
