@@ -715,6 +715,7 @@
               t.timer[turn] = 0
               if(turn === t.playerColor[0]){
                 result = (t.playerColor==='black'?'1-0':'0-1')
+                playSound('defeat.mp3')
                 swal({
                   title: 'Want a rematch?',
                   text: t.opponentName + ' won this game by time',
@@ -738,6 +739,7 @@
                   wtime: t.timer.b,
                   result:result
                 })
+                playSound('victory.mp3')
                 swal("Win!", 'You defeated ' + t.opponentName + " by time", "success")
               }
               if(result){
