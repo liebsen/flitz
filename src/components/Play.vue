@@ -365,6 +365,7 @@
         var result = null
         if(data.asker === t.$root.player.code){
           result = (t.playerColor==='black'?'1-0':'0-1')
+          playSound('defeat.mp3')
           swal({
             title: 'Want a rematch?',
             text: 'You resiged. ' + t.opponentName + ' won this game',
@@ -388,6 +389,7 @@
             wtime: t.timer.b,
             result:result
           })
+          playSound('victory.mp3')
           swal("¡Victoria!", t.opponentName + ' resigned this game', "success")
         }
         if(result){
