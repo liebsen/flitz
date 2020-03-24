@@ -178,12 +178,11 @@ new Vue({
       const chatbox = document.querySelector(".lobby_chat")
       if(chatbox){
         const owned = this.$root.player.code === data.sender
-        const cls = owned ? 'is-pulled-right has-text-right has-background-info has-text-white' : 'is-pulled-left has-text-left'
-        const sender = owned ? '' : data.sender
-        const sender_color = data.sender === 'chatbot' ? 'primary' : 'info'
+        const sender = owned || data.sender === 'chatbot' ? '' : data.sender
+        let cls = owned ? 'is-pulled-right has-text-right has-background-info has-text-white ' : 'is-pulled-left has-text-left '
+        cls+= data.sender === 'chatbot' ? 'has-text-grey' : 'has-text-white has-background-info'
         const ts = moment().format('hh:mm a')
-        const ts_color = owned ? 'has-text-white' : 'has-text-grey'
-        chatbox.innerHTML+= `<div class="box ${cls}"><strong class="has-text-${sender_color}">${sender}</strong> ${data.line} <span class="is-size-7 ${ts_color}">${ts}</span></div>`
+        chatbox.innerHTML+= `<div class="box ${cls}"><strong class="has-text-white">${sender}</strong> ${data.line} <span class="is-size-7">${ts}</span></div>`
         chatbox.scrollTop = chatbox.scrollHeight
         if(data.sender != this.$root.player.code){
           playSound('button-pressed.ogg')
