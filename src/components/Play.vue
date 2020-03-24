@@ -287,7 +287,7 @@
       reject_rematch: function(data) {
         if(data.asker === this.$root.player.code){
           swal.close()
-          swal("Partida declinada", '👤 ' + data.player + ' rejected a rematch')
+          swal("Rematch rejected", '👤 ' + data.player + ' rejected a rematch')
         }
       },
       invite_rematch: function(data) {
@@ -295,9 +295,10 @@
         if(data.player === this.$root.player.code){
           swal.close()
           swal({
-            title: "¿Aceptás esta partida?",
+            title: "¿Want to play?",
             text: '👤 ' + data.asker + ' asks for a rematch',
-            buttons: ["Declinar", "Aceptar"]
+            buttons: ["Cancel", "Yes"],
+            closeOnClickOutside: false
           })
           .then(accept => {
             if (accept) {
@@ -369,7 +370,8 @@
           swal({
             title: 'Want a rematch?',
             text: 'You resiged. ' + t.opponentName + ' won this game',
-            buttons: ["Cancel", "Yes"]
+            buttons: ["Cancel", "Yes"],
+            closeOnClickOutside: false
           })
           .then(accept => {
             if (accept) {
@@ -404,7 +406,8 @@
           swal({
             title: 'Accept draw?',
             text: 'Your opponent ' + t.opponentName + ' asks for a draw',
-            buttons: ["Cancel", "Yes"]
+            buttons: ["Cancel", "Yes"],
+            closeOnClickOutside: false
           })
           .then(accept => {
             if (accept) {
@@ -482,7 +485,8 @@
         swal({
           title: 'Resign game',
           text: 'Confirm to resign this game?',
-          buttons: ["Cancel", "Yes"]
+          buttons: ["Cancel", "Yes"],
+          closeOnClickOutside: false
         })
         .then(accept => {
           if (accept) {
@@ -500,7 +504,8 @@
         swal({
           title: 'Ask for a draw',
           text: '',
-          buttons: ["Cancel", "Yes"]
+          buttons: ["Cancel", "Yes"],
+          closeOnClickOutside: false
         })
         .then(accept => {
           if (accept) {
@@ -721,7 +726,8 @@
                 swal({
                   title: 'Want a rematch?',
                   text: t.opponentName + ' won this game by time',
-                  buttons: ["Cancel", "Yes"]
+                  buttons: ["Cancel", "Yes"],
+                  closeOnClickOutside: false
                 })
                 .then(accept => {
                   if (accept) {
@@ -875,7 +881,8 @@
                 swal({
                   title: 'Want a rematch?',
                   text: t.opponentName + ' won this game',
-                  buttons: ["Cancel", "Yes"]
+                  buttons: ["Cancel", "Yes"],
+                  closeOnClickOutside: false
                 })
                 .then(accept => {
                   if (accept) {
