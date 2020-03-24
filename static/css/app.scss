@@ -920,7 +920,9 @@ table {
       margin-bottom: 0.25rem;
     }
   }
-
+  .box {
+    border-radius: 25px;
+  }
  .is-horizontal {
   .field-body {
     &:not(:first-child) {
