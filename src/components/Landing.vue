@@ -111,11 +111,11 @@ export default {
   name: 'landing',
   mounted: function() {
     var t = this
-    const saved = JSON.parse(localStorage.getItem('player'))
+    const saved = JSON.parse(localStorage.getItem('player')).board || 'classic'
     const board = document.querySelector('.fakeboard')
     board.classList = []
     board.classList.add('fakeboard')
-    board.classList.add(saved.board)
+    board.classList.add(saved)
     axios.post(this.$root.endpoint + '/eco/pgn/random', {}).then((res) => {
       if(res.data.pgn){
         t.eco = res.data
@@ -135,7 +135,9 @@ export default {
   data () {
     return {
       query: null,
-      eco: {},
+      eco: {
+        name: '...'
+      },
     }
   }
 }

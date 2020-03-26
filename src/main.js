@@ -56,10 +56,8 @@ new Vue({
       }
     }
   },
-  mounted () {
-
+  created () {
     const stored = JSON.parse(localStorage.getItem('player'))||{}
-
     var preferences = { 
       code: generateRandomCode(6), 
       observe: false,
@@ -71,21 +69,28 @@ new Vue({
       board:'classic'
     }
 
-    if(Object.keys(stored).length){
+    if(Object.keys(stored).length && stored.flag){
       if(!stored.observe){
         stored.observe = preferences.observe
       }
       preferences = stored
+      this.$socket.emit('preferences', preferences)
     } else {
-      localStorage.setItem('player',JSON.stringify(preferences))
+      axios.post('https://ipapi.co/json').then(res => {
+        axios.get('/static/json/flags.json').then(res2 => {
+          //preferences.locale = res.data
+          preferences.flag = res2.data[res.data.country_code].emoji || null
+          this.player = preferences
+          this.$socket.emit('preferences', this.player)
+          localStorage.setItem('player',JSON.stringify(preferences))
+        })
+      })
     }
 
     if(preferences.darkmode){
       document.documentElement.classList.add('dark-mode')
     }
-    
-    this.player = preferences
-    this.$socket.emit('preferences', preferences)
+
     this.documentTitle = document.title 
 
     document.querySelector('body').addEventListener('click', function (event) {
@@ -131,9 +136,6 @@ new Vue({
       } else {
         document.querySelector('.tosprompt').style.display = 'none';
       }
-
-      this.$socket.emit('lobby_join', this.player)
-      this.loading = false
     })
 
     window.addEventListener('click', event => {
@@ -168,6 +170,7 @@ new Vue({
 
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)
+    this.loading = false
   },
   beforeDestroy() {
     window.removeEventListener('online', this.updateOnlineStatus)
@@ -223,7 +226,7 @@ new Vue({
           this.$router.push('/preferences')
         } else {
           this.player = data
-          document.querySelector('.menu-primary .icon').innerHTML = '<span v-if="$root.player.observe" class="fas fa-user' + (this.player.observe ? '-astronaut' : '-circle') +'"></span>'
+          // document.querySelector('.menu-primary .icon').innerHTML = '<span v-if="$root.player.observe" class="fas fa-user' + (this.player.observe ? '-astronaut' : '-circle') +'"></span>'
           localStorage.setItem('player',JSON.stringify(data))
           snackbar('success','Your settings were saved')          
           if(!data.observe){

@@ -58,7 +58,7 @@
               <a v-if="!player.observe && player.code != $root.player.code" @click="play(player.code)" :title="'Invitar a ' + player.code">
                 <span class="button is-text is-rounded is-info">
                   <span class="icon">
-                    <span class="fas fa-user-circle"></span>
+                    <span v-html="player.flag"></span>
                   </span>
                   <span v-html="player.code"></span>
                 </span>
@@ -68,7 +68,7 @@
               <a v-if="player.observe && player.code != $root.player.code" @click="clickObserve(player.code)" title="Modo observador">
                 <span class="button is-text is-rounded is-grey">
                   <span class="icon">
-                    <span class="fas" :class="{ 'fa-user-astronaut' : player.code != $root.player.code, 'fa-user-circle' : player.code === $root.player.code }"></span>
+                    <span v-html="player.flag"></span>
                   </span>
                   <span v-html="player.code"></span>
                 </span>
