@@ -70,6 +70,7 @@
                       <option value="bases">Bases</option>
                       <option value="uscf">USCF</option>
                       <option value="chess24">Chess24</option>
+                      <option value="fantasy">Fantasy</option>
                       <option value="leipzig">Leipzig</option>
                       <option value="book">Book</option>
                       <option value="cases">Cases</option>
