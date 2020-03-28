@@ -243,9 +243,9 @@ new Vue({
       }
     },
     reject: function(data) {
-      if(data.asker === this.player.code){
+      if(data.asker.code === this.player.code){
         swal.close()
-        swal("Partida declinada", data.player + ' rejected your invitation')
+        swal("Partida declinada", data.player.code + ' rejected your invitation')
         playSound('defeat.mp3')
       }
     },
@@ -254,15 +254,17 @@ new Vue({
       if(data.player === this.player.code){
         if(this.player.autoaccept){
           axios.post( this.endpoint + '/create', {
-            white: data.white,
-            black: data.black,
+            white: data.white.code,
+            black: data.black.code,
+            whiteflag: data.white.flag,
+            blackflag: data.black.flag,
             minutes: data.minutes,
             compensation: data.compensation
           }).then((response) => {
             if(response.data.status === 'success'){
               t.$socket.emit('play', {
-                asker: data.asker,
-                player: data.player,
+                asker: data.asker.code,
+                player: data.player.code,
                 id: response.data.id
               })
               t.$router.push(['/play',response.data.id].join('/'))
@@ -278,7 +280,7 @@ new Vue({
     <span class="icon">
       <span class="fas fa-user"></span>
     </span> 
-    <span>${data.asker}</span>
+    <span>${data.asker.code}</span>
   </h4>
   <h4>
     <span class="icon">
@@ -300,15 +302,17 @@ new Vue({
           .then(accept => {
             if (accept) {
               axios.post( this.endpoint + '/create', {
-                white: data.white,
-                black: data.black,
+                white: data.white.code,
+                whiteflag: data.white.flag,
+                black: data.black.code,
+                blackflag: data.black.flag,
                 minutes: data.minutes,
                 compensation: data.compensation,
               }).then((response) => {
                 if(response.data.status === 'success'){
                   t.$socket.emit('play', {
-                    asker: data.asker,
-                    player: data.player,
+                    asker: data.asker.code,
+                    player: data.player.code,
                     id: response.data.id
                   })
                   t.$router.push(['/play',response.data.id].join('/'))
