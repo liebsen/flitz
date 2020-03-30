@@ -60,6 +60,7 @@ new Vue({
     const stored = JSON.parse(localStorage.getItem('player'))||{}
     var preferences = { 
       code: generateRandomCode(6), 
+      flag: '🇷🇪',
       observe: false,
       autoaccept: false,
       strongnotification: false,
@@ -78,10 +79,11 @@ new Vue({
     } else {
       axios.post('https://ipapi.co/json').then(res => {
         axios.get('/static/json/flags.json').then(res2 => {
-          //preferences.locale = res.data
-          preferences.flag = res2.data[res.data.country_code].emoji || null
+          if (flags.data[json.data.country_code]) {
+            preferences.flag = flags.data[json.data.country_code]
+          }
           this.player = preferences
-          this.$socket.emit('preferences', this.player)
+          this.$socket.emit('preferences', preferences)
           localStorage.setItem('player',JSON.stringify(preferences))
         })
       })
@@ -226,12 +228,8 @@ new Vue({
           this.$router.push('/preferences')
         } else {
           this.player = data
-          // document.querySelector('.menu-primary .icon').innerHTML = '<span v-if="$root.player.observe" class="fas fa-user' + (this.player.observe ? '-astronaut' : '-circle') +'"></span>'
           localStorage.setItem('player',JSON.stringify(data))
           snackbar('success','Your settings were saved')          
-          if(!data.observe){
-            this.$socket.emit('lobby_join', data)
-          }        
         }
         this.saving = false
       }

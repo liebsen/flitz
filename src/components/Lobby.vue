@@ -116,7 +116,7 @@
       setTimeout(() => {
         t.$socket.emit('lobby_chat', { 
           sender: 'chatbot',
-          line: `Hi ${t.$root.player.code}, welcome to Biltz.` + (t.$root.player.observe ? ` You're in watch mode. ` : ` Before playing you can `) +  `<a href="/preferences" class="has-text-success">set your preferences</a>`
+          line: `Hi ${t.$root.player.code} from ${t.$root.player.flag}, welcome to Biltz.` + (t.$root.player.observe ? ` You're in watch mode. ` : ` Before playing you can `) +  `<a href="/preferences" class="has-text-success">set your preferences</a>`
         })
       },1500)
     },
