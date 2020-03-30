@@ -35,17 +35,22 @@ new Vue({
   router,
   watch: {
     '$route' (to, from) {
-      if(from.name === 'play'){
+      if (from.name === 'play') {
+        if (!this.player.observe) {
+          this.$socket.emit('lobby_join', this.player)
+        }   
         this.$socket.emit('match_end', from.params.game)
       }
-      if(to.name === 'play'){
+      if (to.name === 'play') {
         this.$socket.emit('lobby_leave', this.player) 
-      } else {
-        if(!this.player.observe) {
-          setTimeout(() => {
-            this.$socket.emit('lobby_join', this.player)
-          },500)
-        }        
+      }
+      if (to.name === 'lobby') {
+        setTimeout(() => {
+          const chatbox = document.querySelector(".lobby_chat")
+          if (chatbox) {
+            chatbox.scrollTop = chatbox.scrollHeight
+          }
+        }, 500)
       }
     },
     onLine(status) {
