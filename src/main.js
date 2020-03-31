@@ -83,8 +83,8 @@ new Vue({
       preferences = stored
       this.$socket.emit('preferences', preferences)
     } else {
-      axios.post('https://ipapi.co/json').then(res => {
-        axios.get('/static/json/flags.json').then(res2 => {
+      axios.post('https://ipapi.co/json').then(json => {
+        axios.get('/static/json/flags.json').then(flags => {
           if (flags.data[json.data.country_code]) {
             preferences.flag = flags.data[json.data.country_code].emoji
             preferences.country = flags.data[json.data.country_code].name
