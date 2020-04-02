@@ -60,7 +60,7 @@
     <nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">
       <ul class="pagination-list">
         <li v-for="(page, index) in pages">
-          <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Ir a página ' + (index + 1)"></router-link>
+          <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Go to page ' + parseInt(page / limit + 1)"></router-link>
         </li>
       </ul>
     </nav> 
@@ -124,6 +124,12 @@
               snackbar('success','We found ' + this.data.count  +  ' opening' + (this.data.count>1?'s':'')  + '. Showing results from ' + (this.offset + 1) + ' to ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit ), 5000);
             }
           }
+          let max = 20
+          
+          if (pages.length > max) {
+            pages.splice(max / 2, pages.length - max)
+          }
+
           this.pages = pages
           this.$root.loading = false
         })    
