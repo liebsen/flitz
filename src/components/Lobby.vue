@@ -112,15 +112,17 @@
   export default {
     name: 'lobby',
     mounted: function(){
-      let t = this
       setTimeout(() => {
-        t.$socket.emit('lobby_chat', { 
-          sender: 'chatbot',
-          line: `🤝 Hi ${t.$root.player.code} from ${t.$root.player.country} ${t.$root.player.flag} welcome to Biltz.` + (t.$root.player.observe ? ` You're in watch mode. ` : ` Before playing you can `) +  `<a href="/preferences" class="has-text-success">set your preferences</a>`
-        })
-      },1500)
+        this.welcomeMsg()
+      }, 3000)
     },
     methods: {
+      welcomeMsg () {
+        this.$socket.emit('lobby_chat', { 
+          sender: 'chatbot',
+          line: `🤝 Hi ${this.$root.player.code} from ${this.$root.player.country} ${this.$root.player.flag} welcome to Biltz.` + (this.$root.player.observe ? ` You're in watch mode. ` : ` Before playing you can `) +  `<a href="/preferences" class="has-text-success">set your preferences</a>`
+        })
+      },
       sendChat: function() {
         if(this.chat.trim()==='') this.chat = '👋'
         this.$socket.emit('lobby_chat', { 
