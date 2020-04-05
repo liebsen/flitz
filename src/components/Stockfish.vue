@@ -64,7 +64,7 @@
             </div>
             <h6 class="has-text-right white is-hidden-mobile">
               <span v-show="data.result==='1-0'">🏆</span>
-              <span v-html="$root.player.code"></span> 
+              <span v-html="player.code"></span> 
             </h6>
           </div>
         </div>
@@ -139,6 +139,7 @@
 
 <script>
   import axios from 'axios'
+  import { mapState } from 'vuex'
   import Chess from 'chess.js'
   import Chessboard from '../../static/js/chessboard'
   import snackbar from '../components/Snackbar'
@@ -169,6 +170,11 @@
         let li = window.getComputedStyle(e);
         e.style.backgroundImage = li.getPropertyValue('background-image').split('classic').join(saved.pieces)
       })
+    },
+    computed: {
+      ...mapState([
+        'player'
+      ])
     },
     methods: {
       gameRestart: function(){
@@ -385,11 +391,11 @@
           t.board.orientation(t.playerColor)  
 
           if(t.playerColor==='white'){
-            t.data.white = t.$root.player.code
+            t.data.white = t.player.code
             t.data.black = 'Stockfish'
           } else {
             t.data.white = 'Stockfish'
-            t.data.black = t.$root.player.code
+            t.data.black = t.player.code
           }
 
           // resize event handling
@@ -659,8 +665,8 @@
                  
                     case "defeat":
                       let opponent = 'Stockfish level ' + (this.time.level / 2)
-                      let white = this.playerColor==='white' ? this.$root.player.code : opponent
-                      let black = this.playerColor==='black' ? this.$root.player.code : opponent
+                      let white = this.playerColor==='white' ? this.player.code : opponent
+                      let black = this.playerColor==='black' ? this.player.code : opponent
                       axios.post( this.$root.endpoint + '/save', {
                         white: white,
                         black: black,

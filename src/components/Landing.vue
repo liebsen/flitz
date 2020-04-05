@@ -107,31 +107,39 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 export default {
   name: 'landing',
   mounted: function() {
-    var t = this
     const saved = JSON.parse(localStorage.getItem('player'))
     const board = document.querySelector('.fakeboard')
-  
+
     if (board) {
       board.classList = []
       board.classList.add('fakeboard')
-      board.classList.add(saved.board || 'classic')
+      if (saved) {
+        board.classList.add(saved.board || 'classic')
+      }
     }
-    
+
     axios.post(this.$root.endpoint + '/eco/pgn/random', {}).then((res) => {
       if(res.data.pgn){
-        t.eco = res.data
-        t.query = res.data.pgn
+        this.eco = res.data
+        this.query = res.data.pgn
       }
     })
+    
     if (saved.pieces) {
       document.querySelectorAll('.pieces li').forEach(e => {
-        let li = window.getComputedStyle(e);
+        let li = window.getComputedStyle(e)
         e.style.backgroundImage = li.getPropertyValue('background-image').replace('classic',saved.pieces)
       })
     }
+  },
+  computed: {
+    ...mapState([
+      'player'
+    ])
   },
   methods: {
     submit: function(){

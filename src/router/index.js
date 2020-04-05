@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store'
 import $ from 'jquery'
 import Landing from '../components/Landing'
 import Results from '../components/Results'
@@ -103,13 +104,21 @@ const router = new Router({
   ]  
 });
 
-router.beforeEach((to, from, next) => {
-  setTimeout(function() {
-    var body = $("html, body")
-    body.stop().animate({scrollTop:0}, 250, 'swing', function() { 
-    })
-  }, 10)  
-  next()
+router.beforeEach(async (to, from, next) => {
+  await Vue.nextTick()
+  if (!store.state.player) {
+    store
+      .dispatch('playerId')
+      .then(() => {
+        console.log('🙌 Datos de la aplicación cargados')
+        router.app.$socket.emit('preferences', store.state.player)
+        next()        
+      }).catch(err => {
+        console.log(`Algo malo sucedió ` + err)
+      })
+  } else {
+    next()
+  }
 })
 
 router.afterEach(function (to, from, next) {

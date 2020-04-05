@@ -14,17 +14,20 @@
           <div class="is-hidden-mobile">
             <router-link to="/preferences" class="button is-rounded is-white is-outlined" title="Establece tus preferencias">
               <span class="icon">
-                <span v-html="$root.player.flag"></span>
+                <span v-html="player.flag"></span>
               </span>
-              <span v-html="$root.player.code"></span>
+              <span v-html="player.code"></span>
+            </router-link>
+            <router-link to="/lobby" v-if="players" v-show="players.length > 1" class="button is-outlined is-danger">
+              <span class="tag">{{ players.length }}</span>
             </router-link>
           </div>
           <div class="is-hidden-tablet">
             <router-link to="/preferences" class="button is-small is-rounded">
               <span class="icon">
-                <span v-html="$root.player.flag"></span>
+                <span v-html="player.flag"></span>
               </span>
-              <span v-html="$root.player.code"></span>
+              <span v-html="player.code"></span>
             </router-link>
           </div>
         </div>
@@ -83,7 +86,7 @@
               <span class="icon">
                 <span class="fas fa-hands"></span>
               </span> 
-              <span>Donate</span>
+              <span>Donar</span>
             </router-link>
             <a @click="$root.goFS">
               <span class="icon">
@@ -118,7 +121,7 @@
 
     <div class="tosprompt preservefilter"></div> 
 
-    <div class="ui-snackbar ui-snackbar--is-inactive preservefilter" :class="{ 'is-strong' : $root.player.strongnotification }">
+    <div class="ui-snackbar ui-snackbar--is-inactive preservefilter" :class="{ 'is-strong' : player && player.strongnotification }">
       <p class="ui-snackbar__message"></p>
     </div>
 
@@ -126,8 +129,15 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'app',
+  computed: {
+    ...mapState([
+      'players',
+      'player'
+    ])
+  },
   data () {
     return {
       ver: '2.0.1'

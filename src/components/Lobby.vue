@@ -52,10 +52,10 @@
         </div>
       </div>
       <div class="columns">
-        <div class="column is-lobby-list is-3" :class="{ 'no-players': $root.players.length < 2 }">
-          <div v-if="$root.players.length > 2">
-            <div v-for="player in $root.players" class="field">
-              <a v-if="!player.observe && player.code != $root.player.code" @click="play(player)" :title="'Invitar a ' + player.code">
+        <div class="column is-lobby-list is-3" :class="{ 'no-players': players.length < 2 }">
+          <div v-if="players.length > 2">
+            <div v-for="player in players" class="field">
+              <a v-if="!player.observe && player.code != player.code" @click="play(player)" :title="'Invitar a ' + player.code">
                 <span class="button is-text is-rounded is-info">
                   <span class="icon">
                     <span v-html="player.flag"></span>
@@ -64,8 +64,8 @@
                 </span>
               </a>
             </div>
-            <div v-for="player in $root.players" class="field">
-              <a v-if="player.observe && player.code != $root.player.code" @click="clickObserve(player.code)" title="Modo observador">
+            <div v-for="player in players" class="field">
+              <a v-if="player.observe && player.code != player.code" @click="clickObserve(player.code)" title="Modo observador">
                 <span class="button is-text is-rounded is-grey">
                   <span class="icon">
                     <span v-html="player.flag"></span>
@@ -81,10 +81,10 @@
             <div class="columns">
               <div class="column chatbox has-text-left lobby_chat"></div>
             </div>
-            <form v-show="$root.players.length > 1" @submit.prevent="sendChat">
+            <form v-show="players.length > 1" @submit.prevent="sendChat">
               <div class="field is-fullwidth has-addons has-addons-fullwidth">
                 <div class="control">
-                  <input class="input is-rounded" v-model="chat" type="text" placeholder="Ingresa tu mensaje" />
+                  <input class="input is-rounded" v-model="chat" type="text" placeholder="Enter your message..." />
                 </div>
                 <div class="control">
                   <button type="submit" class="button is-info is-rounded">
@@ -105,6 +105,7 @@
 <script>
 
   import axios from 'axios'
+  import { mapState } from 'vuex'
   import snackbar from '../components/Snackbar'
   import swal from 'sweetalert'
   import playSound from '../components/playSound'
@@ -116,32 +117,38 @@
         this.welcomeMsg()
       }, 3000)
     },
+    computed: {
+      ...mapState([
+        'player',
+        'players'
+      ])
+    },
     methods: {
       welcomeMsg () {
         this.$socket.emit('lobby_chat', { 
           sender: 'chatbot',
-          line: `🤝 Hi ${this.$root.player.code} from ${this.$root.player.country} ${this.$root.player.flag} welcome to Biltz.` + (this.$root.player.observe ? ` You're in watch mode. ` : ` Before playing you can `) +  `<a href="/preferences" class="has-text-success">set your preferences</a>`
+          line: `🤝 Hi ${this.player.code} from ${this.player.country} ${this.player.flag} welcome to Biltz.` + (this.player.observe ? ` You're in watch mode. ` : ` Before playing you can `) +  `<a href="/preferences" class="has-text-success">set your preferences</a>`
         })
       },
       sendChat: function() {
         if(this.chat.trim()==='') this.chat = '👋'
         this.$socket.emit('lobby_chat', { 
-          sender: this.$root.player.code,
+          sender: this.player.code,
           line: this.chat
         })
         this.chat = ''
       },
       clickObserve: function(data) { 
-        if(data === this.$root.player.code){
+        if(data === this.player.code){
           snackbar('error',`That's you`)   
         } else {
           snackbar('default', data + ' is in watch mode') 
         }        
       },
       play: function(player) {
-        if(player.code === this.$root.player.code)
+        if(player.code === this.player.code)
         return snackbar('error',`That's you`) 
-        if(this.$root.player.observe)
+        if(this.player.observe)
         return snackbar('default',`You're in watch mode`)   
 
         var t = this
@@ -214,23 +221,23 @@
             var playercolor = document.querySelector('.playercolor > .has-background-warning')
             var gameclock = document.querySelector('.gameclock > .has-background-warning')
             var gamecompensation = document.querySelector('.gamecompensation > .has-background-warning')
-            var white = t.$root.player
+            var white = t.player
             var black = player
             var minutes = parseInt(gameclock.textContent)
             var compensation = parseInt(gamecompensation.textContent)
 
             if(playercolor.classList.contains('is-black-pieces')){
               white = player
-              black = t.$root.player              
+              black = t.player              
             } 
 
             if(playercolor.classList.contains('is-random-pieces')){
               const coin = Math.floor(Math.random() * 1)
               if(coin){
                 white = player
-                black = t.$root.player              
+                black = t.player              
               } else {
-                white = t.$root.player
+                white = t.player
                 black = player
               }
             }
@@ -242,7 +249,7 @@
             })
 
             t.$socket.emit('invite', {
-              asker: t.$root.player,
+              asker: t.player,
               player: player.code,
               white: white,
               black: black,

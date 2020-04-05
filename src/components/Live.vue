@@ -77,6 +77,7 @@
 <script>
 
   import axios from 'axios'
+  import { mapState } from 'vuex'
   import snackbar from '../components/Snackbar';
   export default {
     name: 'live',

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import store from 'store'
+import store from './store'
 import VueSocketIO from 'vue-socket.io'
 import axios from 'axios'
 import swal from 'sweetalert'
@@ -12,6 +12,8 @@ import snackbar from './components/Snackbar';
 import playSound from './components/playSound'
 import '../static/js/fontawesome_all.js'
 
+axios.defaults.baseURL = store.state.endpoint
+
 require('../static/css/main.scss')
 require('../static/css/chessboard.scss')
 
@@ -20,19 +22,10 @@ Vue.use(new VueSocketIO({
   connection: process.env.ENDPOINT
 }))
 
-const generateRandomCode = (() => {
-  const USABLE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789".split("")
-
-  return length => {
-    return new Array(length).fill(null).map(() => {
-      return USABLE_CHARACTERS[Math.floor(Math.random() * USABLE_CHARACTERS.length)]
-    }).join("")
-  }
-})()
-
 new Vue({
   el: '#app',
   router,
+  store,
   watch: {
     '$route' (to, from) {
       if (from.name === 'play') {
@@ -45,6 +38,8 @@ new Vue({
         this.$socket.emit('lobby_leave', this.player) 
       }
       if (to.name === 'lobby') {
+        let player = JSON.parse(localStorage.getItem('player')) || {}
+        this.$socket.emit('lobby_join', player)
         setTimeout(() => {
           const chatbox = document.querySelector(".lobby_chat")
           if (chatbox) {
@@ -62,44 +57,6 @@ new Vue({
     }
   },
   created () {
-    const stored = JSON.parse(localStorage.getItem('player'))||{}
-    var preferences = { 
-      code: generateRandomCode(6), 
-      flag: '🇷🇪',
-      country: '🇷🇪',
-      observe: false,
-      autoaccept: false,
-      strongnotification: false,
-      darkmode: false,
-      sound: true,
-      pieces: 'classic',
-      board:'classic'
-    }
-
-    if(Object.keys(stored).length && stored.flag){
-      if(!stored.observe){
-        stored.observe = preferences.observe
-      }
-      preferences = stored
-      this.$socket.emit('preferences', preferences)
-    } else {
-      axios.post('https://ipapi.co/json').then(json => {
-        axios.get('/static/json/flags.json').then(flags => {
-          if (flags.data[json.data.country_code]) {
-            preferences.flag = flags.data[json.data.country_code].emoji
-            preferences.country = flags.data[json.data.country_code].name
-          }
-          this.player = preferences
-          this.$socket.emit('preferences', preferences)
-          localStorage.setItem('player',JSON.stringify(preferences))
-        })
-      })
-    }
-
-    if(preferences.darkmode){
-      document.documentElement.classList.add('dark-mode')
-    }
-
     this.documentTitle = document.title 
 
     document.querySelector('body').addEventListener('click', function (event) {
@@ -188,15 +145,16 @@ new Vue({
   sockets: {
     lobby_chat: function(data){
       const chatbox = document.querySelector(".lobby_chat")
-      if(chatbox){
-        const owned = this.$root.player.code === data.sender
+      if(chatbox && this.chatlast != data.line){
+        const owned = this.player.code === data.sender
         const sender = owned || data.sender === 'chatbot' ? '' : data.sender
         let cls = owned ? 'is-pulled-right has-text-right has-background-info has-text-white ' : 'is-pulled-left has-text-left '
         cls+= data.sender === 'chatbot' ? 'has-text-grey' : 'has-text-white has-background-info'
         const ts = moment().format('hh:mm a')
         chatbox.innerHTML+= `<div class="box ${cls}"><strong class="has-text-white">${sender}</strong> ${data.line} <span class="is-size-7">${ts}</span></div>`
         chatbox.scrollTop = chatbox.scrollHeight
-        if(data.sender != this.$root.player.code){
+        this.chatlast = data.line
+        if(data.sender != this.player.code){
           playSound('button-pressed.ogg')
         }
       }
@@ -225,8 +183,14 @@ new Vue({
           line: `No players online`
         })
         document.title = this.documentTitle
-      }        
-      this.players = JSON.parse(JSON.stringify(data))
+      }
+      this.$store
+        .dispatch('players', data)
+        .then(() => {
+          console.log('🙌 Lista de jugadores cargada')
+        }).catch(err => {
+          console.log(`Algo malo sucedió ` + err)
+        })
     },
     player: function (data) {
       if(data.ref === this.player.code){
@@ -620,14 +584,14 @@ new Vue({
     loading:true,
     saving:false,
     processing:false,
+    chatlast: null,
     player:{},
     players: [],
     matches:[],
     games:[],
     boards:[],
     documentTitle:null,
-    boardColor:null,
-    code:generateRandomCode(6)
+    boardColor:null
   },
   render: h => h(App)
 })
