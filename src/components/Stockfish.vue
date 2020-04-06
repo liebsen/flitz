@@ -653,7 +653,7 @@
               } else {
                 swal('Win! You defeated Stockfish.', {
                   buttons: {
-                    cancel: 'Go back',
+                    cancel: 'Cancel',
                     catch: {
                       text: 'Play again',
                       value: 'catch',
@@ -686,7 +686,7 @@
                       break;
                  
                     default:
-                      this.$router.push('/')
+                      swal.close()
                   }
                 })
               }
