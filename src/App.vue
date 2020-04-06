@@ -12,7 +12,7 @@
         </div>
         <div class="column menu-primary has-text-right">
           <div class="is-hidden-mobile">
-            <router-link to="/preferences" class="button is-rounded is-white is-outlined" title="Establece tus preferencias">
+            <router-link v-if="player" to="/preferences" class="button is-rounded is-white is-outlined" title="Establece tus preferencias">
               <span class="icon">
                 <span v-html="player.flag"></span>
               </span>
@@ -22,7 +22,7 @@
               <span class="tag">{{ players.length }}</span>
             </router-link>
           </div>
-          <div class="is-hidden-tablet">
+          <div v-if="player" class="is-hidden-tablet">
             <router-link to="/preferences" class="button is-small is-rounded">
               <span class="icon">
                 <span v-html="player.flag"></span>

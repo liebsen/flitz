@@ -182,6 +182,7 @@
     mounted: function(){
       this.data = this.player
       this.saved = this.player
+      this.$root.saving = false
       setTimeout(() => {
         this.drawBoard()  
       },250)
@@ -259,8 +260,8 @@
         document.querySelector('.square-f1').classList.add('highlight-move')
       },
       submit: function(){
-        this.$socket.emit('lobby_leave', this.player) 
-        this.$socket.emit('lobby_leave', this.data) 
+        this.$socket.emit('lobby_leave', this.player)
+        this.$socket.emit('lobby_leave', this.data)
         this.$root.saving = true
         this.data.ref = this.player.code
         this.$socket.emit('preferences', this.data)  
