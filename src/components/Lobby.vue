@@ -53,24 +53,24 @@
       </div>
       <div class="columns">
         <div class="column is-lobby-list is-3" :class="{ 'no-players': players.length < 2 }">
-          <div v-if="players.length > 2">
-            <div v-for="player in players" class="field">
-              <a v-if="!player.observe && player.code != player.code" @click="play(player)" :title="'Invitar a ' + player.code">
+          <div v-if="players.length > 1">
+            <div v-for="plyer in players" class="field">
+              <a v-if="!plyer.observe && plyer.code != player.code" @click="play(plyer)" :title="'Invitar a ' + plyer.code">
                 <span class="button is-text is-rounded is-info">
                   <span class="icon">
-                    <span v-html="player.flag"></span>
+                    <span v-html="plyer.flag"></span>
                   </span>
-                  <span v-html="player.code"></span>
+                  <span v-html="plyer.code"></span>
                 </span>
               </a>
             </div>
-            <div v-for="player in players" class="field">
-              <a v-if="player.observe && player.code != player.code" @click="clickObserve(player.code)" title="Modo observador">
+            <div v-for="plyer in players" class="field">
+              <a v-if="plyer.observe && plyer.code != player.code" @click="clickObserve(plyer)" title="Modo observador">
                 <span class="button is-text is-rounded is-grey">
                   <span class="icon">
-                    <span v-html="player.flag"></span>
+                    <span v-html="plyer.flag"></span>
                   </span>
-                  <span v-html="player.code"></span>
+                  <span v-html="plyer.code"></span>
                 </span>
               </a>
             </div>

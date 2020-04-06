@@ -168,7 +168,7 @@ new Vue({
         }
       }
       if(available > 1){
-        const message = 'There' + (available > 2 ? `'re` : `'s`)  + ' '  + (available - 1) +  ' player' + (available > 2 ? 's' : '') + ' waiting for play '
+        const message = 'There' + (available > 2 ? `'re` : `'s`)  + ' '  + (available - 1) +  ' player' + (available > 2 ? 's' : '') + ' waiting to play '
         document.title = '(' + (available - 1) + ') ' + this.documentTitle
         if(this.$route.name === 'lobby'){
           snackbar('default',message)
@@ -214,7 +214,7 @@ new Vue({
     reject: function(data) {
       if(data.asker.code === this.player.code){
         swal.close()
-        swal("Partida declinada", data.player.code + ' rejected your invitation')
+        swal("Game rejected", data.player + ' rejected your invitation')
         playSound('defeat.mp3')
       }
     },
