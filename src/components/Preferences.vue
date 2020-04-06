@@ -103,25 +103,25 @@
               <div class="field-group">
                 <label class="label">General settings</label>
                 <div class="field-body">
-                  <div class="control has-checkradio" title="Desactiva notificaciones sonoras">
+                  <div class="control has-checkradio" title="You can disable sounds across all pages">
                     <input v-model="data.sound" class="is-checkradio has-background-color is-white" id="sound" type="checkbox" @click="previewSound">
                     <label class="label" for="sound">Sound</label>
                   </div>
                 </div>
                 <div class="field-body">
-                  <div class="control has-checkradio" title="Notificaciones hiper-visibles">
+                  <div class="control has-checkradio" title="When a notification arrives you'll see me">
                     <input v-model="data.strongnotification" class="is-checkradio has-background-color is-white" id="strongnotification" type="checkbox" @click="previewStrongNotification">
-                    <label class="label" for="strongnotification">Big notification</label>
+                    <label class="label" for="strongnotification">Giant notifications</label>
                   </div>
                 </div>
                 <div class="field-body">
-                  <div class="control has-checkradio" title="Activa visión nocturna">
+                  <div class="control has-checkradio" title="You can enable night vision mode if your room is too dark">
                     <input v-model="data.darkmode" class="is-checkradio has-background-color is-white" id="darkmode" type="checkbox" @click="previewDarkmode">
-                    <label class="label" for="darkmode">Dark mode</label>
+                    <label class="label" for="darkmode">Night vision</label>
                   </div>
                 </div>
                 <div class="field-body">
-                  <div class="control has-checkradio" title="No disponible para jugar en línea">
+                  <div class="control has-checkradio" title="Not available for online playing">
                     <input v-model="data.observe" class="is-checkradio has-background-color is-white" id="observe" type="checkbox">
                     <label class="label" for="observe">Watch mode</label>
                     <!--p class="notification is-warning">
@@ -130,7 +130,7 @@
                   </div>
                 </div>
                 <div class="field-body">
-                  <div class="control has-checkradio" title="Aceptar automáticamente todas las invitaciones para jugar">
+                  <div class="control has-checkradio" title="Automatically accept all incoming game requests">
                     <input v-model="data.autoaccept" class="is-checkradio has-background-color is-white" id="autoaccept" type="checkbox">
                     <label class="label" for="autoaccept">Auto-accept invitations to play</label>
                     <!--p class="notification is-warning">
@@ -227,10 +227,10 @@
         setTimeout(() => {
           if(this.data.strongnotification){
             snackbarBar.classList.add('is-strong')
-            snackbar('default','Notificación gigante',3000)
+            snackbar('default','Giant font-size notification',3000)
           } else {
             snackbarBar.classList.remove('is-strong')
-            snackbar('default','Notificación normal',3000)
+            snackbar('default','Default font-size notificaction',3000)
           }
         },100)
       },
