@@ -330,6 +330,13 @@ new Vue({
     }
   },
   methods: {
+    checkBoardStyle (val) {
+      if (val.indexOf('3d') > -1) {
+        document.querySelector('body').classList.add('is-3d-pieces')
+      } else {
+        document.querySelector('body').classList.remove('is-3d-pieces')
+      }
+    },
     fullscreen() {
       var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
         (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||

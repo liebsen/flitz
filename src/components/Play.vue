@@ -574,6 +574,7 @@
           if(pref.pieces){
             cfg.pieceTheme = '/static/img/chesspieces/' + pref.pieces + '/{piece}.png'
             t.boardColor = pref.board
+            t.$root.checkBoardStyle(pref.pieces)
           }
 
           if(window.innerWidth < 789){

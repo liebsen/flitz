@@ -385,6 +385,7 @@
           if(pref.pieces){
             t.boardCfg.pieceTheme = '/static/img/chesspieces/' + pref.pieces + '/{piece}.png'
             t.boardColor = pref.board
+            t.$root.checkBoardStyle(pref.pieces)
           }
 
           t.board = Chessboard('board', t.boardCfg)
@@ -667,10 +668,16 @@
                       let opponent = 'Stockfish level ' + (this.time.level / 2)
                       let white = this.playerColor==='white' ? this.player.code : opponent
                       let black = this.playerColor==='black' ? this.player.code : opponent
+                      let whiteflag = this.playerColor==='white' ? this.player.flag : ''
+                      let blackflag = this.playerColor==='black' ? this.player.flag : ''
+                      let result = this.playerColor==='white'?'1-0':'0-1'
                       axios.post( this.$root.endpoint + '/save', {
                         white: white,
                         black: black,
+                        whiteflag: whiteflag,
+                        blackflag: blackflag,
                         orientation: this.board.orientation(),
+                        result: result,
                         pgn: this.game.pgn()
                       }).then((response) => {
                         if(response.data.status === 'success'){

@@ -87,6 +87,7 @@
                       <option value="club">Club</option>
                       <option value="neon">Neon</option>
                       <option value="magi">Magi</option>
+                      <option value="3d_staunton">3D Staunton</option>
                     </select>
                   </div>
                 </div>
@@ -165,6 +166,7 @@
     watch: {
       'data.pieces': function (val) {
         this.pieceColor = val
+        this.$root.checkBoardStyle(val)
         this.drawBoard()
       },
       'data.board': function (val) {
@@ -248,6 +250,7 @@
           this.boardCfg.pieceTheme = '/static/img/chesspieces/' + this.data.pieces + '/{piece}.png'
           this.boardColor = this.data.board
           this.pieceColor = this.data.pieces
+          this.$root.checkBoardStyle(this.data.pieces)
         }
 
         this.board = Chessboard('board', this.boardCfg)      
