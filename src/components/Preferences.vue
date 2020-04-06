@@ -88,6 +88,9 @@
                       <option value="neon">Neon</option>
                       <option value="magi">Magi</option>
                       <option value="3d_staunton">3D Staunton</option>
+                      <option value="3d_plastic">3D Plastic</option>
+                      <option value="3d_wood">3D Wood</option>
+                      <option value="3d_chesskid">3D Chess Kid</option>
                     </select>
                   </div>
                 </div>
@@ -260,11 +263,19 @@
         document.querySelector('.square-f1').classList.add('highlight-move')
       },
       submit: function(){
+        this.$root.saving = true
         this.$socket.emit('lobby_leave', this.player)
         this.$socket.emit('lobby_leave', this.data)
-        this.$root.saving = true
         this.data.ref = this.player.code
-        this.$socket.emit('preferences', this.data)  
+        this.$store
+          .dispatch('player', this.data)
+          .then(() => {
+            console.log('🙌 Datos de la aplicación cargados')
+            this.$socket.emit('preferences', this.data)
+            next()        
+          }).catch(err => {
+            console.log(`Algo malo sucedió ` + err)
+          })
         this.saved = {}
       }
     },
