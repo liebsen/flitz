@@ -87,10 +87,11 @@
                       <option value="club">Club</option>
                       <option value="neon">Neon</option>
                       <option value="magi">Magi</option>
-                      <option value="3d_staunton">3D Staunton</option>
-                      <option value="3d_plastic">3D Plastic</option>
-                      <option value="3d_wood">3D Wood</option>
-                      <option value="3d_chesskid">3D Chess Kid</option>
+                      <option value="staunton3d">3D Staunton</option>
+                      <option value="plastic3d">3D Plastic</option>
+                      <option value="wood3d">3D Wood</option>
+                      <option value="chesskid3d">3D Chess Kid</option>
+                      <option value="magi3d">3D Magi</option>
                     </select>
                   </div>
                 </div>
