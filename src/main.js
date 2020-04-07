@@ -196,11 +196,9 @@ new Vue({
         })
     },
     player: function (data) {
-      console.log(data.ref)
-      console.log(data.code)
       if(data.ref === data.code){
         if(data.exists){
-          snackbar('error','Nickname ' + data.code + ' is already in use, plase choose another')
+          snackbar('error',`Nickname ${data.code} is already in use, please choose another`)
           this.$router.push('/preferences')
         } else {
           snackbar('success',`Your nick is ${data.code} now`)
