@@ -10,6 +10,7 @@ import Chess from 'chess.js'
 import Chessboard from '../static/js/chessboard'
 import snackbar from './components/Snackbar';
 import playSound from './components/playSound'
+import { mapState } from 'vuex'
 import '../static/js/fontawesome_all.js'
 
 axios.defaults.baseURL = store.state.endpoint
@@ -55,6 +56,12 @@ new Vue({
         snackbar('error','No internet connection')
       }
     }
+  },
+  computed: {
+    ...mapState([
+      'player',
+      'players'
+    ])
   },
   created () {
     this.documentTitle = document.title 
@@ -225,7 +232,7 @@ new Vue({
     reject: function(data) {
       if(data.asker.code === this.player.code){
         swal.close()
-        swal("Game rejected", data.player + ' rejected your invitation')
+        swal("Game rejected", data.player.code + ' rejected your invitation')
         playSound('defeat.mp3')
       }
     },
@@ -607,8 +614,6 @@ new Vue({
     saving:false,
     processing:false,
     chatlast: null,
-    player:{},
-    players: [],
     matches:[],
     games:[],
     boards:[],
