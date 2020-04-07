@@ -183,8 +183,10 @@
       ])
     },
     mounted: function(){
-      this.data = this.player
-      this.saved = this.player
+      Object.keys(this.player).map(i => {
+        this.data[i] = this.player[i]
+        this.saved[i] = this.player[i]
+      })
       this.$root.saving = false
       setTimeout(() => {
         this.drawBoard()  
@@ -270,11 +272,10 @@
         this.$store
           .dispatch('player', this.data)
           .then(() => {
-            console.log('🙌 Datos de la aplicación cargados')
+            console.log('🙌 Settings updated')
             this.$socket.emit('preferences', this.data)
-            next()        
           }).catch(err => {
-            console.log(`Algo malo sucedió ` + err)
+            console.log(`Something wrong happened: ` + err)
           })
         this.saved = {}
       }

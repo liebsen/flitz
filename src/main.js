@@ -154,8 +154,11 @@ new Vue({
         chatbox.innerHTML+= `<div class="box ${cls}"><strong class="has-text-white">${sender}</strong> ${data.line} <span class="is-size-7">${ts}</span></div>`
         chatbox.scrollTop = chatbox.scrollHeight
         this.chatlast = data.line
-        if(data.sender != this.player.code){
+        if (!owned) {
           playSound('button-pressed.ogg')
+          if (this.$route.name != 'lobby') {
+            snackbar('success', '<strong class="has-text-light">👤 ' + data.sender + '</strong> ' + data.line)
+          }
         }
       }
     },
@@ -193,17 +196,27 @@ new Vue({
         })
     },
     player: function (data) {
-      if(data.ref === this.player.code){
+      console.log(data.ref)
+      console.log(data.code)
+      if(data.ref === data.code){
         if(data.exists){
           snackbar('error','Nickname ' + data.code + ' is already in use, plase choose another')
           this.$router.push('/preferences')
         } else {
-          this.player = data
-          localStorage.setItem('player',JSON.stringify(data))
-          snackbar('success','Your settings were saved')          
-        }
-        this.saving = false
+          snackbar('success',`Your nick is ${data.code} now`)
+          this.$socket.emit('lobby_chat', { 
+            sender: 'chatbot',
+            line: `${data.ref} is now ${data.code}`
+          })
+        } 
+      } else {
+        snackbar('success','Your settings were saved')
+        this.$socket.emit('lobby_chat', { 
+          sender: 'chatbot',
+          line: `${data.code} updated preferences`
+        })
       }
+      this.saving = false
     },
     play: function(data) {
       if(data.asker === this.player.code){
