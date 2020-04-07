@@ -170,11 +170,10 @@
     watch: {
       'data.pieces': function (val) {
         this.pieceColor = val
-        this.$root.checkBoardStyle(val)
         this.drawBoard()
       },
       'data.board': function (val) {
-        this.bordColor = val
+        this.boardColor = val
         this.drawBoard()
       }
     },
@@ -184,10 +183,8 @@
       ])
     },
     mounted: function(){
-      Object.keys(this.player).map(i => {
-        this.data[i] = this.player[i]
-        this.saved[i] = this.player[i]
-      })
+      this.data = this.player
+      this.nick = this.player.code
       this.$root.saving = false
       setTimeout(() => {
         this.drawBoard()  
@@ -269,16 +266,16 @@
         this.$root.saving = true
         this.$socket.emit('lobby_leave', this.player)
         this.$socket.emit('lobby_leave', this.data)
-        this.data.ref = this.player.code
+        this.data.ref = this.nick
         this.$store
           .dispatch('player', this.data)
           .then(() => {
             console.log('🙌 Settings updated')
+            this.nick = this.data.nick
             this.$socket.emit('preferences', this.data)
           }).catch(err => {
             console.log(`Something wrong happened: ` + err)
           })
-        this.saved = {}
       }
     },
     data () {
@@ -288,12 +285,11 @@
           pieceTheme:'/static/img/chesspieces/classic/{piece}.png',
           draggable: false
         },
-        data:{},
-        saved:{},
-        nick:null,
-        boardColor:null,
-        boardEl:null,
-        game:null,
+        data: {},
+        nick: null,
+        boardColor: null,
+        boardEl: null,
+        game: null,
         loading: false
       }
     }

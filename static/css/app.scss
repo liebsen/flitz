@@ -1,4 +1,4 @@
-$menubg: #b21f66;
+$menubg: #666;
 
 html, body {
   height: 100%;
@@ -31,6 +31,10 @@ hr {
   margin-bottom: 0.75rem;
   height: 1px;
   background-color: #d1d1d1;
+}
+
+label {
+  padding-left: 0.25rem;
 }
 
 * { 
@@ -147,7 +151,7 @@ hr {
   right: 0;
   z-index: 90;
   height: 60px;
-  background-color: $menubg;
+  background-color: transparent;
   transition: background-color 0.25 linear;
 
   .menu-text {
@@ -236,7 +240,7 @@ hr {
       transition: stroke-dashoffset 0.5s cubic-bezier(0.25, -0.25, 0.75, 1.25), stroke-dasharray 0.5s cubic-bezier(0.25, -0.25, 0.75, 1.25);
       stroke-width: 40px;
       stroke-linecap: round;
-      stroke: #fff;
+      stroke: #333;
       stroke-dashoffset: 0px;
     }
     path#top,
@@ -316,6 +320,7 @@ hr {
   .menu-links .icon {
     position: relative;
     top: 3px;
+    margin-right: 0.5rem;
   }
 
   .menu-items a.active {
@@ -531,6 +536,10 @@ table {
 
 .has-addons {
   margin-bottom: 1rem;
+}
+
+.has-margin-top {
+  margin-top: 0.25rem;
 }
 
 .is-white-pieces {
@@ -856,7 +865,7 @@ table {
 }
 
 .swal-overlay {
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(255, 255, 255, 0.75);
 }
 
 .swal-title {

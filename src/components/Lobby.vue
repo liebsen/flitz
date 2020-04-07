@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="columns">
-        <div class="column is-lobby-list is-3" :class="{ 'no-players': players.length < 2 }">
+        <div v-if="players" class="column is-lobby-list is-3" :class="{ 'no-players': players.length < 2 }">
           <div v-if="players.length > 1">
             <div v-for="plyer in players" class="field">
               <a v-if="!plyer.observe && plyer.code != player.code" @click="play(plyer)" :title="'Invitar a ' + plyer.code">
