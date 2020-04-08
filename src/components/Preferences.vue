@@ -264,8 +264,7 @@
       },
       submit: function(){
         this.$root.saving = true
-        this.$socket.emit('lobby_leave', this.player)
-        this.$socket.emit('lobby_leave', this.data)
+        this.$socket.emit('lobby_leave', {code: this.nick})
         this.data.ref = this.nick
         this.$store
           .dispatch('player', this.data)
