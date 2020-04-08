@@ -76,7 +76,7 @@ export default new Vuex.Store({
     },
     player ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        const stored = data ? data : (JSON.parse(localStorage.getItem('player')) || {})
+        const stored = data || JSON.parse(localStorage.getItem('player')) || {}
         if(Object.keys(stored).length && stored.flag){
           if(stored.darkmode){
             document.documentElement.classList.add('dark-mode')
@@ -85,8 +85,10 @@ export default new Vuex.Store({
           commit('player_success', stored)
           resolve(stored)
         } else {
+          const id = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
           const code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
           var preferences = { 
+            id: id,
             code: code,
             flag: '🇷🇪',
             country: '🇷🇪',

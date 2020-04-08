@@ -203,25 +203,25 @@ new Vue({
         })
     },
     player: function (data) {
-      if(data.ref === data.code){
+      if(data.id === this.player.id){
         if(data.exists){
-          snackbar('error',`Nickname ${data.code} is already in use, please choose another`)
+          snackbar('error',`El nombre ${data.code} ya está en uso, por favor elige otro`)
           this.$router.push('/preferences')
         } else {
-          snackbar('success',`Your nick is ${data.code} now`)
+          snackbar('success',`Ahora eres ${data.code}`)
           this.$socket.emit('lobby_chat', { 
             sender: 'chatbot',
-            line: `${data.ref} is now ${data.code}`
+            line: `${data.ref} ahora es ${data.code}`
           })
-        } 
+        }        
       } else {
-        snackbar('success','Your settings were saved')
+        snackbar('default',`${data.code} actualizó sus preferencias`)
         this.$socket.emit('lobby_chat', { 
           sender: 'chatbot',
-          line: `${data.code} updated preferences`
+          line: `${data.code} actualizó sus preferencias`
         })
       }
-      this.saving = false
+      this.$root.saving = false
     },
     play: function(data) {
       if(data.asker === this.player.code){
