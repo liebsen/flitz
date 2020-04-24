@@ -1,4 +1,4 @@
-$menubg: #666;
+$menubg: #777;
 
 html, body {
   height: 100%;
@@ -46,10 +46,29 @@ label {
   border-width: 0.25rem!important;
 }
 
+.is-margin-right {
+  margin-right: 0.5rem;
+}
+
 .buttons.has-addons {
   justify-content: center;
-  .button:not(:last-child) {
-    margin-right: -2px;
+  .button {
+    box-shadow: 0px 10px 20px #00000015;
+    min-width: 2.75rem;
+    border-color: transparent;
+    &:hover {
+      border-color: #48c774;
+    }
+    &:focus {
+      border-color: #48c774;
+    }
+    &.has-background-success {
+      color: white;
+      font-weight: 800;
+    }
+    &:not(:last-child) {
+      margin-right: -2px;
+    }
   }
 }
 
@@ -67,6 +86,10 @@ label {
 
 .select:not(.is-multiple):not(.is-loading)::after {
   border-color: #dbdbdb!important
+}
+
+.select select {
+  border-radius: 35px;
 }
 
 .is-flex-centered {
@@ -89,6 +112,9 @@ label {
   color: #00e676!important;
 }
 
+.has-margin-top {
+  margin-top: 0.25rem;
+}
 .dialog-invite {
   div {
     text-align: left;
@@ -97,6 +123,22 @@ label {
       display: inline-block;
       min-width: 100px;
     }
+  }
+}
+
+.tabs.is-marginless {
+  ul {
+    margin-right: 2rem;
+  }
+  .is-boxed {
+    a {
+      border-radius: 10px 10px 0 0;
+    }
+  }
+}
+.board-assistant {
+  .tabs.is-boxed li.is-active a {
+    background-color: #edebe9;
   }
 }
 /* spinner */
@@ -151,7 +193,7 @@ label {
   right: 0;
   z-index: 90;
   height: 60px;
-  background-color: transparent;
+  background-color: #edebe9;
   transition: background-color 0.25 linear;
 
   .menu-text {
@@ -172,7 +214,7 @@ label {
 
   .menu-container {
     position: relative;
-    max-width: 960px;
+    max-width: 1080px;
     height: 60px;
     margin: 0 auto;
     margin-bottom: 0 !important;
@@ -392,6 +434,16 @@ label {
   font-size: 3.5rem;
 }
 
+.is-group-edit {
+  h4 {
+    margin-top: 1.25rem;
+    margin-bottom: 0;
+  }
+  .groupcode {
+    max-width: 180px;
+  }
+}
+
 .legal-footer {
   position: fixed;
   bottom: 0;
@@ -510,7 +562,6 @@ table {
   }
 }
 
-
 /*
 .field-body {
   padding-bottom: 0.25rem;
@@ -518,28 +569,53 @@ table {
   padding-left: 0.25rem;
 }*/
 
-.chatbox {
-  height: 270px;
-  width: 100%;
+.chatbox-container {
+  border-radius: 4px;
+  height: 300px;
+  position: relative;
   overflow-y: auto;
+  overflow-x: hidden;
+  .chatbox {
+    position: static;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    .chatline {
+      clear: both;
+      .chatbubble {
+        border-radius: 5px;
+        margin-bottom: 0.5rem;
+        line-height: 1.25rem;
+        padding: 0.25rem 0.5rem;
+      }
+    }
+  }
+}
+
+
+/*.chatbox {
+  height: 205px;
+  width: 100%;
   margin-top: 1.25rem;
+  overflow-y: auto;
   .box {
     clear: both;
     padding: 0.25rem 0.75rem;
     margin-bottom: 0.25rem;
   }
-}
+}*/
 
 .is-clickable {
   cursor: pointer;
 }
 
-.has-addons {
-  margin-bottom: 1rem;
+.is-padded {
+  padding: 1.5rem;
 }
 
-.has-margin-top {
-  margin-top: 0.25rem;
+
+.has-addons {
+  margin-bottom: 1rem;
 }
 
 .is-white-pieces {
@@ -865,7 +941,11 @@ table {
 }
 
 .swal-overlay {
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: rgba(200, 200, 200, 0.5);
+}
+
+.swal-button:focus {
+  box-shadow: none;
 }
 
 .swal-title {
@@ -923,23 +1003,36 @@ table {
  }
 }
 
+
 @media screen and (min-width: 759px) {
-  .is-lobby-list {
-    max-width: 260px;
-    &.no-players {
+  .no-players {
+
+    .is-lobby-list {
+      max-width: 260px;
       opacity: 0.25;
       background-image: url('/static/img/monograma.png');
       background-position: center;
       background-repeat: no-repeat;
       background-size: 100%;
     }
-    .field {
-      margin-bottom: 0.25rem;
+
+    .chatbox {
+      filter: contrast(150%) brightness(125%);
+      background-image: url('/static/img/chat_bg.jpg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
     }
   }
+  
+  .field {
+    margin-bottom: 0.25rem;
+  }
+  
   .swal-modal {
     border-radius: 25px;
   }
+
   .box {
     border-radius: 25px;
   }
@@ -953,6 +1046,14 @@ table {
  }
 }
 
+@media screen and (min-width: 768px), print {
+  .swal-modal {
+    &.is-wide {
+      width: 90%;
+      max-width: 750px;
+    }
+  }
+}
 @media screen and (min-width: 1440px), print {
   .chatbox {
     min-height: 50vh;

@@ -5,19 +5,22 @@
         <div class="column is-hidden-mobile"></div>
         <div class="column is-8 has-text-centered">
           <div class="content is-hidden-mobile">
-            <h1 class="has-text-white"></a>Play online chess</h1>
+            <h1 class="has-text-white"></a>Estudia, entrena y gana</h1>
             <h6></h6>
           </div>
           <div class="content is-hidden-tablet">
-            <h2 class="has-text-white"></a>Play online chess</h2>
+            <h2 class="has-text-white"></a>Estudia, entrena y gana</h2>
             <h6></h6>
           </div>
           <div class="has-text-centered">
             <form id="search" class="has-text-centered" @submit.prevent="submit">
-              <label class="label"><span v-html="eco.name" class="has-text-light"></span></label>
+              <label v-if="group.games" class="label">
+                <span v-html="`Match a ${group.games} - ${group.minutes}'+${group.compensation}`" class="has-text-light">
+                </span>
+              </label>
               <div class="field has-addons is-hidden-mobile is-flex-centered">
                 <div class="control">
-                  <input v-model="query" class="input is-medium is-white is-rounded" name="query" type="text" placeholder="Event, player or PGN" autofocus>
+                  <input v-model="query" class="input is-medium is-white is-rounded" name="query" type="text" placeholder="Buscar en grupos" autofocus>
                 </div>
                 <div class="control">
                   <button type="submit" id="searchbtn" class="button is-medium is-rounded is-white">
@@ -29,7 +32,7 @@
               </div>
               <div class="field has-addons is-hidden-tablet is-flex-centered">
                 <div class="control">
-                  <input v-model="query" class="input is-rounded" name="query" type="text" placeholder="Event, player or PGN" autofocus>
+                  <input v-model="query" class="input is-rounded" name="query" type="text" placeholder="Evento, jugador o PGN" autofocus>
                 </div>
                 <div class="control">
                   <button type="submit" id="searchbtn" class="button is-rounded is-white">
@@ -42,17 +45,17 @@
             </form>     
           </div>       
           <div class="has-text-centered">
-            <h4 class="has-text-white">Play against</h4>
+            <h4 class="has-text-white">Jugar contra</h4>
             <h6>&nbsp;</h6>
           </div>
           <div class="columns is-vcentered has-text-centered is-hidden-mobile">
             <div class="column has-text-right">
-              <router-link class="button is-rounded is-medium is-success" to="/lobby">
+              <a @click="$root.play" class="button is-rounded is-medium is-success">
                 <span class="icon">
-                  <span class="fas fa-user-circle"></span>
+                  <span class="fas fa-handshake"></span>
                 </span> 
-                <span>Human</span>
-              </router-link>    
+                <span>Humano</span>
+              </a>
             </div>
             <div class="column has-text-left">
               <router-link class="button is-rounded is-medium is-info" to="/stockfish">
@@ -65,12 +68,12 @@
           </div>
           <div class="columns is-vcentered has-text-centered is-hidden-tablet">
             <div class="column">
-              <router-link class="button is-rounded is-success" to="/lobby">
+              <a @click="$root.play" class="button is-rounded is-success">
                 <span class="icon">
-                  <span class="fas fa-user-circle"></span>
+                  <span class="fas fa-layer-group"></span>
                 </span> 
-                <span>Human</span>
-              </router-link>    
+                <span>Humano</span>
+              </a>
             </div>
             <div class="column">
               <router-link class="button is-rounded is-info" to="/stockfish">
@@ -111,6 +114,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'landing',
   mounted: function() {
+    var t = this
     const saved = JSON.parse(localStorage.getItem('player'))
     const board = document.querySelector('.fakeboard')
 
@@ -122,10 +126,10 @@ export default {
       }
     }
 
-    axios.post(this.$root.endpoint + '/eco/pgn/random', {}).then((res) => {
-      if(res.data.pgn){
-        this.eco = res.data
-        this.query = res.data.pgn
+    axios.post('/group/random').then((res) => {
+      if(res.data.status === 'success'){
+        t.group = res.data.data
+        t.query = res.data.data.code
       }
     })
     
@@ -142,16 +146,16 @@ export default {
     ])
   },
   methods: {
-    submit: function(){
-      this.$router.push('/results?q=' + this.query)
+    submit: function() {
+      this.$router.push('/groups?q=' + this.query)
     }
   },
   data () {
     return {
-      query: null,
-      eco: {
-        name: '...'
-      },
+      query: '',
+      group: {
+        code: '...'
+      }
     }
   }
 }

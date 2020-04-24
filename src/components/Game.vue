@@ -39,8 +39,8 @@
           <div class="column">
             <div class="board-assistant" v-if="Object.keys(data).length">
               <div class="columns has-text-centered">
-                <div class="column has-text-left">
-                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Flip board">
+                <div class="column">
+                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Girar tablero">
                     <span class="icon">
                       <span class="fa fa-retweet"></span>
                     </span>
@@ -192,7 +192,7 @@
       },
       findEco: function(pgn){
         let t = this
-        axios.post( this.$root.endpoint + '/eco/pgn', {pgn:pgn} ).then((res) => {
+        axios.post('/eco/pgn', {pgn:pgn} ).then((res) => {
           if(res.data.eco){
             t.opening = res.data.name
             t.ecode = res.data.eco
@@ -240,7 +240,7 @@
   </div>
 </div>`)
         swal({
-          title: 'Copy PGN',
+          title: 'Copiar PGN',
           content: {
             element: 'div',
             attributes: {
@@ -291,7 +291,7 @@
       gameStart: function(){
         const pref = JSON.parse(localStorage.getItem('player'))||{}
         this.boardEl = document.getElementById('board')
-        axios.post( this.$root.endpoint + '/game', {id:this.$route.params.game} ).then((res) => {
+        axios.post('/game', {id:this.$route.params.game} ).then((res) => {
           if(!Object.keys(res.data).length) return location.href="/404"
           var game = res.data
           const totalms = this.$root.countMoves(game.pgn) * this.speed
@@ -325,10 +325,12 @@
 
             const offset = 150
             setTimeout(() => {
-              document.querySelector('.movesTableContainer').style.height = ($('.board').height() - offset) + 'px'
-              setTimeout(() => {
-                this.gameMove()
-              }, 1000)
+              if (document.querySelector('.movesTableContainer')) {
+                document.querySelector('.movesTableContainer').style.height = ($('.board').height() - offset) + 'px'
+                setTimeout(() => {
+                  this.gameMove()
+                }, 1000)
+              }
             }, 500)
           },2000)
 
@@ -472,11 +474,10 @@
         }
       },
       gameFlip: function(){
-        const white = document.querySelector('.board-container .white').innerHTML
-        const black = document.querySelector('.board-container .black').innerHTML
-
         this.board.flip()
         this.orientation = this.board.orientation()
+        const white = document.querySelector('.board-container .white').innerHTML
+        const black = document.querySelector('.board-container .black').innerHTML
         document.querySelector('.board-container .white').innerHTML = black
         document.querySelector('.board-container .black').innerHTML = white
         this.highlightLastMove()
@@ -564,6 +565,7 @@
           content: {
             element: 'input',
             attributes: {
+              className: 'input is-rounded',
               placeholder: "Valor en milisegundos",
               value: this.speed
             }

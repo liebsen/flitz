@@ -4,7 +4,7 @@
       <div class="columns-centered fadeIn">
         <div class="columns columns-bottom is-flex has-text-centered">
           <div class="column">
-            <h3>Play against Stockfish</h3>
+            <h3>Jugar contra Stockfish</h3>
             <div class="control">
               <div class="buttons levels has-addons preservefilter">
                 <button class="button is-rounded is-large is-white-pieces" @click="setPlayerColor('white')" :class="{'has-background-success' : selectedColor==='white'}"></button>
@@ -16,23 +16,23 @@
         </div>
         <div class="columns is-flex has-text-centered">
           <div class="column">
-            <h4>Level</h4>
+            <h4>Nivel</h4>
             <div class="control has-text-centered column">
               <div class="buttons levels has-addons">
                 <button class="button is-rounded" @click="gameStart(0)">
-                  <span>Child</span>
+                  <span>Niño</span>
                 </button>
-                <button class="button is-rounded" @click="gameStart(4)">
-                  <span>Rookie</span>
+                <button class="button" @click="gameStart(4)">
+                  <span>Novato</span>
                 </button>
                 <button class="button" @click="gameStart(8)">
-                  <span>Beginner</span>
+                  <span>Principiante</span>
                 </button>
                 <button class="button" @click="gameStart(12)">
-                  <span>Intermediate</span>
+                  <span>Intermedio</span>
                 </button>
                 <button class="button" @click="gameStart(16)">
-                  <span>Advanced</span>
+                  <span>Avanzado</span>
                 </button>
                 <button class="button is-rounded" @click="gameStart(20)">
                   <span>GM</span>
@@ -51,7 +51,7 @@
               <span v-show="data.result==='0-1'">🏆</span>
               <span>Stockfish</span> 
               <span>
-                <span>level</span> 
+                <span>nivel</span> 
                 <span v-html="time.level / 2"></span>
               </span>
               <span class="button is-small thinking" :class="{'is-loading' : thinking}"></span>
@@ -64,6 +64,9 @@
             </div>
             <h6 class="has-text-right white is-hidden-mobile">
               <span v-show="data.result==='1-0'">🏆</span>
+              <span class="icon">
+                <span v-html="player.flag"/>
+              </span>
               <span v-html="player.code"></span> 
             </h6>
           </div>
@@ -136,7 +139,6 @@
   </div>
 </template>
 
-
 <script>
   import axios from 'axios'
   import { mapState } from 'vuex'
@@ -150,7 +152,7 @@
     name: 'stockfish',
     mounted: function(){
       window.app = this
-      const saved = JSON.parse(localStorage.getItem('player'))
+      // const saved = JSON.parse(localStorage.getItem('player'))
 
       document.getElementById('board').addEventListener("wheel", event => {
         this.gamePos(Math.sign(event.deltaY)<0?this.index+1:this.index-1)
@@ -168,7 +170,7 @@
       pieces.forEach(tag => {
         let e = document.querySelector(tag)
         let li = window.getComputedStyle(e);
-        e.style.backgroundImage = li.getPropertyValue('background-image').split('classic').join(saved.pieces)
+        e.style.backgroundImage = li.getPropertyValue('background-image').split('classic').join(this.player.pieces)
       })
     },
     computed: {
@@ -195,9 +197,9 @@
       askForRematch: function() {
         var t = this
         swal({
-          title: 'Restart game',
-          text: 'Want to restart the game?',
-          buttons: ["Cancel", "Yes"]
+          title: 'Reiniciar partida',
+          text: '¿Querés reiniciar esta partida?',
+          buttons: ["No", "Sí"]
         })
         .then(accept => {
           if (accept) {
@@ -222,7 +224,7 @@
   </div>
 </div>`)
         swal({
-          title: 'Copy PGN',
+          title: 'Copiar PGN',
           content: {
             element: 'div',
             attributes: {
@@ -368,7 +370,7 @@
               t.stockfishMoved = true
               t.prepareMove()
             },t.ucitime * 3)
-          }
+          } 
         }
         
         t.uciCmd('uci')
@@ -382,6 +384,7 @@
           if(window.innerWidth < 789){
             t.boardCfg.draggable = false 
           }
+
           if(pref.pieces){
             t.boardCfg.pieceTheme = '/static/img/chesspieces/' + pref.pieces + '/{piece}.png'
             t.boardColor = pref.board
@@ -393,13 +396,16 @@
 
           if(t.playerColor==='white'){
             t.data.white = t.player.code
+            t.data.whiteflag = t.player.flag
             t.data.black = 'Stockfish'
           } else {
             t.data.white = 'Stockfish'
+            t.data.blackflag = t.player.flag
             t.data.black = t.player.code
           }
 
           // resize event handling
+
           $(window).resize(() => {
             t.$root.fullscreenBoard()
             t.board.resize()
@@ -617,18 +623,10 @@
         var t = this
         if(t.game.game_over()){
           if(t.game.in_draw() || t.game.in_stalemate() || t.game.in_threefold_repetition()){
-
-            var draw = 'Draw'
-            if(t.game.in_stalemate()){
-              draw = 'Draw by stalemate'
-            } else if(t.game.in_threefold_repetition()){
-              draw = 'Draw by threefold repetition'
-            } 
-
             swal({
-              title: draw,
-              text: 'Want a rematch?',
-              buttons: ["Cancel", "Yes"]
+              title: "Esta partida finalizó en tablas",
+              text: '¿Querés la revancha?',
+              buttons: ["No", "Sí"]
             }).then(accept => {
               if (accept) {
                 t.gameRestart()
@@ -640,9 +638,9 @@
             setTimeout(() => {
               if(t.game.turn() === t.playerColor[0]){
                 swal({
-                  title: "Stockfish won",
-                  text: 'Want a rematch?',
-                  buttons: ["Cancel", "Yes"]
+                  title: "Stockfish ganó esta partida",
+                  text: '¿Querés la revancha?',
+                  buttons: ["No", "Sí"]
                 })
                 .then(accept => {
                   if (accept) {
@@ -652,38 +650,45 @@
                   }
                 })
               } else {
-                swal('Win! You defeated Stockfish.', {
+                swal('¡Felicitaciones! Venciste a Stockfish', {
                   buttons: {
-                    cancel: 'Cancel',
+                    cancel: 'Cancelar',
                     catch: {
-                      text: 'Play again',
+                      text: 'Jugar de nuevo',
                       value: 'catch',
                     },
-                    defeat: 'Save this game',
+                    defeat: 'Guardar partida',
                   },
                 }).then((value) => {
                   switch (value) {
                  
                     case "defeat":
-                      let opponent = 'Stockfish level ' + (this.time.level / 2)
+                      let opponent = 'Stockfish nivel ' + (this.time.level / 2)
                       let white = this.playerColor==='white' ? this.player.code : opponent
                       let black = this.playerColor==='black' ? this.player.code : opponent
                       let whiteflag = this.playerColor==='white' ? this.player.flag : ''
                       let blackflag = this.playerColor==='black' ? this.player.flag : ''
                       let result = this.playerColor==='white'?'1-0':'0-1'
-                      axios.post( this.$root.endpoint + '/save', {
+                      let game = {
+                        event: 'Jugá contra Stockfish',
                         white: white,
                         black: black,
                         whiteflag: whiteflag,
                         blackflag: blackflag,
-                        orientation: this.board.orientation(),
                         result: result,
+                        score: this.chart.values,
+                        eco: this.ecode,
+                        opening: this.opening,
+                        orientation: this.board.orientation(),
                         pgn: this.game.pgn()
-                      }).then((response) => {
-                        if(response.data.status === 'success'){
-                          swal("Saved", 'This game was successfully stored')
+                      }
+
+                      axios.post('/game/save', game).then((res) => {
+                        if (res.data.status === 'success') {
+                          this.$store.dispatch('games', res.data)
+                          swal("Guardado", 'La partida se guardó correctamente')
                         } else {
-                          snackbar('danger','The game could not be saved')
+                          snackbar('danger','La partida no pudo ser guardada')
                         }        
                       })
                       break;
@@ -725,7 +730,7 @@
       },
       findEco: function(pgn){
         let t = this
-        axios.post( this.$root.endpoint + '/eco/pgn', {pgn:pgn} ).then((res) => {
+        axios.post('/eco/pgn', {pgn:pgn} ).then((res) => {
           if(res.data.eco){
             t.opening = res.data.name
             t.ecode = res.data.eco

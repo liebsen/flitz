@@ -1,11 +1,11 @@
 <template>
   <div class="container is-widescreen">
-    <div class="content column">
+    <div class="content column fadeIn">
       <h3>
         <span class="icon">
           <span class="fas fa-book"></span>
         </span> 
-        <span>ECO Openings</span>
+        <span>Aperturas</span>
       </h3>
       <form @submit.prevent="submit">
         <div class="field has-addons">
@@ -31,7 +31,7 @@
           <thead>
             <th></th>
             <th>ECO</th>
-            <th>Name</th>
+            <th>Nombre</th>
             <th>Plys</th>
           </thead>
           <tbody>
@@ -60,7 +60,7 @@
     <nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">
       <ul class="pagination-list">
         <li v-for="(page, index) in pages">
-          <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Go to page ' + parseInt(page / limit + 1)"></router-link>
+          <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Ir a página ' + parseInt(page / limit + 1)"></router-link>
         </li>
       </ul>
     </nav> 
@@ -105,25 +105,25 @@
       },
       search: function() {
         this.$root.loading = true
-        axios.post( this.$root.endpoint + '/eco/search', {query:this.query,offset:this.offset,limit:this.limit} ).then((res) => {
+        axios.post('/eco/search', {query:this.query,offset:this.offset,limit:this.limit} ).then((res) => {
           this.data = res.data
-
           var pages = []
           if(res.data.error){
             if(res.data.error==='not_enough_params'){
-              snackbar('info','Search for name or PGN', 15000);  
+              snackbar('info','Ingresá una palabra clave para ver aperturas. Podés buscar por nombre o PGN.', 15000);  
             }
           } else {
             if(res.data.count===0){
-              snackbar('danger','No ECO opening found', 5000);
+              snackbar('danger','No hay aperturas que coincidan con tu palabra clave.', 5000);
             } else {
               var numPages = Math.ceil(res.data.count/this.limit)
               for(var i=0;i< numPages;i++){
                 pages[i] = i*this.limit
               }
-              snackbar('success','We found ' + this.data.count  +  ' opening' + (this.data.count>1?'s':'')  + '. Showing results from ' + (this.offset + 1) + ' to ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit ), 5000);
+              snackbar('success','Se econtraron ' + this.data.count  +  ' apertura' + (this.data.count>1?'s':'')  + '. Mostrando resultados de ' + (this.offset + 1) + ' a ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit ), 5000);
             }
           }
+
           let max = 20
           
           if (pages.length > max) {
@@ -140,10 +140,7 @@
     },
     data () {
       return {
-        data:{
-          count:0,
-          games:[]
-        },
+        data:{count:0,games:[]},
         pages:{},
         query:'',
         limit:10,

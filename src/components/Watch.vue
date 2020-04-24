@@ -11,7 +11,7 @@
                 </span>
                 <span v-html="data.black" class="is-size-6"></span>
               </h6>
-              <div class="board preservefilter">
+              <div class="board preservefilter" :class="{ 'black' : orientation === 'black' }">
                 <div class="score-container">
                   <div class="score" :style="'max-height:' + vscore + '%'"></div>
                 </div>            
@@ -65,7 +65,7 @@
               </div>
               <div class="columns has-text-centered">
                 <div class="column has-text-left preservefilter">
-                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Flip board">
+                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Girar tablero">
                     <span class="icon">
                       <span class="fa fa-retweet"></span>
                     </span>
@@ -122,6 +122,7 @@
 <script>
 
   import axios from 'axios'
+  import { mapState } from 'vuex'
   import Chess from 'chess.js'
   import Chessboard from '../../static/js/chessboard'
   import snackbar from '../components/Snackbar'
@@ -265,15 +266,15 @@
         if(t.game.game_over()){
           if(t.game.in_draw() || t.game.in_stalemate() || t.game.in_threefold_repetition()) {
             if(t.game.in_stalemate()){
-              swal("Draw", 'This game ended in a draw by stalemate', "info")
+              swal("Tablas", 'Esta partida finalizó en tablas por rey ahogado', "info")
             } else if(t.game.in_threefold_repetition()){
-              swal("Draw", 'This game ended in a draw by threefold repetition', "info")
+              swal("Tablas", 'Esta partida finalizó en tablas por triple repetición', "info")
             } else {
-              swal("Draw", 'This game ended in a draw', "info")
+              swal("Tablas", 'Esta partida finalizó en tablas', "info")
             }
           } else {          
             const winner = t.game.turn() === 'w' ? t.data.black : t.data.white
-            swal(winner + ' won this game', "success")
+            swal("¡Victoria!", winner + ' ganó esta partida', "success")
           }
           
           sound = 'game-end.mp3'
@@ -315,7 +316,7 @@
       },
       findEco: function(pgn){
         let t = this
-        axios.post( this.$root.endpoint + '/eco', {pgn:pgn} ).then((res) => {
+        axios.post('/eco', {pgn:pgn} ).then((res) => {
           if(res.data.eco){
             t.opening = res.data.name
             t.ecode = res.data.eco
@@ -390,7 +391,7 @@
   </div>
 </div>`)
         swal({
-          title: 'Copy PGN',
+          title: 'Copiar PGN',
           content: {
             element: 'div',
             attributes: {
@@ -402,7 +403,7 @@
       gameStart: function(){
         this.$root.loading = true
         const pref = JSON.parse(localStorage.getItem('player'))||{}
-        axios.post( this.$root.endpoint + '/game', {id:this.$route.params.game} ).then((res) => {
+        axios.post('/game', {id:this.$route.params.game} ).then((res) => {
           if(!Object.keys(res.data).length) return location.href="/404"
           var game = res.data
 
@@ -517,7 +518,7 @@
           if(!isNaN(this.selectedIndex) && !this.paused) {
             this.gamePause()
           }
-        },10)
+        }, 10)
       },
       gamePos:function(pos){
         if(pos > this.gameMoves.length){

@@ -5,13 +5,13 @@
         <span class="icon">
           <span class="fas fa-fire"></span> 
         </span>
-        <span>Live</span>
+        <span>En vivo</span>
       </h3>
       <form @submit.prevent="submit">
         <label class="label"><span v-html="eco.name" class="has-text-grey"></span></label>
         <div class="field has-addons">
           <div class="control">
-            <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" placeholder="Event, site, date, player or PGN" autofocus>
+            <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" placeholder="Evento, lugar, fecha, jugador o PGN" autofocus>
           </div>
           <div class="control">
             <button v-show="query.length" type="button" @click="clear" class="button is-rounded is-danger">
@@ -30,10 +30,10 @@
       <div v-if="Object.keys(data).length" class="has-text-left">
         <table class="table">
           <thead>
-            <th>Table</th>
-            <th>Event</th>
-            <th>White</th>
-            <th>Black</th>
+            <th>Mesa</th>
+            <th>Evento</th>
+            <th>Blancas</th>
+            <th>Negras</th>
             <th>Plys</th>
           </thead>
           <tbody>
@@ -67,7 +67,7 @@
       <a class="pagination-next">Next page</a-->
       <ul class="pagination-list">
         <li v-for="(page, index) in pages">
-          <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Go to page ' + parseInt(page / limit + 1)"></router-link>
+          <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Ir a página ' + parseInt(page / limit + 1)"></router-link>
         </li>
       </ul>
     </nav>     
@@ -75,7 +75,6 @@
 </template>
 
 <script>
-
   import axios from 'axios'
   import { mapState } from 'vuex'
   import snackbar from '../components/Snackbar';
@@ -111,27 +110,27 @@
         this.search()
       },
       search: function() {
-        var t = this
         this.$root.loading = true
-        axios.post( this.$root.endpoint + '/online', {query:this.query,offset:this.offset,limit:this.limit} ).then((res) => {
+        axios.post('/online', {query:this.query,offset:this.offset,limit:this.limit} ).then((res) => {
           this.data = res.data
 
           var pages = []
           if(res.data.error){
             if(res.data.error==='not_enough_params'){
-              snackbar('info','Search for event, site, player or PGN.', 15000);  
+              snackbar('info','Ingresá una palabra clave para ver partidas. Podés buscar por evento, lugar, jugador o PGN.', 15000);  
             }
           } else {
             if(res.data.count===0){
-              snackbar('danger','No games found', 5000);
+              snackbar('warning','No hay partidas en vivo', 5000);
             } else {
               var numPages = Math.ceil(res.data.count/this.limit)
               for(var i=0;i< numPages;i++){
                 pages[i] = i*this.limit
               }
-              snackbar('success','We found ' + this.data.count  +  ' game' + (this.data.count>1?'s':'')  + '. Showing results from ' + (this.offset + 1) + ' to ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit ), 5000);
+              snackbar('success','Se econtraron ' + this.data.count  +  ' partida' + (this.data.count>1?'s':'')  + '. Mostrando resultados de ' + (this.offset + 1) + ' a ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit ), 5000);
             }
           }
+
           let max = 20
           
           if (pages.length > max) {
@@ -155,7 +154,7 @@
       return {
         data:{},
         pages:{},
-        eco: {},
+        eco:{},
         query:'',
         limit:10,
         offset:0

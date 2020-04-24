@@ -10,11 +10,6 @@
         <div class="columns is-marginless-top fadeIn">
           <div class="column">
             <div class="board-container">
-              <h6 class="black has-text-left">
-                <span class="is-size-6">
-                  <span>&nbsp;</span> 
-                </span>
-              </h6>
               <div class="board preservefilter">
                 <div class="score-container">
                   <div class="score" :style="'max-height:' + vscore + '%'"></div>
@@ -27,7 +22,7 @@
             <div class="board-assistant" v-if="Object.keys(data).length">
               <div class="columns has-text-centered">
                 <div class="column preservefilter">
-                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Flip board">
+                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Girar tablero">
                     <span class="icon">
                       <span class="fa fa-retweet"></span>
                     </span>
@@ -284,7 +279,7 @@
   </div>
 </div>`)
         swal({
-          title: 'Copy PGN',
+          title: 'Copiar PGN',
           content: {
             element: 'div',
             attributes: {
@@ -299,7 +294,7 @@
       },    
       gameStart: function(){
         this.$root.loading = true
-        axios.post( this.$root.endpoint + '/eco/search', {
+        axios.post('/eco/search', {
           query:this.$route.params.name,
           limit:1,
           offset:0
@@ -308,7 +303,6 @@
           var game = res.data.games[0]
           const pref = JSON.parse(localStorage.getItem('player'))||{}
           const totalms = this.$root.countMoves(game.pgn) * this.speed
-
           this.gameMoves = this.gamePGN(game.pgn)
           this.pgnIndex = this.gamePGNIndex(game.pgn)
           this.data = game
@@ -467,11 +461,11 @@
       },
       setClock : function(){
         this.gamePause()
-        swal("Enter milliseconds between 1000/60000", {
+        swal("Ingresa el intervalo en milisegundos entre 1000/60000", {
           content: {
             element: 'input',
             attributes: {
-              placeholder: "milliseconds",
+              placeholder: "Valor en milisegundos",
               value: this.speed
             }
           },
@@ -481,7 +475,7 @@
           if(speed){
             speed = parseInt(speed)
             if(speed > 60000 || speed < 1000){
-              swal('Value should be between 1000 / 60000')
+              swal('El valor debe ser entre 1000 / 60000')
             } else {
               this.speed = speed
               localStorage.setItem('speed',speed)

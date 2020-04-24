@@ -1,7 +1,12 @@
 <template>
   <div :class="boardColor">
     <div class="status" v-show="!gameStarted">
-      <span class="button is-rounded is-info is-small"><strong>Waiting for opponents...</strong></span>
+      <span class="button is-rounded is-info is-small">
+        <span class="icon">
+          <span class="fas fa-clock">
+          </span>
+        </span>
+      </span>
     </div>  
     <div class="game-container" v-show="!$root.loading">
       <div class="container is-widescreen">
@@ -69,11 +74,11 @@
               <div class="board-assistant">
                 <div class="columns has-text-centered">
                   <div class="column preservefilter">
-                    <button @click="inviteRematch()" class="button is-small is-rounded is-danger" v-show="announced_game_over" title="Rematch">
+                    <!--button @click="inviteRematch()" class="button is-small is-rounded is-danger" v-show="announced_game_over" title="Rematch">
                       <span class="icon has-text-white">
-                        <span class="fas fa-chess-pawn"></span>
+                        <span class="fas fa-chess-knight"></span>
                       </span>
-                    </button>
+                    </button-->
                     <button @click="gameCapitulate()" class="button is-small is-rounded is-danger" v-show="pgnIndex.length && !announced_game_over" title="Abandonar partida">
                       <span class="icon has-text-white">
                         <span class="fas fa-flag"></span>
@@ -84,14 +89,14 @@
                         <span class="fas fa-handshake"></span>
                       </span>
                     </button>
-                    <button @click="showLiveURL()" class="button is-small is-rounded is-info" v-show="pgnIndex.length && !announced_game_over" title="Mostrar URL de transmisión">
+                    <!--button @click="showLiveURL()" class="button is-small is-rounded is-info" v-show="pgnIndex.length && !announced_game_over" title="Mostrar URL de transmisión">
                       <span class="icon has-text-white">
                         <span class="fas fa-user-astronaut"></span>
                       </span>
                     </button>
                     <button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length && announced_game_over" title="Mostrar PGN">
                       <strong>PGN</strong>
-                    </button>
+                    </button-->
                   </div>
                 </div> 
                 <div class="columns is-hidden-mobile preservefilter">
@@ -131,30 +136,40 @@
                   </div>
                 </div>
 
+                <!--div class="columns has-text-centered">
+                  <pre v-html="scoreChart"/>  ½
+                  <div class="column">
+                    <table class="table">
+                      <tr v-for="(row, i) in scoreChart" :key="i">
+                        <td>{{row.player}}</td>
+                        <td v-for="(item, j) in row.partials" :key="j">{{item}}</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div-->
+
                 <div class="columns has-text-centered">
                   <div class="column">
                     <strong v-html="ecode" class=""></strong> 
                     <span v-html="opening" class="has-text-black"></span>
                   </div>
                 </div>
-                <div class="tabs is-centered is-boxed is-hidden-mobile">
+                <div class="tabs is-boxed is-hidden-mobile">
                   <ul>
                     <li :class="{ 'is-active' : tab === 'pgn' }">
-                      <a @click="tab = 'pgn'">
-                        <span class="icon is-small"><i class="fas fa-clipboard-list" aria-hidden="true"></i></span>
-                        <strong>Plys</strong>
+                      <a @click="tab = 'pgn'" title="Plys">
+                        <span class="icon"><i class="fas fa-clipboard-list" aria-hidden="true"></i></span>
                       </a>
                     </li>
                     <li :class="{ 'is-active' : tab === 'chat' }">
-                      <a @click="tab = 'chat'">
-                        <span class="icon is-small"><i class="fas fa-comments" aria-hidden="true"></i></span>
-                        <strong>Chat</strong>
+                      <a @click="tab = 'chat'" title="Chat">
+                        <span class="icon"><i class="fas fa-comments" aria-hidden="true"></i></span>
                       </a>
                     </li>
                   </ul>
                 </div>
                 <div v-show="tab === 'pgn'" class="is-hidden-mobile">
-                  <div class="columns is-hidden-mobile">
+                  <div class="columns">
                     <div class="chart-container preservefilter">
                       <div :class="playerColor">
                         <div class="chart-indicator"></div>
@@ -191,7 +206,7 @@
                     <form @submit.prevent="sendChat">
                       <div class="field has-addons has-text-centered is-flex-centered">
                         <div class="control">
-                          <input class="input is-rounded" v-model="chat" type="text" placeholder="Enter your message" />
+                          <input class="input is-rounded" v-model="chat" type="text" placeholder="Ingresa tu mensaje" />
                         </div>
                         <div class="control">
                           <button type="submit" class="button is-info is-rounded">
@@ -224,7 +239,7 @@
 
   export default {
     name: 'play',
-    mounted: function(){
+    mounted (){
       var t = this
       t.$root.loading = true
       window.app = this
@@ -241,22 +256,29 @@
         'player'
       ])
     },
-    destroyed () {
+    beforeDestroy () {
       this.$socket.emit('leave',this.data._id)
       clearInterval(this.clock)
-    },
-    beforeDestroy: function() {
       this.$socket.emit('gone', {
         player: this.player.code,
-        id:this.data._id
+        id: this.data._id
       })
       this.$socket.emit('leave',this.data._id)
       this.$socket.emit('match_end', {
-        id:this.data._id
+        id: this.data._id
       })
     },
     sockets: {
-      start: function(data){
+      play (data) {
+        this.$router.push(`/play/${data.game}`)
+      },
+      game_updated (data) {
+        if (data.result) {
+          this.data = data
+          this.showResultGame()
+        }
+      },
+      start (data){
         var t = this
         setTimeout(() => {
           if(!t.gameStarted && !t.data.result){
@@ -264,6 +286,7 @@
             t.gameStarted = true
             t.boardTaps()
             t.startClock()
+            playSound('start.ogg')
             this.$socket.emit('match_start', {
               id:t.data._id,
               white: t.data.white,
@@ -274,11 +297,11 @@
           }
         },100)
       },
-      resume: function(data) {
+      resume (data) {
         var t = this
         var exists = false
         if(data.code != t.player.code && !t.announced_game_over){
-          snackbar("success", '👤 ' + data.code + ' just joined the game')
+          snackbar("success", '👤 ' + data.code + ' se unió a la partida')
         }
         for(var i in t.usersJoined){
           if(t.usersJoined[i] === data.code){
@@ -297,9 +320,9 @@
           }
         },1500)
       },
-      gone: function(data) {
+      gone (data) {
         if(data.player != this.player.code){
-          snackbar("error", '👤 ' + data.player + ' abandoned the game')
+          snackbar("error", '👤 ' + data.player + ' abandonó la partida')
         }
         for(var i in this.usersJoined){
           if(this.usersJoined[i] === data.player){
@@ -307,51 +330,32 @@
           }
         }
       },
-      reject_rematch: function(data) {
+      reject_rematch (data) {
         if(data.asker.code === this.player.code){
           swal.close()
-          swal("Rematch rejected", '👤 ' + data.player.code + ' rejected a rematch')
+          swal("Partida declinada", '👤 ' + data.player.code + ' declinó la revancha')
         }
       },
-      invite_rematch: function(data) {
+      invite_rematch (data) {
         var t = this
         if(data.player.code === this.player.code){
           swal.close()
           swal({
-            title: "¿Want to play?",
-            text: '👤 ' + data.asker.code + ' asks for a rematch',
-            buttons: ["Cancel", "Yes"],
+            title: "¿Aceptás esta partida?",
+            text: '👤 ' + data.asker.code + ' solicita una revancha',
+            buttons: ["Declinar", "Aceptar"],
             closeOnClickOutside: false
           })
           .then(accept => {
             if (accept) {
-              axios.post( this.$root.endpoint + '/create', {
-                white: (t.playerColor==='white'?data.asker.code:data.player.code),
-                black: (t.playerColor==='white'?data.player.code:data.asker.code),
-                whiteflag: (t.playerColor==='white'?data.asker.flag:data.player.flag),
-                blackflag: (t.playerColor==='white'?data.player.flag:data.asker.flag),
-                minutes: t.data.minutes,
-                compensation: t.data.compensation,
-                broadcast: true
-              } ).then((response) => {
-                if(response.data.status === 'success'){
-                  t.$socket.emit('play', {
-                    asker: data.asker.code,
-                    player: data.player.code,
-                    id: response.data.id
-                  })
-                  t.$router.push(['/play',response.data.id].join('/'))
-                } else {
-                  snackbar('danger','Somehow this game could not be created. Please try again later.')
-                }        
-              })
+              t.createNewGame(1)
             } else {
               t.$socket.emit('reject_rematch', data)
             }
           })
         }
       },
-      move: function(data){
+      move (data) {
         var t = this
         if(data.color != t.playerColor[0]) {
 
@@ -375,81 +379,62 @@
         t.tdisplay.w = t.$root.getTimeDisplay(t.timer.w)
         t.tdisplay.b = t.$root.getTimeDisplay(t.timer.b)
       },
-      acceptdraw: function(data){
+      acceptdraw (data){
         swal.close()
-        swal("Draw", 'This game ended in a draw', "info")
+        swal("Tablas", 'Esta partida finalizó con un empate', "info")
         this.announced_game_over = true
       },
-      rejectdraw: function(data){
+      rejectdraw (data){
         swal.close()
         if(data.asker === this.player.code){
-          swal("Draw rejected", 'Your opponent wants to keep playing', "info")
+          swal("Tablas rechazado", 'El oponente desea continuar jugando', "info")
         }
       },
-      capitulate: function(data){
+      capitulate (data){
         var t = this
         var result = null
         if(data.asker === t.player.code){
           result = (t.playerColor==='black'?'1-0':'0-1')
           playSound('defeat.mp3')
-          swal({
-            title: 'Want a rematch?',
-            text: 'You resiged. ' + t.opponentName + ' won this game',
-            buttons: ["Cancel", "Yes"],
-            closeOnClickOutside: false
-          })
-          .then(accept => {
-            if (accept) {
-              t.$socket.emit('invite_rematch', {
-                asker: t.player,
-                player: {
-                  code: t.opponentName,
-                  flag: t.opponentFlag
-                }
-              })
-            } else {
-              console.log('Clicked on cancel')
-            }
-          })
         } else {
           result = (t.playerColor==='white'?'1-0':'0-1')
-          t.$socket.emit('data',{
-            id:t.data._id,
+          let match = JSON.parse(localStorage.getItem('match'))
+          t.$socket.emit('game',{
+            id: t.data._id,
             wtime: t.timer.w,
             wtime: t.timer.b,
-            result:result
+            result: result,
+            match: match.match,
+            score: t.chart.values
           })
           playSound('victory.mp3')
-          swal("¡Victoria!", t.opponentName + ' resigned this game', "success")
-        }
-        if(result){
-          t.data.result = result
         }
         t.announced_game_over = true
       },
-      askfordraw: function(data){
+      askfordraw (data){
         var t = this
         var result = null
         if(data.player === t.player.code){
           swal({
-            title: 'Accept draw?',
-            text: 'Your opponent ' + t.opponentName + ' asks for a draw',
-            buttons: ["Cancel", "Yes"],
+            title: '¿Aceptas tablas?',
+            text: 'Tu oponente ' + t.opponentName + ' solicita tablas',
+            buttons: ["No", "Sí"],
             closeOnClickOutside: false
           })
           .then(accept => {
             if (accept) {
               result = '1/2-1/2'
-
-              t.$socket.emit('data',{
-                id:this.$route.params.game,
+              let match = JSON.parse(localStorage.getItem('match'))
+              t.$socket.emit('game',{
+                id: t.$route.params.game,
                 wtime: t.timer.w,
                 wtime: t.timer.b,
-                result:result
+                result: result,
+                match: match.match,
+                score: t.chart.values
               })
 
               t.$socket.emit('acceptdraw', data)
-              t.data.result = result
               t.announced_game_over = true
               playSound('game-end.mp3')
             } else {
@@ -458,25 +443,147 @@
             }
           })
         } else {
-          swal("Waiting for response...", 'You asked ' + t.opponentName + " for a draw", "info")
+          swal("Esperando respuesta...", 'Has solicitado tablas a ' + t.opponentName, "info")
         }
       },
-      chat: function(data){
+      chat (data){
         const chatbox = document.querySelector(".chatbox")
         const owned = this.player.code === data.sender
         const cls = owned ? 'is-pulled-right has-text-right' : 'is-pulled-left has-text-left has-background-info has-text-white'
         chatbox.innerHTML+= `<div class="box ${cls}">${data.line}</div>`
         chatbox.scrollTop = chatbox.scrollHeight
-        if(!owned){
-          snackbar('success', '<strong class="has-text-light">👤 ' + data.sender + '</strong> ' + data.line)
-        }
         if(data.sender!=this.player.code){
           playSound('pop.mp3')
         }
       }
     },
     methods: {
-      sendChat: function(){
+      showResultGame () {
+        let data = this.data
+        let winner = ''
+        switch (data.result) {
+          case '1-0':
+            winner = data.white
+            break;
+          case '0-1':
+            winner = data.black
+            break;
+          case '1/2-1/2':
+          default:
+            winner = null
+            break;
+        }
+
+
+        let result_text = winner ? `Gana ${winner}` : 'Tablas'
+        let game = parseInt(data.game)
+        let games = parseInt(data.games)
+
+        if (game < games) {
+          const template = (`
+<div>
+  <div class="columns is-mobile">
+    <div class="column">
+      <span class="button is-large is-rounded result-white">${data.whiteflag} ${data.white}</span>
+    </div>
+    <div class="column">
+      <span class="button is-large is-rounded result-black">${data.black} ${data.blackflag}</span>
+    </div>
+  </div>
+  <div class="has-text-centered">
+    <div class="pietimer">
+      <div class="spinner pie"></div>
+      <div class="filler pie"></div>
+      <div class="mask"></div>
+      <div class="timer"></div>
+    </div>
+    <p>Siguiente partida en <span id="secondstoproceed"></span></p>
+  </div>
+</div>`)
+          swal({
+            title: `Resultado parcial ${game}/${games}`,
+            text: result_text,
+            content: {
+              element: 'div',
+              attributes: {
+                innerHTML: `${template}`,
+              }
+            },
+            buttons: false,
+            closeOnClickOutside: false
+          })
+
+          let seconds = this.secondsToProceed
+          let interval = setInterval(() => {
+            let s = seconds > 1 ? 's' : ''
+            document.getElementById('secondstoproceed').innerHTML = `${seconds} segundo${s}`
+            seconds--
+
+            if (seconds <= -1) {
+              clearInterval(interval)
+            }
+          }, 1000)
+
+          setTimeout(() => {
+            swal.close()
+            if (this.playerColor[0] === 'w') {
+              this.createNewGame(this.data.game + 1)
+            }
+          }, seconds*1000)
+
+          if (data.result !== '1/2-1/2') {
+            setTimeout(() => {
+              let sel = data.result === '1-0' ? 'white' : 'black'
+              document.querySelector(`.result-${sel}`).classList.add('is-success', 'is-outlined')
+            }, 100)
+          }
+        } else {
+          const template = (`
+<div>
+  <div class="columns is-mobile">
+    <div class="column">
+      <span class="button result-white">${data.whiteflag} ${data.white}</span>
+    </div>
+    <div class="column">
+      <span class="button result-black">${data.black} ${data.blackflag}</span>
+    </div>
+  </div>
+</div>`)
+          swal({
+            title: `Resultado final`,
+            text: result_text,
+            closeOnClickOutside: false
+          }).then(accept => {
+            let match = JSON.parse(localStorage.getItem('match'))
+            this.$router.push('/group/' + match.group)
+          })
+        }
+      },
+      createNewGame (game) {
+        console.log('createNewGame')
+        let t = this
+        axios.post('/game/create', {
+          white: (t.playerColor==='white' ? this.player.code : this.opponentName),
+          black: (t.playerColor==='black' ? this.player.code : this.opponentName),
+          whiteflag: (t.playerColor==='white' ? this.player.flag : this.opponentFlag),
+          blackflag: (t.playerColor==='black' ? this.player.flag : this.opponentFlag),
+          minutes: t.data.minutes,
+          games: t.data.games,
+          game: game,
+          compensation: t.data.compensation,
+          broadcast: true
+        }).then((res) => {
+          if(res.data.status === 'success'){
+            t.$socket.emit('play', {
+              id: t.data._id,
+              game: res.data.data._id
+            })
+          } else {
+            snackbar('error','El juego no pudo ser creado.')
+          }        
+        })
+      },
+      sendChat (){
         if(this.chat.trim()==='') this.chat = '👋'
         this.$socket.emit('chat', { 
           id:this.$route.params.game,
@@ -492,11 +599,11 @@
         })
         this.$socket.emit('leave',this.$route.params.game)
       },      
-      uciCmd: function(cmd, which) {
+      uciCmd (cmd, which) {
         //console.log("UCI: " + cmd);
         (which || this.evaler).postMessage(cmd);
       }, 
-      moveList: function()
+      moveList ()
       {
         var moves = '';
         var pgn = []
@@ -509,11 +616,11 @@
 
         return moves;
       },
-      gameCapitulate: function(){
+      gameCapitulate (){
         swal({
-          title: 'Resign game',
-          text: 'Confirm to resign this game?',
-          buttons: ["Cancel", "Yes"],
+          title: 'Abandonar partida',
+          text: '¿Querés abandonar esta partida?',
+          buttons: ["No", "Sí"],
           closeOnClickOutside: false
         })
         .then(accept => {
@@ -528,11 +635,11 @@
           }
         })
       },
-      gameAskForDraw: function(){
+      gameAskForDraw (){
         swal({
-          title: 'Ask for a draw',
+          title: '¿Querés solicitar tablas?',
           text: '',
-          buttons: ["Cancel", "Yes"],
+          buttons: ["No", "Sí"],
           closeOnClickOutside: false
         })
         .then(accept => {
@@ -547,7 +654,7 @@
           }
         })
       },
-      gameStart: function(){
+      gameStart (){
         var t = this
         var pos = 'start'
         const pref = JSON.parse(localStorage.getItem('player'))||{}
@@ -574,7 +681,7 @@
           if(pref.pieces){
             cfg.pieceTheme = '/static/img/chesspieces/' + pref.pieces + '/{piece}.png'
             t.boardColor = pref.board
-            t.$root.checkBoardStyle(pref.pieces)
+            this.$root.checkBoardStyle(pref.pieces)
           }
 
           if(window.innerWidth < 789){
@@ -599,9 +706,8 @@
 
           if(t.data.result){
             t.announced_game_over = true
-            snackbar('success',"This game has finished")
-          } else {
-            playSound('start.ogg')
+            snackbar('success',"Reviví esta partida")
+            t.$router.push('/game/' + t.data._id)
           }
           
           if(t.data.pgn){
@@ -650,7 +756,7 @@
           this.addHightlight(moved)
         },250)
       },
-      drawChartPosition: function(draw){
+      drawChartPosition (draw){
         if(draw===undefined) draw = true
         if(!draw){
           document.querySelector('.chart-indicator').style.backgroundColor = 'transparent' 
@@ -659,10 +765,10 @@
           document.querySelector('.chart-indicator').style.backgroundColor = 'rgb(0,0,0,0.15)'
         }
       },
-      gameLoad: function(){
+      gameLoad (){
         this.$root.loading = true
         var t = this
-        axios.post( t.$root.endpoint + '/game',{
+        axios.post('/game',{
           id:this.$route.params.game
         }).then((res) => {
 
@@ -732,7 +838,7 @@
           }
         })
       },
-      getTimeDisplay: function(time){
+      getTimeDisplay (time){
         var min = parseInt(time / 60, 10)
         var sec = parseInt(time % 60, 10)
 
@@ -741,7 +847,7 @@
 
         return min + ":" + sec
       },
-      startClock: function(){
+      startClock (){
         var t = this
         t.clock = setInterval(() => {
           if(t.announced_game_over) {
@@ -754,38 +860,20 @@
               if(turn === t.playerColor[0]){
                 result = (t.playerColor==='black'?'1-0':'0-1')
                 playSound('defeat.mp3')
-                swal({
-                  title: 'Want a rematch?',
-                  text: t.opponentName + ' won this game by time',
-                  buttons: ["Cancel", "Yes"],
-                  closeOnClickOutside: false
-                })
-                .then(accept => {
-                  if (accept) {
-                    this.$socket.emit('invite_rematch', {
-                      asker:t.player,
-                      player: {
-                        code: this.opponentName,
-                        flag: this.opponentFlag
-                      }
-                    })
-                  } else {
-                    console.log('Clicked on cancel')
-                  }
-                })
               } else {
                 result = (t.playerColor==='white'?'1-0':'0-1')
-                t.$socket.emit('data',{
+                playSound('victory.mp3')
+              }
+              if (turn === 'w') {
+                let match = JSON.parse(localStorage.getItem('match'))
+                t.$socket.emit('game',{
                   id:t.data._id,
                   wtime: t.timer.w,
                   wtime: t.timer.b,
-                  result:result
+                  result: result,
+                  match: match.match,
+                  score: t.chart.values
                 })
-                playSound('victory.mp3')
-                swal("Win!", 'You defeated ' + t.opponentName + " by time", "success")
-              }
-              if(result){
-                t.data.result = result
               }
               t.announced_game_over = true
             } else {
@@ -803,7 +891,7 @@
           }
         })
       },
-      boardTaps:function(){
+      boardTaps (){
         var t = this
         const events = ['click', 'mousedown']
         events.forEach((event) => {
@@ -856,7 +944,7 @@
           })
         })
       },
-      onDragStart : function(source, piece, position, orientation) {
+      onDragStart  (source, piece, position, orientation) {
         var t = this
         if (t.game.game_over() === true ||
             (t.game.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -864,7 +952,7 @@
           return false;
         }
       },
-      onDrop : function(source, target) {
+      onDrop  (source, target) {
         var t = this
         if(!t.gameStarted || t.announced_game_over) return 'snapback'
         //move object
@@ -886,71 +974,50 @@
         t.updateMoves(move)
         t.emitMove(move)
       },
-      emitMove: function(move){
-        var t = this
-        move.id = t.$route.params.game
-        move.vscore = t.vscore
-        move.fen = t.game.fen()
-        move.pgn = t.game.pgn()
-        move.turn = t.game.turn()
-        move.wtime = parseInt(t.timer.w)
-        move.btime = parseInt(t.timer.b)
-        move.compensation = t.data.compensation
-        t.$socket.emit('move', move)
+      emitMove (move){
+        move.id = this.$route.params.game
+        move.eco = this.ecode
+        move.opening = this.opening
+        move.vscore = this.vscore
+        move.fen = this.game.fen()
+        move.pgn = this.game.pgn()
+        move.turn = this.game.turn()
+        move.wtime = parseInt(this.timer.w)
+        move.btime = parseInt(this.timer.b)
+        move.compensation = this.data.compensation
+        this.$socket.emit('move', move)
       },
-      onSnapEnd: function() {
+      onSnapEnd () {
         setTimeout(() => {
           this.board.position(this.game.fen())
         },100)
       },
       updateMoves:function(move){
-
         var t = this
         setTimeout(() => {
           this.uciCmd('position startpos moves' + this.moveList(), this.evaler);
           this.uciCmd("eval", this.evaler);
-
           if(t.game.game_over()){
+            let result = '1/2-1/2'
             if(t.game.in_draw() || t.game.in_stalemate() || t.game.in_threefold_repetition()) {
-              t.$socket.emit('data',{
-                id:this.$route.params.game,
+              result = '1/2-1/2'
+            } else {          
+              result = t.playerColor==='white'?'1-0':'0-1'
+            }
+            console.log('1a')
+            console.log(t.game.turn())
+
+            if (t.playerColor[0] === 'w') {
+              let match = JSON.parse(localStorage.getItem('match'))
+              t.$socket.emit('game',{
+                id: this.$route.params.game,
                 wtime: t.timer.w,
                 wtime: t.timer.b,
-                result:"1/2-1/2"
+                result: result,
+                match: match.match,
+                score: t.chart.values
               })
-              swal("Draw", 'This game ended in a draw', "info")
-            } else {          
-              if(t.game.turn() === t.playerColor[0]){
-                swal({
-                  title: 'Want a rematch?',
-                  text: t.opponentName + ' won this game',
-                  buttons: ["Cancel", "Yes"],
-                  closeOnClickOutside: false
-                })
-                .then(accept => {
-                  if (accept) {
-                    this.$socket.emit('invite_rematch', {
-                      asker:this.player,
-                      player: {
-                        code: t.opponentName,
-                        flag: t.opponentFlag
-                      }
-                    })
-                  } else {
-                    console.log('Clicked on cancel')
-                  }
-                })
-              } else {
-                t.$socket.emit('data',{
-                  id:t.data._id,
-                  wtime: t.timer.w,
-                  wtime: t.timer.b,
-                  result:(t.playerColor==='white'?'1-0':'0-1')
-                })
-                swal("¡Victoria!", 'Has vencido a ' + t.opponentName, "success")
-              }
             }
-            
             t.announced_game_over = true
           } 
 
@@ -975,16 +1042,16 @@
 
         t.findEco(t.game.pgn())
       },
-      findEco: function(pgn){
+      findEco (pgn){
         let t = this
-        axios.post( this.$root.endpoint + '/eco/pgn', {pgn:pgn} ).then((res) => {
+        axios.post('/eco/pgn', {pgn:pgn} ).then((res) => {
           if(res.data.eco){
             t.opening = res.data.name
             t.ecode = res.data.eco
           }
         })
       },
-      updateMoveList: function(){
+      updateMoveList (){
         const movesTable = document.querySelector(".movesTableContainer")
         const current = document.querySelector('.moveindex.m' + this.index)
         if(current.parentNode.offsetTop + current.parentNode.clientHeight > movesTable.clientHeight){
@@ -997,7 +1064,7 @@
         })
         document.querySelector('.moveindex.m' + this.index).parentNode.classList.add('active')
       },
-      calcPoints : function(){
+      calcPoints  (){
         this.chart.points = [];
         if(this.chart.values.length > 1){
           var points = "0," + this.chart.height + " ";
@@ -1011,7 +1078,7 @@
           this.chart.points = points                  
         }
       },
-      drawChart: function(index){
+      drawChart (index){
         var score = this.vscore
 
         if(this.playerColor === 'white'){
@@ -1033,7 +1100,7 @@
           this.updateChart()
         }        
       },
-      updateChart: function(){
+      updateChart (){
 
         this.calcPoints()
 
@@ -1056,7 +1123,7 @@
           chart.appendChild(polygon);
         }
       },
-      moveSound: function(move){
+      moveSound (move){
         var sound = 'move.mp3'
         let t = this
         if(t.game.game_over()){
@@ -1089,34 +1156,38 @@
 
         playSound(sound)
       },
-      removeHighlight : function() {
+      removeHighlight  () {
         document.getElementById('board').querySelectorAll('.square-55d63').forEach((item) => {
           item.classList.remove('highlight-move')
           item.classList.remove('in-check')
         })
       },
-      addHightlight : function(move){
+      addHightlight  (move){
         var t = this
         t.removeHighlight()
         
         if(move){
           if (t.game.in_check() === true) {
             setTimeout(() => {
-              document.getElementById('board').querySelector('img[data-piece="' + t.game.turn() + 'K"]').parentNode.classList.add('in-check')
+              if (document.getElementById('board')) {
+                document.getElementById('board').querySelector('img[data-piece="' + t.game.turn() + 'K"]').parentNode.classList.add('in-check')
+              }
             },200)      
           }
-          document.getElementById('board').querySelector('.square-' + move.from).classList.add('highlight-move');
-          document.getElementById('board').querySelector('.square-' + move.to).classList.add('highlight-move');   
+          if (document.getElementById('board')) {
+            document.getElementById('board').querySelector('.square-' + move.from).classList.add('highlight-move');
+            document.getElementById('board').querySelector('.square-' + move.to).classList.add('highlight-move');
+          }   
         }      
       },
-      highlightLastMove: function(){
+      highlightLastMove (){
         var history = this.game.history({verbose:true})
         if(history.length){
           var move = history[history.length-1]
           this.addHightlight(move)
         }
       },
-      showLiveURL: function(){
+      showLiveURL (){
         var url = `${ window.location.protocol }//${ window.location.host }/watch/${this.$route.params.game}`
         const template = (`
 <div class="content">
@@ -1131,7 +1202,7 @@
   </div>
 </div>`)
         swal({
-          title: 'Live game URL',
+          title: 'URL partida en vivo',
           content: {
             element: 'div',
             attributes: {
@@ -1155,7 +1226,7 @@
   </div>
 </div>`)
         swal({
-          title: 'Copy PGN',
+          title: 'Copiar PGN',
           content: {
             element: 'div',
             attributes: {
@@ -1189,40 +1260,42 @@
     },
     data () {
       return {
-        chart:{
+        chart: {
           width: 100,
           height: 50,
           maxValue: 100,
           values:[51],
           points:[]
         },
-        data:{},
-        eco:{},
-        tab:'pgn',
-        chat:'',
-        index:-1,
-        gameMoves:[],
-        clock:null,
-        timer:{w:null,b:null},
-        tdisplay:{w:null,b:null},
-        opening:null,
-        score:0.10,
-        vscore:49,
-        orientation:null,
-        announced_game_over:false,
-        ecode:null,
-        board:null,
-        boardEl:null,
-        boardColor:'classic',
-        game:null,
-        gameStarted:false,
-        usersJoined:[],
-        pgnIndex:[],
-        moveFrom:null,
-        playerColor:null,
-        opponentName:null,
-        opponentFlag:null,
-        data:{}
+        secondsToProceed: 30,
+        data: {},
+        eco: {},
+        tab: 'pgn',
+        chat: '',
+        index: -1,
+        currentGame: 0,
+        gameMoves: [],
+        clock: null,
+        timer: {w:null,b:null},
+        tdisplay: {w:null,b:null},
+        opening: null,
+        score: 0.10,
+        scoreChart: [],
+        vscore: 49,
+        orientation: null,
+        announced_game_over: false,
+        ecode: null,
+        board: null,
+        boardEl: null,
+        boardColor: 'classic',
+        game: null,
+        gameStarted: false,
+        usersJoined: [],
+        pgnIndex: [],
+        moveFrom: null,
+        playerColor: null,
+        opponentName: null,
+        opponentFlag: null
       }
     }
   }

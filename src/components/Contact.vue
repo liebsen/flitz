@@ -5,11 +5,10 @@
         <span class="icon">
           <span class="fa fa-envelope"></span>
         </span> 
-        <span>Contact</span>
+        <span>Contacto</span>
       </h3>
-      <h2>Drop me an email</h2>
-      <p>Life's simple. If you want to keep in touch just drop me a line.</p>
-      <p><a href="mailto:overlemonsoft@gmail.com?Subject=Contact from Biltz" class="button is-success is-rounded">Contact Biltz's author</a></p>      
+      <p>Si estas interesado en participar del proyecto o simplemente tienes dudas y/o sugerencias acerca de <em>Ajedrez en vivo</em> escríbenos un correo electrónico a <a href="mailto:overlemonsoft@gmail.com">overlemonsoft@gmail.com</a></p>
+      <p><a href="mailto:overlemonsoft@gmail.com?Subject=Contacto desde Biltz" class="button is-success is-rounded">Contactar con Biltz</a></p>      
     </section>
   </div>
 </template>
@@ -19,7 +18,7 @@ export default {
   name: 'contact',
   data () {
     return {
-      msg: ''
+      msg: 'Welcome to JetsBooking'
     }
   }
 }

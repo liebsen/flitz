@@ -14,8 +14,16 @@ import Stockfish from '../components/Stockfish'
 import Eco from '../components/Eco'
 import PlayEco from '../components/PlayEco'
 import Game from '../components/Game'
+import Group from '../components/Group'
+import Groups from '../components/Groups'
+import Analysis from '../components/Analysis'
 import Watch from '../components/Watch'
 import About from '../components/About'
+import Register from '../components/Register'
+import Login from '../components/Login'
+import RegisterSuccess from '../components/RegisterSuccess'
+import ForgotPass from '../components/ForgotPass'
+import Validate from '../components/Validate'
 import NotFound from '../components/NotFound'
 
 window.jQuery = $;
@@ -67,6 +75,21 @@ const router = new Router({
       component: Watch
     },
     {
+      path: '/analysis/:game',
+      name: 'analysis',
+      component: Analysis
+    },
+    {
+      path: '/groups',
+      name: 'groups',
+      component: Groups
+    },
+    {
+      path: '/group/:group',
+      name: 'group',
+      component: Group
+    },
+    {
       path: '/preferences',
       name: 'preferences',
       component: Preferences
@@ -97,6 +120,31 @@ const router = new Router({
       component: About
     },
     {
+      path: '/register',
+      name: 'register',
+      component: Register
+    },
+    {
+      path: '/register-success',
+      name: 'register-success',
+      component: RegisterSuccess
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: ForgotPass
+    },
+    {
+      path: '/validate/:code',
+      name: 'validate',
+      component: Validate
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
       path: '*',
       name: 'notfound',
       component: NotFound
@@ -109,9 +157,9 @@ router.beforeEach(async (to, from, next) => {
   if (!store.state.player) {
     store
       .dispatch('player')
-      .then(() => {
-        console.log('🙌 Datos de la aplicación cargados')
-        router.app.$socket.emit('preferences', store.state.player)
+      .then(data => {
+        console.log('🙌 Player identification successfully performed')
+        router.app.$socket.emit('preferences', data)
         next()        
       }).catch(err => {
         console.log(`Algo malo sucedió ` + err)

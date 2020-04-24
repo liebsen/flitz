@@ -4,12 +4,15 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
+let games = JSON.parse(localStorage.getItem('games')) || []
+
 export default new Vuex.Store({
   state: {
     player: null,
     players: null,
+    games: games,
     status: null,
-    endpoint: (process.env.NODE_ENV === 'production' ? 'https://ajedrezenvivoapi.herokuapp.com' : 'http://localhost:4000')
+    endpoint: process.env.ENDPOINT
   },
   mutations: {
     /* A fit-them-all commit */
@@ -37,12 +40,19 @@ export default new Vuex.Store({
     },
     player_success (state, data) {
       state.player = data
-      console.log('player success')
       localStorage.setItem('player', JSON.stringify(data))
     },
     player_error (state) {
       state.status = 'error'
       localStorage.removeItem('player')
+    },
+    games_success (state, data) {
+      state.games.push(data)
+      localStorage.setItem('games', JSON.stringify(state.games))
+    },
+    games_error (state) {
+      state.status = 'error'
+      localStorage.removeItem('games')
     },
     app_success (state, data) {
       state.app = data
@@ -74,10 +84,17 @@ export default new Vuex.Store({
         commit('players_error')
       }
     },
+    games ({ commit }, data) {
+      if (data) {
+        commit('games_success', data)
+      } else {
+        commit('games_error') 
+      }
+    },
     player ({ commit }, data) {
       return new Promise((resolve, reject) => {
         const stored = data || JSON.parse(localStorage.getItem('player')) || {}
-        if(Object.keys(stored).length && stored.flag){
+        if(Object.keys(stored).length && stored.id){
           if(stored.darkmode){
             document.documentElement.classList.add('dark-mode')
           }
@@ -87,7 +104,7 @@ export default new Vuex.Store({
         } else {
           const id = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
           const code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
-          var preferences = { 
+          var preferences = {
             id: id,
             code: code,
             flag: '🇷🇪',
