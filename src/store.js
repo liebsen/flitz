@@ -5,6 +5,7 @@ import axios from 'axios'
 Vue.use(Vuex)
 
 let games = JSON.parse(localStorage.getItem('games')) || []
+let languages = ['en', 'es']
 
 export default new Vuex.Store({
   state: {
@@ -94,6 +95,7 @@ export default new Vuex.Store({
     player ({ commit }, data) {
       return new Promise((resolve, reject) => {
         const stored = data || JSON.parse(localStorage.getItem('player')) || {}
+
         if(Object.keys(stored).length && stored.id){
           if(stored.darkmode){
             document.documentElement.classList.add('dark-mode')
@@ -102,6 +104,11 @@ export default new Vuex.Store({
           commit('player_success', stored)
           resolve(stored)
         } else {
+          let detected = navigator.languages
+            ? navigator.languages[0]
+            : (navigator.language || navigator.userLanguage)
+          detected = detected.split('-')[0]
+          const lang = languages[detected] ? detected : languages[0]
           const id = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
           const code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
           var preferences = {
@@ -109,6 +116,7 @@ export default new Vuex.Store({
             code: code,
             flag: '🇷🇪',
             country: '🇷🇪',
+            lang: lang,
             observe: false,
             autoaccept: false,
             strongnotification: false,

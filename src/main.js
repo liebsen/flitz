@@ -25,6 +25,17 @@ Vue.use(new VueSocketIO({
   connection: process.env.ENDPOINT
 }))
 
+Vue.filter('fn', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return moment(value).fromNow(false)
+})
+
+Vue.filter('t', function (value) {
+  if (!value) return ''
+  return router.app.translations[value] || value.charAt(0).toUpperCase() + value.slice(1)
+})
+
 new Vue({
   el: '#app',
   router,
@@ -152,7 +163,6 @@ new Vue({
       if (this.$route.name === 'group') {
         group = this.$route.params.group
       }
-      console.log('group: ' + group)
       this.$socket.emit('find_opponent', {
         player: this.player,
         group: group
@@ -324,34 +334,8 @@ new Vue({
         })
       })
     },
-    fullscreen() {
-      var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
-        (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
-        (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
-        (document.msFullscreenElement && document.msFullscreenElement !== null);
-
-      var docElm = document.documentElement;
-      if (!isInFullScreen) {
-        if (docElm.requestFullscreen) {
-          docElm.requestFullscreen();
-        } else if (docElm.mozRequestFullScreen) {
-          docElm.mozRequestFullScreen();
-        } else if (docElm.webkitRequestFullScreen) {
-          docElm.webkitRequestFullScreen();
-        } else if (docElm.msRequestFullscreen) {
-          docElm.msRequestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      }
+    translate (value) {
+      return this.translations[value] || value.charAt(0).toUpperCase() + value.slice(1)
     },
     fullscreenBoard: function(){
       if(document.querySelector('.board') && document.body.clientHeight < document.body.clientWidth && document.body.clientWidth > 768){
@@ -362,21 +346,6 @@ new Vue({
         document.querySelector('.board').style.width = document.body.clientHeight - document.querySelector('.menu').clientHeight - offset + 'px'
       }
     },
-    goFS: function(){
-      if(document.querySelector('.menu-logo').classList.contains('is-hidden')){
-        document.querySelector('.menu-logo').classList.remove('is-hidden')
-        document.querySelector('.menu-primary').classList.remove('is-hidden')
-        document.querySelector('body').classList.remove('fs')
-      } else {
-        document.querySelector('.menu-logo').classList.add('is-hidden')
-        document.querySelector('.menu-primary').classList.add('is-hidden')
-        document.querySelector('body').classList.add('fs')
-      }
-      setTimeout(() => {
-        this.fullscreenBoard()
-        this.fullscreen();
-      },750)      
-    },
     updateOnlineStatus(e) {
       const {
         type
@@ -386,6 +355,7 @@ new Vue({
   },
   data () {
     return {
+      appKey: 0,
       isFindingOpponent: false,
       isCreatingGroup: false,
       endpoint: process.env.ENDPOINT,
@@ -396,6 +366,7 @@ new Vue({
       matches: [],
       games: [],
       boards: [],
+      translations: {},
       chatlast: null,
       documentTitle: null,
       boardColor: null

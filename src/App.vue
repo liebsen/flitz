@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div :key="$root.appKey">
     <svg v-show="$root.loading" class="spinner-container" viewBox="0 0 44 44">
       <circle class="path" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
     </svg>
-    <div class="menu hidden-loading slideDown preservefilter">
+    <div class="menu preservefilter">
       <div class="menu-container is-flex columns is-vcentered">
         <div class="column menu-logo has-text-left">
           <router-link to="/">
@@ -13,13 +13,13 @@
         <div class="column menu-primary has-text-right">
           <div class="is-hidden-mobile">
             <div class="buttons levels has-addons is-pulled-right">
-              <router-link v-if="player" to="/preferences" class="button is-rounded is-grey" title="Establece tus preferencias">
+              <router-link v-if="player" to="/preferences" class="button is-rounded is-grey" :title="'set_your_preferences' | t">
                 <span class="icon">
                   <span v-html="player.flag"></span>
                 </span>
                 <span v-html="player.code"></span>
               </router-link>
-              <a @click="$root.play" class="button is-rounded is-success" :class="{ 'is-loading': $root.isFindingOpponent }" title="Buscar oponente">
+              <a @click="$root.play" class="button is-rounded is-success" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
                 <span class="icon has-text-white">
                   <span class="fas fa-handshake"></span>
                 </span>
@@ -28,13 +28,13 @@
           </div>
           <div v-if="player" class="is-hidden-tablet">
             <div class="buttons levels has-addons is-pulled-right">
-              <router-link to="/preferences" class="button is-small is-rounded" title="Establece tus preferencias">
+              <router-link to="/preferences" class="button is-small is-rounded" :title="'set_your_preferences' | t">
                 <span class="icon">
                  <span v-html="player.flag"></span>
                 </span>
                 <span v-html="player.code"></span>
               </router-link>
-              <a @click="$root.play" class="button is-small is-success is-rounded" :class="{ 'is-loading': $root.isFindingOpponent }" title="Buscar oponente">
+              <a @click="$root.play" class="button is-small is-success is-rounded" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
                 <span class="icon has-text-white">
                   <span class="fas fa-handshake"></span>
                 </span>
@@ -61,49 +61,49 @@
               <span class="icon">
                 <span class="fas fa-layer-group"></span>
               </span> 
-              <span>Grupos</span>
+              <span>{{ 'groups' | t }}</span>
             </router-link>
             <router-link to="/eco">
               <span class="icon">
                 <span class="fas fa-book"></span>
               </span> 
-              <span>Aperturas</span>
+              <span>{{ 'openings' | t }}</span>
             </router-link>
             <router-link to="/live">
               <span class="icon">
                 <span class="fas fa-fire"></span> 
               </span>
-              <span>En vivo</span>
+              <span>{{ 'live' | t }}</span>
             </router-link>
             <router-link to="/results">
               <span class="icon">
                 <span class="fas fa-list"></span>
               </span> 
-              <span>Resultados</span>
+              <span>{{ 'results' | t }}</span>
             </router-link>
             <router-link to="/preferences">
               <span class="icon">
                 <span class="fas fa-paint-brush"></span>
               </span> 
-              <span>Preferencias</span>
+              <span>{{ 'preferences' | t }}</span>
             </router-link>
             <router-link to="/about">
               <span class="icon">
                 <span class="fa fa-info"></span>
               </span> 
-              <span>Acerca de</span>
+              <span>{{ 'about' | t }}</span>
             </router-link>
             <router-link to="/contact">
               <span class="icon">
                 <span class="fas fa-envelope"></span>
               </span> 
-              <span>Contacto</span>
+              <span>{{ 'contact' | t }}</span>
             </router-link>
             <router-link to="/donate">
               <span class="icon">
                 <span class="fas fa-hands"></span>
               </span> 
-              <span>Donate</span>
+              <span>{{ 'donate' | t }}</span>
             </router-link>
           </div>
           <div class="column">
@@ -112,7 +112,7 @@
                 <span class="icon">
                   <span class="fas fa-layer-group"></span>
                 </span> 
-                <span>Nuevo Grupo</span>
+                <span>{{ 'create_group' | t }}</span>
               </a>
             </div>
           </div>

@@ -5,11 +5,11 @@
         <div class="column is-hidden-mobile"></div>
         <div class="column is-8 has-text-centered">
           <div class="content is-hidden-mobile">
-            <h1 class="has-text-white"></a>Estudia, entrena y gana</h1>
+            <h1 class="has-text-white"></a>{{ 'landing_title_mobile' | t }}</h1>
             <h6></h6>
           </div>
           <div class="content is-hidden-tablet">
-            <h2 class="has-text-white"></a>Estudia, entrena y gana</h2>
+            <h2 class="has-text-white"></a>{{ 'landing_title_desktop' | t }}</h2>
             <h6></h6>
           </div>
           <div class="has-text-centered">
@@ -45,7 +45,7 @@
             </form>     
           </div>       
           <div class="has-text-centered">
-            <h4 class="has-text-white">Jugar contra</h4>
+            <h4 class="has-text-white">{{ 'play_against' | t }}</h4>
             <h6>&nbsp;</h6>
           </div>
           <div class="columns is-vcentered has-text-centered is-hidden-mobile">
@@ -54,7 +54,7 @@
                 <span class="icon">
                   <span class="fas fa-handshake"></span>
                 </span> 
-                <span>Humano</span>
+                <span>{{ 'human' | t }}</span>
               </a>
             </div>
             <div class="column has-text-left">
@@ -72,7 +72,7 @@
                 <span class="icon">
                   <span class="fas fa-layer-group"></span>
                 </span> 
-                <span>Humano</span>
+                <span>{{ 'human' | t }}</span>
               </a>
             </div>
             <div class="column">
@@ -115,6 +115,7 @@ export default {
   name: 'landing',
   mounted: function() {
     var t = this
+    console.log('11')
     const saved = JSON.parse(localStorage.getItem('player'))
     const board = document.querySelector('.fakeboard')
 

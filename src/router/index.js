@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
+import axios from 'axios'
 import $ from 'jquery'
 import Landing from '../components/Landing'
 import Results from '../components/Results'
@@ -157,10 +158,13 @@ router.beforeEach(async (to, from, next) => {
   if (!store.state.player) {
     store
       .dispatch('player')
-      .then(data => {
-        console.log('🙌 Player identification successfully performed')
-        router.app.$socket.emit('preferences', data)
-        next()        
+      .then(res => {
+        axios.get(`/json/lang/${res.lang}.json`).then(json => {
+          router.app.translations = json.data
+          console.log('🙌 Player identification successfully performed')
+          router.app.$socket.emit('preferences', res)
+          next()        
+        })
       }).catch(err => {
         console.log(`Algo malo sucedió ` + err)
       })
