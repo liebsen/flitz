@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import ObjectId from '@/components/ObjectId'
 
 Vue.use(Vuex)
 
@@ -180,7 +181,7 @@ export default new Vuex.Store({
             : (navigator.language || navigator.userLanguage)
           detected = detected.split('-')[0]
           const lang = languages[detected] ? detected : languages[0]
-          const id = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
+          const id = ObjectId()
           const code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
           var preferences = {
             id: id,

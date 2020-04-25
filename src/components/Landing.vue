@@ -115,7 +115,6 @@ export default {
   name: 'landing',
   mounted: function() {
     var t = this
-    console.log('11')
     const saved = JSON.parse(localStorage.getItem('player'))
     const board = document.querySelector('.fakeboard')
 
