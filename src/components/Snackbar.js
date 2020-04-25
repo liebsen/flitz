@@ -1,4 +1,4 @@
-var snackbarClock = null;
+var snackbarClock = null
 
 module.exports = function (type, message, options) {
 

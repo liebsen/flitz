@@ -31,7 +31,7 @@ Vue.filter('fn', function (value) {
   return moment(value).fromNow(false)
 })
 
-Vue.filter('t', function (value, var1) {
+Vue.filter('t', function (value) {
   if (!value) return ''
   return router.app.translations[value] || value.charAt(0).toUpperCase() + value.slice(1)
 })
@@ -269,10 +269,11 @@ new Vue({
               this.isLoading = false
               swal.close()
               if (res.data.status === 'success') {
-                snackbar('success', `Grupo creado`)
+                // snackbar('success', 'group_created')
+                console.log(res.data.data)
                 this.$router.push('/group/' + res.data.data._id)
               } else {
-                snackbar('error', `Algo pasó y no se pudo crear el grupo`)
+                snackbar('error', 'error')
               }
             })
           }, 1000)
