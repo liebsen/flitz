@@ -1,21 +1,53 @@
 <template>
-  <div class="container is-widescreen">
+  <div class="container">
     <section class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
-          <span class="fa fa-hands"></span>
+          <span class="fa fa-question"></span>
         </span> 
-        <span>Donate</span>
+        <span>{{ 'forgot_password' | t }}</span>
       </h3>
-      <p>Si estas interesado en impulsar el desarrollo y mantenimiento de este proyecto podés donar voluntariamente. Cualquier suma por pequeña que parezca ayuda a continuar con el proyecto. Desde ya, muchas gracias.</p>
-      <p>Los autores de Biltz</p>
-      <p><a href="https://www.paypal.me/overlemon" target="_blank" class="button is-success is-rounded">Efectuar donación a Biltz</a></p>      
+      <div class="columns is-centered">
+        <div class="column is-narrow">
+          <form class="form has-text-centered slideIn has-margin-top" @submit.prevent="submit">
+            <p>{{ 'register_text' | t }}</p>
+            <div class="field">
+              <div class="control">
+                <input v-model="data.email" class="input is-rounded" type="email" :placeholder="'email' | t" required autofocus>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control has-text-centered">
+                <button type="submit" class="button  is-rounded is-link" :class="{'is-loading' : $root.processing}">{{ 'recover_password' | t }}</button>
+              </div>
+            </div>  
+          </form>
+        </div>
+      </div>
     </section>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'donate'
+  name: 'forgot-password',
+  data () {
+    return {
+      acceptTerms: false,
+      data: {}
+    }
+  },
+  methods: {
+    submit: function() {
+      var t = this
+      t.$root.processing = true
+      this.$store
+        .dispatch("register", t.data)
+        .then(res => {
+          this.$router.push("/register-success")
+        })
+        .catch(err => console.log(err));
+    }
+  }
 }
 </script>

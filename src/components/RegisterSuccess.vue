@@ -1,21 +1,20 @@
 <template>
-  <div class="container is-widescreen">
+  <div class="container">
     <section class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
-          <span class="fa fa-hands"></span>
+          <span class="fa fa-tick"></span>
         </span> 
-        <span>Donate</span>
+        <span>{{ 'register_success' | t }}</span>
       </h3>
-      <p>Si estas interesado en impulsar el desarrollo y mantenimiento de este proyecto podés donar voluntariamente. Cualquier suma por pequeña que parezca ayuda a continuar con el proyecto. Desde ya, muchas gracias.</p>
-      <p>Los autores de Biltz</p>
-      <p><a href="https://www.paypal.me/overlemon" target="_blank" class="button is-success is-rounded">Efectuar donación a Biltz</a></p>      
+      <p>{{ 'register_success_text' | t }}</p>
+      <p><router-link to="/login" class="button is-success is-rounded">{{ 'login' | t }}</router-link></p>
     </section>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'donate'
+  name: 'register_success'
 }
 </script>

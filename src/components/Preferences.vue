@@ -21,55 +21,12 @@
                   <label class="label">{{ 'nick' | t }}</label>
                   <input type="text" v-model="data.code" class="input is-rounded" maxlength="10" title="Ingresa tu nombre!" required>
                 </div>
-              </div>
-            </div>
-            <div class="field is-horizontal">
-              <div class="field-body">
-                <div class="field">
-                  <label class="label">{{ 'language' | t }}</label>
-                  <div class="select is-fullwidth">
-                    <select v-model="data.lang" id="piezas" title="Elegí tu país">
-                      <option v-for="(item, index) in languages" :key="index" :value="item.code">{{item.name}}</option>
-                    </select>
-                  </div>
-                </div>
                 <span></span>
               </div>
-              <div class="field-body">
-                <div class="field">
-                  <label class="label">{{ 'country' | t }}</label>
-                  <div class="select is-fullwidth">
-                    <select v-model="data.flag" id="piezas" title="Elegí tu país">
-                      <option v-for="(item, index) in flags" :key="index" :value="item.emoji">{{item.emoji}} {{item.name}}</option>
-                    </select>
-                  </div>
-                </div>
+              <div class="field-body is-hidden-mobile">
+                <div class="field"></div>
               </div>
             </div>
-            <div class="field is-horizontal">
-              <div class="field-body">
-                <div class="field">
-                  <label class="label">{{ 'board_theme' | t }}</label>
-                  <div class="select is-fullwidth">
-                    <select v-model="data.board" id="tablero" :title="'board_theme_desc' | t">
-                      <option v-for="(item, index) in board_themes" :key="index" :value="item">{{ item | t }}</option>
-                    </select>
-                  </div>
-                </div>
-                <span></span>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <label class="label">{{ 'piece_theme' | t }}</label>
-                  <div class="select is-fullwidth">
-                    <select v-model="data.pieces" id="piezas" title="Elegí estilo de piezas">
-                      <option v-for="(item, index) in piece_themes" :key="index" :value="item">{{ item | t }}</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div class="field">
               <div class="field-group">
                 <label class="label">{{ 'preferences_general' | t }}</label>
@@ -111,6 +68,54 @@
                 </div>
               </div>
             </div>
+            <div class="field is-horizontal">
+              <div class="field-body">
+                <div class="field">
+                  <label class="label">{{ 'language' | t }}</label>
+                  <div class="select is-fullwidth">
+                    <select v-model="data.lang" id="piezas" title="Elegí tu país">
+                      <option v-for="(item, index) in languages" :key="index" :value="item.code">{{item.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <span></span>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <label class="label">{{ 'country' | t }}</label>
+                  <div class="select is-fullwidth">
+                    <select v-model="data.flag" id="piezas" title="Elegí tu país">
+                      <option v-for="(item, index) in flags" :key="index" :value="item.emoji">{{item.emoji}} {{item.name}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-body">
+                <div class="field">
+                  <label class="label">{{ 'board_theme' | t }}</label>
+                  <div class="select is-fullwidth">
+                    <select v-model="data.board" id="tablero" :title="'board_theme_desc' | t">
+                      <option v-for="(item, index) in themes.boards" :key="index" :value="item">{{ item | t }}</option>
+                    </select>
+                  </div>
+                </div>
+                <span></span>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <label class="label">{{ 'piece_theme' | t }}</label>
+                  <div class="select is-fullwidth">
+                    <select v-model="data.pieces" id="piezas" title="Elegí estilo de piezas">
+                      <option v-for="(item, index) in themes.pieces" :key="index" :value="item">{{ item | t }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
 
             <div class="field has-text-centered">
               <div class="column">
@@ -286,71 +291,73 @@
             code: 'es'
           }
         ],
-        board_themes: [
-          'classic',
-          'bases',
-          'bit',
-          'blue',
-          'bubblegum',
-          'burled-wood',
-          'dark-wood',
-          'dash',
-          'glass',
-          'graffiti',
-          'green',
-          'green-plastic',
-          'ocean',
-          'lolz',
-          'marble',
-          'metal',
-          'neon',
-          'newspaper',
-          'orange',
-          'overlay',
-          'parchment',
-          'pink',
-          'purple',
-          'red',
-          'sand',
-          'sky',
-          'stone',
-          'tan',
-          'tournament',
-          'translucent',
-          'turquoise',
-          'walnut'
-        ],
-        piece_themes: [
-          'classic',
-          'neo',
-          'neo_wood',
-          'wood',
-          'bases',
-          'alpha',
-          'chess24',
-          'leipzig',
-          'fantasy',
-          'book',
-          'cases',
-          'newspaper',
-          'maya',
-          'glass',
-          'gothic',
-          'light',
-          'lolz',
-          'tigers',
-          'condal',
-          'marble',
-          'modern',
-          'club',
-          'neon',
-          'magi',
-          'staunton3d',
-          'plastic3d',
-          'wood3d',
-          'chesskid3d',
-          'magi3d'
-        ],
+        themes: {
+          boards: [
+            'classic',
+            'bases',
+            'bit',
+            'blue',
+            'bubblegum',
+            'burled-wood',
+            'dark-wood',
+            'dash',
+            'glass',
+            'graffiti',
+            'green',
+            'green-plastic',
+            'ocean',
+            'lolz',
+            'marble',
+            'metal',
+            'neon',
+            'newspaper',
+            'orange',
+            'overlay',
+            'parchment',
+            'pink',
+            'purple',
+            'red',
+            'sand',
+            'sky',
+            'stone',
+            'tan',
+            'tournament',
+            'translucent',
+            'turquoise',
+            'walnut'
+          ],
+          pieces: [
+            'classic',
+            'neo',
+            'neo_wood',
+            'wood',
+            'bases',
+            'alpha',
+            'chess24',
+            'leipzig',
+            'fantasy',
+            'book',
+            'cases',
+            'newspaper',
+            'maya',
+            'glass',
+            'gothic',
+            'light',
+            'lolz',
+            'tigers',
+            'condal',
+            'marble',
+            'modern',
+            'club',
+            'neon',
+            'magi',
+            'staunton3d',
+            'plastic3d',
+            'wood3d',
+            'chesskid3d',
+            'magi3d'
+          ]
+        },
         data:{},
         anchor: {},
         flags:[],

@@ -31,7 +31,7 @@ Vue.filter('fn', function (value) {
   return moment(value).fromNow(false)
 })
 
-Vue.filter('t', function (value) {
+Vue.filter('t', function (value, var1) {
   if (!value) return ''
   return router.app.translations[value] || value.charAt(0).toUpperCase() + value.slice(1)
 })

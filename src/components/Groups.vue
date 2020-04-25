@@ -126,7 +126,6 @@
               for(var i=0;i< numPages;i++){
                 pages[i] = i*this.limit
               }
-              snackbar('success','Se encontraron ' + this.data.count  +  ' grupo' + (this.data.count>1?'s':'')  + '. Mostrando resultados de ' + (this.offset + 1) + ' a ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit ), 5000);
             }
           }
 

@@ -13,6 +13,7 @@ export default new Vuex.Store({
     players: null,
     games: games,
     status: null,
+    auth: JSON.parse(localStorage.getItem('auth')) || {},
     endpoint: process.env.ENDPOINT
   },
   mutations: {
@@ -30,6 +31,17 @@ export default new Vuex.Store({
     /* Auth */
     auth_request (state) {
       state.status = 'loading'
+    },
+    auth_success(state, auth) {
+      state.status = 'success'
+      state.auth = auth
+    },
+    auth_error(state) {
+      state.status = 'error'
+    },
+    logout(state) {
+      state.status = ''
+      state.auth = {}
     },
     preferences_success (state, data) {
       state.player = data
@@ -92,11 +104,70 @@ export default new Vuex.Store({
         commit('games_error') 
       }
     },
+    login({ commit }, user) {
+      return new Promise((resolve, reject) => {
+        commit('auth_request')
+        axios.post( this.state.endpoint + '/account/login', user ).then((res) => {
+          const auth = res.data
+          localStorage.setItem('auth', JSON.stringify(auth))
+          axios.defaults.headers.common['Authorization'] = auth.token
+          commit('auth_success', auth)
+          resolve(res)
+        })
+        .catch(err => {
+          commit('auth_error')
+          localStorage.removeItem('auth')
+          reject(err)
+        })
+      })
+    },
+    register({ commit }, user) {
+      return new Promise((resolve, reject) => {
+        commit('auth_request')
+        axios.post( this.state.endpoint + '/account/create', user ).then((res) => {
+          const auth = res.data
+          localStorage.setItem('auth', JSON.stringify(auth))
+          axios.defaults.headers.common['Authorization'] = auth.token
+          commit('auth_success', auth)
+          resolve(res)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          localStorage.removeItem('auth')
+          reject(err)
+        })
+      })
+    },
+    validate({ commit }, code) {
+      return new Promise((resolve, reject) => {
+        commit('auth_request')
+        axios.post( this.state.endpoint + '/account/validate/' + code, {}).then((res) => {
+          const auth = res.data
+          localStorage.setItem('auth', JSON.stringify(auth))
+          axios.defaults.headers.common['Authorization'] = auth.token
+          commit('auth_success', auth)
+          resolve(res)
+        })
+        .catch(err => {
+          commit('auth_error', err)
+          localStorage.removeItem('auth')
+          reject(err)
+        })
+      })
+    },
+    logout({ commit }) {
+      return new Promise((resolve, reject) => {
+        const user = this.state.auth.user
+        commit('logout')
+        delete axios.defaults.headers.common['Authorization']
+        resolve(user)
+      })
+    },
     player ({ commit }, data) {
       return new Promise((resolve, reject) => {
         const stored = data || JSON.parse(localStorage.getItem('player')) || {}
 
-        if(Object.keys(stored).length && stored.id){
+        if(Object.keys(stored).length && stored.lang){
           if(stored.darkmode){
             document.documentElement.classList.add('dark-mode')
           }
