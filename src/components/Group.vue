@@ -68,7 +68,7 @@
       </div>
       <div class="columns">
         <div v-if="players && data && data.owner" class="column is-lobby-list is-3">
-          <div v-show="data.owner.code === player.code">
+          <div v-show="data.owner._id === player._id">
             <h3 class="is-clickable" @click="setGroupRules" title="Configurar Grupo">
               <span class="icon">
                 <span class="fas fa-cog"></span>
@@ -222,7 +222,7 @@
         this.players = data
       },
       player (data) {
-        if(data.id === this.player.id){
+        if(data._id === this.player._id){
           if(data.exists){
             snackbar('error',`El nombre ${data.code} ya está en uso, por favor elige otro`)
             this.$router.push('/preferences')

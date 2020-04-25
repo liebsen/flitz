@@ -2,12 +2,11 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import ObjectId from '@/components/ObjectId'
+import languages from '@/components/Languages'
 
 Vue.use(Vuex)
 
 let games = JSON.parse(localStorage.getItem('games')) || []
-let languages = ['en', 'es']
-
 export default new Vuex.Store({
   state: {
     player: null,
@@ -167,8 +166,7 @@ export default new Vuex.Store({
     player ({ commit }, data) {
       return new Promise((resolve, reject) => {
         const stored = data || JSON.parse(localStorage.getItem('player')) || {}
-
-        if(Object.keys(stored).length && stored.lang){
+        if(Object.keys(stored).length && stored._id){
           if(stored.darkmode){
             document.documentElement.classList.add('dark-mode')
           }
@@ -179,12 +177,12 @@ export default new Vuex.Store({
           let detected = navigator.languages
             ? navigator.languages[0]
             : (navigator.language || navigator.userLanguage)
-          detected = detected.split('-')[0]
-          const lang = languages[detected] ? detected : languages[0]
-          const id = ObjectId()
+          detected = detected.split('-')[0].toLowerCase()
+
+          const lang = languages[detected] ? detected : Object.keys(languages)[0]
           const code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
           var preferences = {
-            id: id,
+            _id: ObjectId(),
             code: code,
             flag: '🇷🇪',
             country: '🇷🇪',

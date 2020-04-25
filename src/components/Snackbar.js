@@ -12,7 +12,6 @@ module.exports = function (type, message, options) {
   }
 
   if (!message) return;
-  // message = router.app.translate(message)
 
   snackBarElement.classList.remove('ui-snackbar--is-inactive')
   snackBarElement.classList.remove('ui-snackbar--success')
