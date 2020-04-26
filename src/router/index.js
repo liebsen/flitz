@@ -27,8 +27,8 @@ import ForgotPass from '../components/ForgotPass'
 import Validate from '../components/Validate'
 import NotFound from '../components/NotFound'
 
-window.jQuery = $;
-window.$ = $;
+window.jQuery = $
+window.$ = $
 
 Vue.use(Router)
 
@@ -150,8 +150,8 @@ const router = new Router({
       name: 'notfound',
       component: NotFound
     }
-  ]  
-});
+  ]
+})
 
 router.beforeEach(async (to, from, next) => {
   await Vue.nextTick()
@@ -163,7 +163,7 @@ router.beforeEach(async (to, from, next) => {
           router.app.translations = json.data
           console.log('🙌 Player identification successfully performed')
           router.app.$socket.emit('preferences', res)
-          next()        
+          next()
         })
       }).catch(err => {
         console.log(`Algo malo sucedió ` + err)
@@ -173,8 +173,9 @@ router.beforeEach(async (to, from, next) => {
   }
 })
 
-router.afterEach(function (to, from, next) {
+router.afterEach(() => {
+  document.querySelector('.menu').classList.remove('fs')
+  document.querySelector('.menu-burger').classList.remove('cross')
 })
-
 
 export default router

@@ -1,12 +1,12 @@
-module.exports = function (audio,vol) {
-  if(vol === undefined) vol = 1
-  if(audio === undefined) audio = "move.ogg"
+module.exports = function (audio, vol) {
+  if (vol === undefined) vol = 1
+  if (audio === undefined) audio = 'move.ogg'
 
-  const pref = JSON.parse(localStorage.getItem('player'))||{}
-  const sound = new Audio('/static/audio/' + audio)
+  const pref = JSON.parse(localStorage.getItem('player')) || {}
+  const sound = new Audio('/audio/' + audio)
   sound.vol = vol
 
-  if(pref.sound){
+  if (pref.sound) {
     var playPromise = sound.play()
 
     if (playPromise !== undefined) {
@@ -14,10 +14,11 @@ module.exports = function (audio,vol) {
         // Automatic playback started!
         // Show playing UI.
       })
-      .catch(error => {
+        .catch(error => {
+          console.log(error)
         // Auto-play was prevented
         // Show paused UI.
-      });
+        })
     }
   }
 }

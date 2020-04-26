@@ -5,7 +5,7 @@
         <h1 class="title">
           <span class="icon is-margin-right">
             <span class="fa fa-robot"></span>
-          </span> 
+          </span>
           <span>Este recurso no existe</span>
         </h1>
         <p jsb-word="not-found-text">Si creés que se trata de un error contáctanos</p>

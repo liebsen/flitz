@@ -29,7 +29,7 @@
                 <router-link :to="'/watch/' + match.id">
                   <div class="board preservefilter">
                     <div :id="'board' + match.id"></div>
-                  </div> 
+                  </div>
                 </router-link>
                 <h6 class="has-text-right white is-clickable" @click="$root.gameFlip">
                   <span class="button is-small is-text">
@@ -89,13 +89,13 @@
                 <div class="control">
                   <button type="submit" class="button is-info is-rounded">
                     <span class="icon">
-                      <span class="fas fa-arrow-up"></span>
+                      <span class="mdi mdi-arrow-up"></span>
                     </span>
                   </button>
                 </div>
               </div>
             </form>
-          </div>        
+          </div>
         </div>
       </div>
     </div>
@@ -103,63 +103,63 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import { mapState } from 'vuex'
-  import snackbar from '../components/Snackbar'
-  import swal from 'sweetalert'
-  import playSound from '../components/playSound'
-  export default {
-    name: 'lobby',
-    data () {
-      return {
-        chat:''
+import axios from 'axios'
+import { mapState } from 'vuex'
+import snackbar from '../components/Snackbar'
+import swal from 'sweetalert'
+import playSound from '../components/playSound'
+export default {
+  name: 'lobby',
+  data () {
+    return {
+      chat: ''
+    }
+  },
+  computed: {
+    ...mapState([
+      'player',
+      'players'
+    ])
+  },
+  mounted () {
+    setTimeout(() => {
+      this.welcomeMsg()
+    }, 3000)
+  },
+  methods: {
+    welcomeMsg () {
+      let message = `🤝 Saludos ${this.player.code} que nos visita desde ${this.player.country} ${this.player.flag}` + (this.player.observe ? ` Estas en modo observador.` : ` Antes de jugar podés `) + `<a href="/preferences" class="has-text-success">establecer preferencias</a>`
+      this.$socket.emit('lobby_chat', {
+        sender: 'chatbot',
+        line: message
+      })
+    },
+    sendChat: function () {
+      if (this.chat.trim() === '') this.chat = '🤝'
+      this.$socket.emit('lobby_chat', {
+        sender: this.player.code,
+        line: this.chat
+      })
+      this.chat = ''
+    },
+    clickObserve: function (data) {
+      if (data === this.player.code) {
+        snackbar('error', 'No podés jugar contra vos mismo')
+      } else {
+        snackbar('default', data + ' Está en modo Observador y no acepta invitaciones')
       }
     },
-    computed: {
-      ...mapState([
-        'player',
-        'players'
-      ])
-    },
-    mounted () {
-      setTimeout(() => {
-        this.welcomeMsg()
-      }, 3000)
-    },
-    methods: {
-      welcomeMsg () {
-        let message = `🤝 Saludos ${this.player.code} que nos visita desde ${this.player.country} ${this.player.flag}` + (this.player.observe ? ` Estas en modo observador.` : ` Antes de jugar podés `) +  `<a href="/preferences" class="has-text-success">establecer preferencias</a>`
-        this.$socket.emit('lobby_chat', { 
-          sender: 'chatbot',
-          line: message
-        })
-      },
-      sendChat: function() {
-        if(this.chat.trim()==='') this.chat = '🤝'
-        this.$socket.emit('lobby_chat', { 
-          sender: this.player.code,
-          line: this.chat
-        })
-        this.chat = ''
-      },
-      clickObserve: function(data) { 
-        if(data === this.player.code){
-          snackbar('error','No podés jugar contra vos mismo')   
-        } else {
-          snackbar('default', data + ' Está en modo Observador y no acepta invitaciones') 
-        }        
-      },
-      play: function(player) {
-        if (player.code === this.player.code) {
-          return snackbar('error','No podés jugar contra vos mismo') 
-        }
-        const template = (`
+    play: function (player) {
+      if (player.code === this.player.code) {
+        return snackbar('error', 'No podés jugar contra vos mismo')
+      }
+      const template = (`
 <div class="content">
   <div class="columns columns-bottom is-flex has-text-centered">
     <div class="column">
       <h4>
         <span class="icon">
-          <span class="fas fa-clock"></span>
+          <span class="mdi mdi-clock"></span>
         </span>
         <span>Rondas</span>
       </h4>
@@ -191,7 +191,7 @@
     <div class="column">
       <h4>
         <span class="icon">
-          <span class="fas fa-clock"></span>
+          <span class="mdi mdi-clock"></span>
         </span>
         <span>Minutos</span>
       </h4>
@@ -209,7 +209,7 @@
     <div class="column">
       <h4>
         <span class="icon">
-          <span class="fas fa-stopwatch"></span>
+          <span class="mdi mdi-stopwatch"></span>
         </span>
         <span>Compensación en segundos</span>
       </h4>
@@ -224,76 +224,76 @@
     </div>
   </div>
 
-</div>`);
-        swal({
-          title: 'Invitar a ' + player.code,
-          buttons: ["Cancelar", "Invitar"],
-          closeOnClickOutside: false,
-          content: {
-            element: 'div',
-            attributes: {
-              innerHTML: `${template}`,
-            }
+</div>`)
+      swal({
+        title: 'Invitar a ' + player.code,
+        buttons: ['Cancelar', 'Invitar'],
+        closeOnClickOutside: false,
+        content: {
+          element: 'div',
+          attributes: {
+            innerHTML: `${template}`
           }
-        }).then(accept => {
-          if (accept) {
-            var playercolor = document.querySelector('.playercolor > .has-background-success')
-            var gameclock = document.querySelector('.gameclock > .has-background-success')
-            var roundsCont = document.querySelector('.rounds > .has-background-success')
-            var gamecompensation = document.querySelector('.gamecompensation > .has-background-success')
-            var white = this.player
-            var black = player
-            var minutes = parseInt(gameclock.textContent)
-            var rounds = parseInt(roundsCont.textContent)
-            var compensation = parseInt(gamecompensation.textContent)
+        }
+      }).then(accept => {
+        if (accept) {
+          var playercolor = document.querySelector('.playercolor > .has-background-success')
+          var gameclock = document.querySelector('.gameclock > .has-background-success')
+          var roundsCont = document.querySelector('.rounds > .has-background-success')
+          var gamecompensation = document.querySelector('.gamecompensation > .has-background-success')
+          var white = this.player
+          var black = player
+          var minutes = parseInt(gameclock.textContent)
+          var rounds = parseInt(roundsCont.textContent)
+          var compensation = parseInt(gamecompensation.textContent)
 
-            if(playercolor.classList.contains('is-black-pieces')){
+          if (playercolor.classList.contains('is-black-pieces')) {
+            white = player
+            black = this.player
+          }
+
+          if (playercolor.classList.contains('is-random-pieces')) {
+            const coin = Math.floor(Math.random() * 1)
+            if (coin) {
               white = player
               black = this.player
-            } 
-
-            if(playercolor.classList.contains('is-random-pieces')){
-              const coin = Math.floor(Math.random() * 1)
-              if(coin){
-                white = player
-                black = this.player
-              } else {
-                white = this.player
-                black = player
-              }
+            } else {
+              white = this.player
+              black = player
             }
-
-            swal({
-              title: "Esperando confirmación...",
-              text: player.code + ' debe responder la solicitud',
-              buttons: false
-            })
-
-            let game = {
-              asker: this.player,
-              player: player,
-              white: white,
-              black: black,
-              minutes: minutes,
-              rounds: rounds,
-              round: 1,
-              compensation: compensation
-            }
-
-            this.$socket.emit('invite', game)
           }
-        })
 
-        setTimeout(() => {
-          const saved = JSON.parse(localStorage.getItem('player'))
-          let pieces = ['.is-white-pieces','.is-black-pieces','.is-random-pieces']
-          pieces.forEach(tag => {
-            let e = document.querySelector(tag)
-            let li = window.getComputedStyle(e);
-            e.style.backgroundImage = li.getPropertyValue('background-image').split('classic').join(saved.pieces)
+          swal({
+            title: 'Esperando confirmación...',
+            text: player.code + ' debe responder la solicitud',
+            buttons: false
           })
-        },10)
-      }
+
+          let game = {
+            asker: this.player,
+            player: player,
+            white: white,
+            black: black,
+            minutes: minutes,
+            rounds: rounds,
+            round: 1,
+            compensation: compensation
+          }
+
+          this.$socket.emit('invite', game)
+        }
+      })
+
+      setTimeout(() => {
+        const saved = JSON.parse(localStorage.getItem('player'))
+        let pieces = ['.is-white-pieces', '.is-black-pieces', '.is-random-pieces']
+        pieces.forEach(tag => {
+          let e = document.querySelector(tag)
+          let li = window.getComputedStyle(e)
+          e.style.backgroundImage = li.getPropertyValue('background-image').split('classic').join(saved.pieces)
+        })
+      }, 10)
     }
   }
+}
 </script>

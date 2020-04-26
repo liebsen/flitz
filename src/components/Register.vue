@@ -4,7 +4,7 @@
       <h3 class="title">
         <span class="icon">
           <span class="fa fa-user-plus"></span>
-        </span> 
+        </span>
         <span>{{ 'register' | t }}</span>
       </h3>
       <div class="columns is-centered">
@@ -33,12 +33,12 @@
                 <button type="submit" class="button  is-rounded is-link" :class="{'is-loading' : $root.processing}">{{ 'register' | t }}</button>
               </div>
             </div>
-            <hr> 
+            <hr>
             <div class="field">
               <div class="control">
                 <router-link to="/login">{{ 'login' | t }}</router-link>
               </div>
-            </div> 
+            </div>
           </form>
         </div>
       </div>
@@ -56,17 +56,16 @@ export default {
     }
   },
   methods: {
-    submit: function() {
+    submit: function () {
       var t = this
-      if(!t.acceptTerms)
-        return snackbar('error',"Tenés que aceptar nuestros términos y condiciones para crear una cuenta") 
+      if (!t.acceptTerms) { return snackbar('error', 'Tenés que aceptar nuestros términos y condiciones para crear una cuenta') }
       t.$root.processing = true
       this.$store
-        .dispatch("register", t.data)
+        .dispatch('register', t.data)
         .then(res => {
-          this.$router.push("/register-success")
+          this.$router.push('/register-success')
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err))
     }
   }
 }

@@ -14,7 +14,7 @@ export default new Vuex.Store({
     games: games,
     status: null,
     auth: JSON.parse(localStorage.getItem('auth')) || {},
-    endpoint: process.env.ENDPOINT
+    endpoint: (process.env.NODE_ENV === 'production' ? 'https://biltzapi.herokuapp.com' : 'http://localhost:4000')
   },
   mutations: {
     /* A fit-them-all commit */
@@ -166,8 +166,8 @@ export default new Vuex.Store({
     player ({ commit }, data) {
       return new Promise((resolve, reject) => {
         const stored = data || JSON.parse(localStorage.getItem('player')) || {}
-        if(Object.keys(stored).length && stored._id){
-          if(stored.darkmode){
+        if (Object.keys(stored).length && stored._id) {
+          if (stored.darkmode) {
             document.documentElement.classList.add('dark-mode')
           }
 

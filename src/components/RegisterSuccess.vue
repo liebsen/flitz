@@ -4,7 +4,7 @@
       <h3 class="title">
         <span class="icon">
           <span class="fa fa-tick"></span>
-        </span> 
+        </span>
         <span>{{ 'register_success' | t }}</span>
       </h3>
       <p>{{ 'register_success_text' | t }}</p>

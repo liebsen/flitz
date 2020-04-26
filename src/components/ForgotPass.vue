@@ -4,7 +4,7 @@
       <h3 class="title">
         <span class="icon">
           <span class="fa fa-question"></span>
-        </span> 
+        </span>
         <span>{{ 'forgot_password' | t }}</span>
       </h3>
       <div class="columns is-centered">
@@ -20,7 +20,7 @@
               <div class="control has-text-centered">
                 <button type="submit" class="button  is-rounded is-link" :class="{'is-loading' : $root.processing}">{{ 'recover_password' | t }}</button>
               </div>
-            </div>  
+            </div>
           </form>
         </div>
       </div>
@@ -38,15 +38,15 @@ export default {
     }
   },
   methods: {
-    submit: function() {
+    submit: function () {
       var t = this
       t.$root.processing = true
       this.$store
-        .dispatch("register", t.data)
+        .dispatch('register', t.data)
         .then(res => {
-          this.$router.push("/register-success")
+          this.$router.push('/register-success')
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err))
     }
   }
 }

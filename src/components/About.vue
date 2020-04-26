@@ -4,7 +4,7 @@
       <h3 class="title">
         <span class="icon">
           <span class="fa fa-info"></span>
-        </span> 
+        </span>
         <span>Acerca de Biltz</span>
       </h3>
       <h2>¿Qué es?</h2>
@@ -15,7 +15,7 @@
       <h2>¿Qué objetivos persigue?</h2>
       <p>El código fuente de este proyecto fue creado y es mantenido por un solo desarrollador ad honorem. Actualmente tiene un solo idioma, <i>castellano neutro</i> o mas conocido como español neutro porque pretende llegar a los nuevos entusiastas del ajedrez en Argentina y países hermanos de habla castellana. Existe la posibilidad de extender la aplicación a multi-idioma pero es necesaria la bondadosa colaboración de eventuales entusiastas.</p>
       <p><a href="mailto:overlemonsoft@gmail.com?Subject=Hola, Quiero conocer mas sobre el proyecto Biltz" class="button is-success is-rounded">Conocer mas sobre Biltz</a></p>
-      
+
       <h4>Objetivos</h4>
       <ul>
         <li>Proveer de herramientas digitales para la promoción del deporte del ajedrez en Argentina, tanto tableros virtuales de eventos en tiempo real y como para estudio offline.</li>
@@ -47,7 +47,7 @@
         <li>
           <a href="https://ajedrezenvivo.net" target="_blank">Biltz Producción (inactivo)</a>
         </li>
-        <li>  
+        <li>
           <a href="https://biltz.herokuapp.com" target="_blank">Biltz Desarrollo</a>
         </li>
       </ul>
@@ -59,7 +59,7 @@
         <li>
           <a href="https://github.com/liebsen/biltzapi.git" target="_blank">Biltz API</a>
         </li>
-        <li>  
+        <li>
           <a href="https://github.com/liebsen/biltz.git" target="_blank">Biltz App</a>
         </li>
       </ul>
@@ -73,7 +73,7 @@
       <h4>Agradecimientos</h4>
       <p>Biltz desea agradecer especialmente a <a href="https://github.com/jhlywa">Jeff Hlywa</a> de <a href="https://github.com/jhlywa/chess.js">chess.js</a>, a <a href="https://github.com/oakmac">Chris Oakman</a> de <a href="https://github.com/oakmac/chessboardjs">chessboard.js</a> y a <a href="https://github.com/nmrugg">Nathan Rugg</a> de <a href="https://github.com/nmrugg/stockfish.js">stockfish.js</a> por contribuir al desarrollo del software libre de ajedrez.</p>
       <p>Biltz quiere agradecer asimismo a todas las personas que contribuyen con este proyecto directa o indirectamente usando la aplicación.</p>
-        
+
       <h4>ChangeLog</h4>
       <ul>
         <li class="has-text-success">2019.4.2 Versión 0.1 Inicio del proyecto — Visualización de partida.</li>
@@ -103,7 +103,7 @@
 
 export default {
   name: 'about',
-  mounted: function(){
+  mounted: function () {
   },
   data () {
     return {

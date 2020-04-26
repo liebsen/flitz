@@ -1,4 +1,4 @@
 module.exports = {
-	en: true, 
-	es: true
+  en: true,
+  es: true
 }

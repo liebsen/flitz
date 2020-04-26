@@ -38,7 +38,7 @@
               <div class="column">
                 <a :href="'mailto:?Body=Estoy como ' + player.code + ' https://biltz.herokuapp.com/lobby&Subject=¿Querés jugar ajedrez online?'" target="_blank">
                   <span class="icon has-text-primary is-size-3">
-                    <span class="fas fa-envelope-square"></span>
+                    <span class="mdi mdi-envelope-square"></span>
                   </span>
                 </a>
               </div>

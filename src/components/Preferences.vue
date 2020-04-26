@@ -3,8 +3,8 @@
     <section class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
-          <span class="fas fa-paint-brush"></span>
-        </span> 
+          <span class="mdi mdi-paint-brush"></span>
+        </span>
         <span>{{ 'preferences' | t }}</span>
       </h3>
       <div class="columns is-marginless">
@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="column">
-          <form @submit.prevent="submit"> 
+          <form @submit.prevent="submit">
             <div class="field is-horizontal">
               <div class="field-body">
                 <div class="field">
@@ -115,8 +115,6 @@
               </div>
             </div>
 
-
-
             <div class="field has-text-centered">
               <div class="column">
                 <button type="submit" class="button is-rounded is-success" :class="{ 'is-loading' : $root.saving }">{{ 'preferences_update' | t }}</button>
@@ -130,243 +128,243 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import Chess from 'chess.js'
-  import { mapState } from 'vuex'
-  import Chessboard from '../../static/js/chessboard'
-  import snackbar from '../components/Snackbar'
-  import playSound from '../components/playSound'
+import axios from 'axios'
+import Chess from 'chess.js'
+import { mapState } from 'vuex'
+import Chessboard from '.././assets/js/chessboard'
+import snackbar from '../components/Snackbar'
+import playSound from '../components/playSound'
 
-  export default {
-    name: 'preferences',
-    watch: {
-      'data.pieces'  (val) {
-        this.pieceColor = val
+export default {
+  name: 'preferences',
+  watch: {
+    'data.pieces'  (val) {
+      this.pieceColor = val
+      this.drawBoard()
+    },
+    'data.board'  (val) {
+      this.boardColor = val
+      this.drawBoard()
+    }
+  },
+  computed: {
+    ...mapState([
+      'player'
+    ])
+  },
+  mounted () {
+    this.$root.loading = true
+    this.data = this.player
+    this.anchor.code = this.player.code
+    this.anchor.lang = this.player.lang
+    this.$root.saving = false
+    axios.get('/json/flags.json').then(flags => {
+      this.flags = flags.data
+      setTimeout(() => {
+        this.$root.loading = false
         this.drawBoard()
-      },
-      'data.board'  (val) {
-        this.boardColor = val
-        this.drawBoard()
-      }
+      }, 250)
+    })
+  },
+  created () {
+    window.addEventListener('resize', this.addWindowListeners)
+  },
+  destroyed () {
+    window.removeEventListener('resize', this.addWindowListeners)
+  },
+  beforeDestroy () {
+    const player = JSON.parse(localStorage.getItem('player'))
+    if (player.strongnotification) {
+      document.querySelector('.ui-snackbar').classList.add('is-strong')
+    } else {
+      document.querySelector('.ui-snackbar').classList.remove('is-strong')
+    }
+    if (player.darkmode) {
+      document.documentElement.classList.add('dark-mode')
+    } else {
+      document.documentElement.classList.remove('dark-mode')
+    }
+  },
+  methods: {
+    addWindowListeners () {
+      this.board.resize()
+      document.querySelector('.square-b5').classList.add('highlight-move')
+      document.querySelector('.square-f1').classList.add('highlight-move')
     },
-    computed: {
-      ...mapState([
-        'player'
-      ])
-    },
-    mounted (){
-      this.$root.loading = true
-      this.data = this.player
-      this.anchor.code = this.player.code
-      this.anchor.lang = this.player.lang
-      this.$root.saving = false
-      axios.get('/json/flags.json').then(flags => {
-        this.flags = flags.data
-        setTimeout(() => {
-          this.$root.loading = false
-          this.drawBoard()  
-        },250)
-      })
-    },
-    created () {
-      window.addEventListener('resize', this.addWindowListeners)
-    },
-    destroyed () {
-      window.removeEventListener('resize', this.addWindowListeners)
-    },
-    beforeDestroy () {
-      const player = JSON.parse(localStorage.getItem('player'))
-      if(player.strongnotification){
-        document.querySelector('.ui-snackbar').classList.add('is-strong')
-      } else {
-        document.querySelector('.ui-snackbar').classList.remove('is-strong')
-      }
-      if(player.darkmode){
-        document.documentElement.classList.add('dark-mode')
-      } else {
-        document.documentElement.classList.remove('dark-mode')
-      }
-    },
-    methods: {
-      addWindowListeners () {
-        this.board.resize()
-        document.querySelector('.square-b5').classList.add('highlight-move')
-        document.querySelector('.square-f1').classList.add('highlight-move')
-      },
-      previewSound (){
-        setTimeout(() => {
-          if(this.data.sound){
-            playSound('check.ogg')
-          }
-        },100)
-      },
-      previewStrongNotification (){
-        var contains = document.querySelector('.ui-snackbar').classList.contains('is-strong')
-        var snackbarBar = document.querySelector('.ui-snackbar')
-        snackbarBar.classList.remove('ui-snackbar--is-active')
-        snackbarBar.classList.add('ui-snackbar--is-inactive')
-        setTimeout(() => {
-          if(this.data.strongnotification){
-            snackbarBar.classList.add('is-strong')
-            snackbar('default','huge_notifications',3000)
-          } else {
-            snackbarBar.classList.remove('is-strong')
-            snackbar('default','normal_notifications',3000)
-          }
-        },100)
-      },
-      previewDarkmode (){
-        setTimeout(() => {
-          if(this.data.darkmode){
-            document.documentElement.classList.add('dark-mode')
-          } else {
-            document.documentElement.classList.remove('dark-mode')
-          }
-        },100)
-      },
-      drawBoard:function(){
-        this.boardEl = document.getElementById('board')
-        this.game = new Chess()
-
-        if(this.data.pieces){
-          this.boardCfg.pieceTheme = '/static/img/chesspieces/' + this.data.pieces + '/{piece}.png'
-          this.boardColor = this.data.board
-          this.pieceColor = this.data.pieces
-          this.$root.checkBoardStyle(this.data.pieces)
+    previewSound () {
+      setTimeout(() => {
+        if (this.data.sound) {
+          playSound('check.ogg')
         }
-
-        this.board = Chessboard('board', this.boardCfg)      
-        this.board.resize()        
-        document.querySelector('.square-b5').classList.add('highlight-move')
-        document.querySelector('.square-f1').classList.add('highlight-move')
-      },
-      submit (){
-        this.$root.saving = true
-        this.$socket.emit('lobby_leave', {code: this.anchor.code})
-        this.data.ref = this.anchor.code || 'desconocido'
-        this.$store
-          .dispatch('player', this.data)
-          .then(data => {
-            let checkLang = res => {
-              return new Promise((resolve,reject) => {
-                console.log(this.anchor.lang)
-                console.log(res.lang)
-                if (this.anchor.lang !== res.lang) {
-                  axios.get(`/json/lang/${res.lang}.json`).then(json => {
-                    console.log('cargando lang: '  + res.lang)
-                    this.$root.translations = json.data
-                    this.$root.appKey++
-                    resolve()
-                  })
-                } else {
-                  resolve()
-                }                
-              })
-            }
-            checkLang(data).then(() => {
-              this.anchor.code = data.code
-              this.$root.saving = false
-              this.$socket.emit('preferences', data)
-              snackbar('success', 'preferences_saved')
-            })
-          }).catch(err => {
-            console.log(`Algo malo sucedió ` + err)
-          })
-      }
+      }, 100)
     },
-    data () {
-      return {
-        boardCfg: {
-          position: 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R',
-          pieceTheme:'/static/img/chesspieces/classic/{piece}.png',
-          draggable: false
-        },
-        languages: [
-          {
-            name: 'English',
-            code: 'en'
-          },
-          {
-            name: 'Español',
-            code: 'es'
-          }
-        ],
-        themes: {
-          boards: [
-            'classic',
-            'bases',
-            'bit',
-            'blue',
-            'bubblegum',
-            'burled-wood',
-            'dark-wood',
-            'dash',
-            'glass',
-            'graffiti',
-            'green',
-            'green-plastic',
-            'ocean',
-            'lolz',
-            'marble',
-            'metal',
-            'neon',
-            'newspaper',
-            'orange',
-            'overlay',
-            'parchment',
-            'pink',
-            'purple',
-            'red',
-            'sand',
-            'sky',
-            'stone',
-            'tan',
-            'tournament',
-            'translucent',
-            'turquoise',
-            'walnut'
-          ],
-          pieces: [
-            'classic',
-            'neo',
-            'neo_wood',
-            'wood',
-            'bases',
-            'alpha',
-            'chess24',
-            'leipzig',
-            'fantasy',
-            'book',
-            'cases',
-            'newspaper',
-            'maya',
-            'glass',
-            'gothic',
-            'light',
-            'lolz',
-            'tigers',
-            'condal',
-            'marble',
-            'modern',
-            'club',
-            'neon',
-            'magi',
-            'staunton3d',
-            'plastic3d',
-            'wood3d',
-            'chesskid3d',
-            'magi3d'
-          ]
-        },
-        data:{},
-        anchor: {},
-        flags:[],
-        nick:null,
-        boardColor:null,
-        boardEl:null,
-        game:null,
-        loading: false
+    previewStrongNotification () {
+      var contains = document.querySelector('.ui-snackbar').classList.contains('is-strong')
+      var snackbarBar = document.querySelector('.ui-snackbar')
+      snackbarBar.classList.remove('ui-snackbar--is-active')
+      snackbarBar.classList.add('ui-snackbar--is-inactive')
+      setTimeout(() => {
+        if (this.data.strongnotification) {
+          snackbarBar.classList.add('is-strong')
+          snackbar('default', 'huge_notifications', 3000)
+        } else {
+          snackbarBar.classList.remove('is-strong')
+          snackbar('default', 'normal_notifications', 3000)
+        }
+      }, 100)
+    },
+    previewDarkmode () {
+      setTimeout(() => {
+        if (this.data.darkmode) {
+          document.documentElement.classList.add('dark-mode')
+        } else {
+          document.documentElement.classList.remove('dark-mode')
+        }
+      }, 100)
+    },
+    drawBoard: function () {
+      this.boardEl = document.getElementById('board')
+      this.game = new Chess()
+
+      if (this.data.pieces) {
+        this.boardCfg.pieceTheme = '/img/chesspieces/' + this.data.pieces + '/{piece}.png'
+        this.boardColor = this.data.board
+        this.pieceColor = this.data.pieces
+        this.$root.checkBoardStyle(this.data.pieces)
       }
+
+      this.board = Chessboard('board', this.boardCfg)
+      this.board.resize()
+      document.querySelector('.square-b5').classList.add('highlight-move')
+      document.querySelector('.square-f1').classList.add('highlight-move')
+    },
+    submit () {
+      this.$root.saving = true
+      this.$socket.emit('lobby_leave', { code: this.anchor.code })
+      this.data.ref = this.anchor.code || 'desconocido'
+      this.$store
+        .dispatch('player', this.data)
+        .then(data => {
+          let checkLang = res => {
+            return new Promise((resolve, reject) => {
+              console.log(this.anchor.lang)
+              console.log(res.lang)
+              if (this.anchor.lang !== res.lang) {
+                axios.get(`/json/lang/${res.lang}.json`).then(json => {
+                  console.log('cargando lang: ' + res.lang)
+                  this.$root.translations = json.data
+                  this.$root.appKey++
+                  resolve()
+                })
+              } else {
+                resolve()
+              }
+            })
+          }
+          checkLang(data).then(() => {
+            this.anchor.code = data.code
+            this.$root.saving = false
+            this.$socket.emit('preferences', data)
+            snackbar('success', 'preferences_saved')
+          })
+        }).catch(err => {
+          console.log(`Algo malo sucedió ` + err)
+        })
+    }
+  },
+  data () {
+    return {
+      boardCfg: {
+        position: 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R',
+        pieceTheme: '/img/chesspieces/classic/{piece}.png',
+        draggable: false
+      },
+      languages: [
+        {
+          name: 'English',
+          code: 'en'
+        },
+        {
+          name: 'Español',
+          code: 'es'
+        }
+      ],
+      themes: {
+        boards: [
+          'classic',
+          'bases',
+          'bit',
+          'blue',
+          'bubblegum',
+          'burled-wood',
+          'dark-wood',
+          'dash',
+          'glass',
+          'graffiti',
+          'green',
+          'green-plastic',
+          'ocean',
+          'lolz',
+          'marble',
+          'metal',
+          'neon',
+          'newspaper',
+          'orange',
+          'overlay',
+          'parchment',
+          'pink',
+          'purple',
+          'red',
+          'sand',
+          'sky',
+          'stone',
+          'tan',
+          'tournament',
+          'translucent',
+          'turquoise',
+          'walnut'
+        ],
+        pieces: [
+          'classic',
+          'neo',
+          'neo_wood',
+          'wood',
+          'bases',
+          'alpha',
+          'chess24',
+          'leipzig',
+          'fantasy',
+          'book',
+          'cases',
+          'newspaper',
+          'maya',
+          'glass',
+          'gothic',
+          'light',
+          'lolz',
+          'tigers',
+          'condal',
+          'marble',
+          'modern',
+          'club',
+          'neon',
+          'magi',
+          'staunton3d',
+          'plastic3d',
+          'wood3d',
+          'chesskid3d',
+          'magi3d'
+        ]
+      },
+      data: {},
+      anchor: {},
+      flags: [],
+      nick: null,
+      boardColor: null,
+      boardEl: null,
+      game: null,
+      loading: false
     }
   }
+}
 </script>

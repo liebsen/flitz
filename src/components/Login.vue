@@ -4,7 +4,7 @@
       <h3 class="title">
         <span class="icon">
           <span class="fa fa-user-check"></span>
-        </span> 
+        </span>
         <span>{{ 'login' | t }}</span>
       </h3>
       <div class="columns is-centered">
@@ -25,14 +25,14 @@
               <div class="control has-text-centered">
                 <button type="submit" class="button  is-rounded is-link" :class="{'is-loading' : $root.processing}">{{ 'login' | t }}</button>
               </div>
-            </div> 
-            <hr> 
+            </div>
+            <hr>
             <div class="field">
               <div class="control">
                 <router-link to="/forgot-password">{{ 'forgot_password' | t }}</router-link>
                 <router-link to="/register">{{ 'register' | t }}</router-link>
               </div>
-            </div> 
+            </div>
           </form>
         </div>
       </div>
@@ -49,12 +49,12 @@ export default {
     }
   },
   methods: {
-    submit: function() {
+    submit: function () {
       this.$root.processing = true
       this.$store
-        .dispatch("login", t.data)
+        .dispatch('login', t.data)
         .then(res => {
-          this.$router.push("/dash")
+          this.$router.push('/dash')
         })
         .catch(err => console.log(err))
     }

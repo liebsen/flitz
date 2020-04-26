@@ -1,17 +1,16 @@
 var snackbarClock = null
 
 module.exports = function (type, message, options) {
-
-  var snackBarElement = document.querySelector('.ui-snackbar');
-  if(snackbarClock){
+  var snackBarElement = document.querySelector('.ui-snackbar')
+  if (snackbarClock) {
     clearInterval(snackbarClock)
-  } 
+  }
 
-  if(options===undefined) {
+  if (options === undefined) {
     options = 3000
   }
 
-  if (!message) return;
+  if (!message) return
 
   snackBarElement.classList.remove('ui-snackbar--is-inactive')
   snackBarElement.classList.remove('ui-snackbar--success')
@@ -24,5 +23,5 @@ module.exports = function (type, message, options) {
   snackbarClock = setTimeout(() => {
     snackBarElement.classList.remove('ui-snackbar--is-active')
     snackBarElement.classList.add('ui-snackbar--is-inactive')
-  },options)
+  }, options)
 }

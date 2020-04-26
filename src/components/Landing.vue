@@ -5,104 +5,82 @@
         <div class="column is-hidden-mobile"></div>
         <div class="column is-8 has-text-centered">
           <div class="content is-hidden-mobile">
-            <h1 class="has-text-white"></a>{{ 'landing_title_mobile' | t }}</h1>
-            <h6></h6>
+            <h1 class="">{{ 'landing_title_mobile' | t }}</h1>
           </div>
           <div class="content is-hidden-tablet">
-            <h2 class="has-text-white"></a>{{ 'landing_title_desktop' | t }}</h2>
-            <h6></h6>
+            <h2 class="">{{ 'landing_title_desktop' | t }}</h2>
           </div>
           <div class="has-text-centered">
             <form id="search" class="has-text-centered" @submit.prevent="submit">
-              <label v-if="group.games" class="label">
-                <span v-html="`Match a ${group.games} - ${group.minutes}'+${group.compensation}`" class="has-text-light">
-                </span>
-              </label>
               <div class="field has-addons is-hidden-mobile is-flex-centered">
                 <div class="control">
-                  <input v-model="query" class="input is-medium is-white is-rounded" name="query" type="text" placeholder="Buscar en grupos" autofocus>
+                  <input v-model="query" class="input is-medium is-white is-rounded" name="query" type="text" :placeholder="'search_in_groups' | t" autofocus>
                 </div>
                 <div class="control">
                   <button type="submit" id="searchbtn" class="button is-medium is-rounded is-white">
                     <span class="icon has-text-info">
-                      <span class="fas fa-search"></span>
+                      <span class="mdi mdi-layers-search"></span>
                     </span>
                   </button>
                 </div>
               </div>
               <div class="field has-addons is-hidden-tablet is-flex-centered">
                 <div class="control">
-                  <input v-model="query" class="input is-rounded" name="query" type="text" placeholder="Evento, jugador o PGN" autofocus>
+                  <input v-model="query" class="input is-rounded" name="query" type="text" :placeholder="'search_in_groups' | t" autofocus>
                 </div>
                 <div class="control">
                   <button type="submit" id="searchbtn" class="button is-rounded is-white">
                     <span class="icon has-text-info">
-                      <span class="fas fa-search"></span>
+                      <span class="mdi mdi-layers-search"></span>
                     </span>
                   </button>
                 </div>
               </div>
-            </form>     
-          </div>       
-          <div class="has-text-centered">
-            <h4 class="has-text-white">{{ 'play_against' | t }}</h4>
-            <h6>&nbsp;</h6>
+            </form>
+          </div>
+          <div class="has-text-centered content">
+            <div class="field">
+              <h3>{{ 'play_against' | t }}</h3>
+            </div>
           </div>
           <div class="columns is-vcentered has-text-centered is-hidden-mobile">
             <div class="column has-text-right">
               <a @click="$root.play" class="button is-rounded is-medium is-success">
                 <span class="icon">
-                  <span class="fas fa-handshake"></span>
-                </span> 
+                  <span class="mdi mdi-handshake"></span>
+                </span>
                 <span>{{ 'human' | t }}</span>
               </a>
             </div>
             <div class="column has-text-left">
               <router-link class="button is-rounded is-medium is-info" to="/stockfish">
                 <span class="icon">
-                  <span class="fas fa-server"></span>
-                </span> 
+                  <span class="mdi mdi-robot"></span>
+                </span>
                 <span>Stockfish</span>
-              </router-link>              
+              </router-link>
             </div>
           </div>
           <div class="columns is-vcentered has-text-centered is-hidden-tablet">
             <div class="column">
               <a @click="$root.play" class="button is-rounded is-success">
                 <span class="icon">
-                  <span class="fas fa-layer-group"></span>
-                </span> 
+                  <span class="mdi mdi-handshake"></span>
+                </span>
                 <span>{{ 'human' | t }}</span>
               </a>
             </div>
             <div class="column">
               <router-link class="button is-rounded is-info" to="/stockfish">
                 <span class="icon">
-                  <span class="fas fa-server"></span>
-                </span> 
+                  <span class="mdi mdi-robot"></span>
+                </span>
                 <span>Stockfish</span>
-              </router-link>              
+              </router-link>
             </div>
           </div>
         </div>
         <div class="column is-hidden-mobile"></div>
-      </div>
-      <ul class="pieces">
-        <li class="black"></li>
-        <li class="black"></li>
-        <li class="black"></li>
-        <li class="black"></li>
-        <li class="black"></li>
-        <li class="black"></li>
-        <li class="white"></li>
-        <li class="white"></li>
-        <li class="white"></li>
-        <li class="white"></li>
-        <li class="white"></li>
-        <li class="white"></li>
-      </ul>
-      <div class="fakeboard">
-        <div class="board-b72b1"></div>
       </div>
     </div>
   </div>
@@ -113,7 +91,7 @@ import axios from 'axios'
 import { mapState } from 'vuex'
 export default {
   name: 'landing',
-  mounted: function() {
+  mounted () {
     var t = this
     const saved = JSON.parse(localStorage.getItem('player'))
     const board = document.querySelector('.fakeboard')
@@ -127,16 +105,15 @@ export default {
     }
 
     axios.post('/group/random').then((res) => {
-      if(res.data.status === 'success'){
-        t.group = res.data.data
-        t.query = res.data.data.code
+      if (res.data.status === 'success') {
+        t.groups = res.data.data
       }
     })
-    
+
     if (saved.pieces) {
       document.querySelectorAll('.pieces li').forEach(e => {
         let li = window.getComputedStyle(e)
-        e.style.backgroundImage = li.getPropertyValue('background-image').replace('classic',saved.pieces)
+        e.style.backgroundImage = li.getPropertyValue('background-image').replace('classic', saved.pieces)
       })
     }
   },
@@ -146,16 +123,14 @@ export default {
     ])
   },
   methods: {
-    submit: function() {
+    submit () {
       this.$router.push('/groups?q=' + this.query)
     }
   },
   data () {
     return {
       query: '',
-      group: {
-        code: '...'
-      }
+      groups: []
     }
   }
 }

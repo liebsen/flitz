@@ -3,7 +3,7 @@
     <div class="content column fadeIn">
       <h3>
         <span class="icon">
-          <span class="fas fa-layer-group"></span> 
+          <span class="mdi mdi-layer-group"></span>
         </span>
         <span>Grupos</span>
       </h3>
@@ -15,17 +15,17 @@
           <div class="control">
             <button v-show="query.length" type="button" @click="clear" class="button is-rounded is-danger">
               <span class="icon">
-                <span class="fas fa-times"></span>
+                <span class="mdi mdi-times"></span>
               </span>
             </button>
             <button v-show="!query.length" type="submit" id="searchbtn" class="button is-rounded is-success">
               <span class="icon">
-                <span class="fas fa-search"></span>
+                <span class="mdi mdi-search"></span>
               </span>
             </button>
           </div>
         </div>
-      </form>   
+      </form>
       <div v-if="Object.keys(data).length" class="has-text-left">
         <table class="table">
           <thead>
@@ -69,88 +69,88 @@
           <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Ir a página ' + parseInt(page / limit + 1)"></router-link>
         </li>
       </ul>
-    </nav>     
+    </nav>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
-  import { mapState } from 'vuex'
-  import snackbar from '../components/Snackbar';
-  export default {
-    name: 'groups',
-    watch: {
-      '$route': function () {
-        this.triggerSearch()
-      }
-    },
-    mounted: function(){
+import axios from 'axios'
+import { mapState } from 'vuex'
+import snackbar from '../components/Snackbar'
+export default {
+  name: 'groups',
+  watch: {
+    '$route': function () {
       this.triggerSearch()
+    }
+  },
+  mounted: function () {
+    this.triggerSearch()
+  },
+  methods: {
+    inputTrigger: function () {
+      if (this.interval) clearInterval(this.interval)
+      this.interval = setTimeout(() => {
+        this.$router.push({ path: 'live', query: { q: this.query } })
+      }, 1500)
     },
-    methods : {
-      inputTrigger: function(){
-        if(this.interval) clearInterval(this.interval)
-        this.interval = setTimeout(() => {
-          this.$router.push({ path: 'live', query: { q: this.query }})
-        },1500)
-      },
-      clear: function(){
-        this.query = ''
-        this.submit()
-      },
-      triggerSearch: function(){
-        if(this.$route.query.q){
-          this.query = this.$route.query.q
-        }
-        if(this.$route.query.offset){
-          this.offset = parseInt(this.$route.query.offset)
-        }
-        this.$nextTick(() => this.$refs.input.focus())
-        this.search()
-      },
-      search: function() {
-        this.$root.loading = true
-        axios.post('/groups', {query:this.query,offset:this.offset,limit:this.limit} ).then((res) => {
-          this.data = res.data
-
-          var pages = []
-          if(res.data.error){
-            if(res.data.error==='not_enough_params'){
-              snackbar('info','Ingresá una palabra clave para ver grupos.', 15000);  
-            }
-          } else {
-            if(res.data.count===0){
-              snackbar('warning','No hay grupos', 5000);
-            } else {
-              var numPages = Math.ceil(res.data.count/this.limit)
-              for(var i=0;i< numPages;i++){
-                pages[i] = i*this.limit
-              }
-            }
-          }
-
-          let max = 20
-          
-          if (pages.length > max) {
-            pages.splice(max / 2, pages.length - max)
-          }
-
-          this.pages = pages
-          this.$root.loading = false
-        })       
-      },
-      submit: function(){
-        this.$router.push('/groups?q=' + this.query.trim())
-      }    
+    clear: function () {
+      this.query = ''
+      this.submit()
     },
-    data () {
-      return {
-        data:{},
-        pages:{},
-        query:'',
-        limit:10,
-        offset:0
+    triggerSearch: function () {
+      if (this.$route.query.q) {
+        this.query = this.$route.query.q
       }
+      if (this.$route.query.offset) {
+        this.offset = parseInt(this.$route.query.offset)
+      }
+      this.$nextTick(() => this.$refs.input.focus())
+      this.search()
+    },
+    search: function () {
+      this.$root.loading = true
+      axios.post('/groups', { query: this.query, offset: this.offset, limit: this.limit }).then((res) => {
+        this.data = res.data
+
+        var pages = []
+        if (res.data.error) {
+          if (res.data.error === 'not_enough_params') {
+            snackbar('info', 'Ingresá una palabra clave para ver grupos.', 15000)
+          }
+        } else {
+          if (res.data.count === 0) {
+            snackbar('warning', 'No hay grupos', 5000)
+          } else {
+            var numPages = Math.ceil(res.data.count / this.limit)
+            for (var i = 0; i < numPages; i++) {
+              pages[i] = i * this.limit
+            }
+          }
+        }
+
+        let max = 20
+
+        if (pages.length > max) {
+          pages.splice(max / 2, pages.length - max)
+        }
+
+        this.pages = pages
+        this.$root.loading = false
+      })
+    },
+    submit: function () {
+      this.$router.push('/groups?q=' + this.query.trim())
+    }
+  },
+  data () {
+    return {
+      data: {},
+      pages: {},
+      query: '',
+      limit: 10,
+      offset: 0
     }
   }
+}
 </script>
