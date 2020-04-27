@@ -92,7 +92,7 @@
                 <div class="columns is-hidden-mobile">
                   <div class="movesTableContainer preservefilter">
                     <div class="movesTable">
-                      <div class="moveRow" v-for="(move,index) in pgnIndex">
+                      <div class="moveRow" v-for="(move, index) in pgnIndex" :key="index">
                         <div class="moveNumCell" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                           <span v-html="(index+1)"></span>
                         </div>
@@ -122,16 +122,13 @@
 <script>
 
 import axios from 'axios'
-import { mapState } from 'vuex'
 import Chess from 'chess.js'
 import Chessboard from '.././assets/js/chessboard'
-import snackbar from '../components/Snackbar'
 import swal from 'sweetalert'
 import playSound from '../components/playSound'
-
 export default {
   name: 'watch',
-  mounted: function () {
+  mounted () {
     window.app = this
     this.gameStart()
     this.$socket.emit('join', this.$route.params.game)
@@ -139,11 +136,11 @@ export default {
   destroyed () {
     clearInterval(this.clock)
   },
-  beforeDestroy: function () {
+  beforeDestroy () {
     this.$socket.emit('leave', this.$route.params.game)
   },
   sockets: {
-    move: function (data) {
+    move (data) {
       var t = this
       var moveObj = ({
         from: data.from,
@@ -166,7 +163,7 @@ export default {
     }
   },
   methods: {
-    startClock: function () {
+    startClock () {
       var t = this
       t.clock = setInterval(() => {
         if (t.announced_game_over) {
@@ -186,9 +183,8 @@ export default {
         }
       }, 1000)
     },
-    get_moves: function () {
+    get_moves () {
       var moves = ''
-      var pgn = []
       var history = this.game.history({ verbose: true })
 
       for (var i = 0; i < history.length; ++i) {
@@ -198,7 +194,7 @@ export default {
 
       return moves
     },
-    calcPoints: function () {
+    calcPoints () {
       this.chart.points = []
       if (this.chart.values.length > 1) {
         var points = '0,' + this.chart.height + ' '
@@ -212,7 +208,7 @@ export default {
         this.chart.points = points
       }
     },
-    drawChart: function () {
+    drawChart () {
       var score = parseInt(this.vscore)
 
       if (this.orientation === 'white') {
@@ -232,7 +228,7 @@ export default {
         this.updateChart()
       }
     },
-    updateChart: function () {
+    updateChart () {
       this.calcPoints()
 
       var element = document.getElementsByClassName('chart')[0]
@@ -244,7 +240,6 @@ export default {
       chart.setAttribute('height', '100%')
       chart.setAttribute('preserveAspectRatio', 'none')
       chart.setAttribute('viewBox', '0 0 ' + this.chart.width + ' ' + this.chart.height)
-
       var polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon')
       polygon.setAttribute('points', this.chart.points)
 
@@ -254,7 +249,7 @@ export default {
         chart.appendChild(polygon)
       }
     },
-    updateMoves: function (move) {
+    updateMoves (move) {
       var t = this
       var sound = 'move.mp3'
       var pgn = t.game.pgn()
@@ -311,7 +306,7 @@ export default {
         t.findEco(t.game.pgn())
       }
     },
-    findEco: function (pgn) {
+    findEco (pgn) {
       let t = this
       axios.post('/eco', { pgn: pgn }).then((res) => {
         if (res.data.eco) {
@@ -320,13 +315,13 @@ export default {
         }
       })
     },
-    removeHighlight: function () {
+    removeHighlight () {
       document.getElementById('board').querySelectorAll('.square-55d63').forEach((item) => {
         item.classList.remove('highlight-move')
         item.classList.remove('in-check')
       })
     },
-    addHightlight: function (move) {
+    addHightlight (move) {
       var t = this
       t.removeHighlight()
       if (move) {
@@ -339,7 +334,7 @@ export default {
         }, 200)
       }
     },
-    highlightLastMove: function () {
+    highlightLastMove () {
       var history = this.game.history({ verbose: true })
       if (history.length) {
         var move = history[history.length - 1]
@@ -347,14 +342,8 @@ export default {
         document.querySelector('.square-' + move.to).classList.add('highlight-move')
       }
     },
-    gamePGNIndex: function (pgn) {
+    gamePGNIndex (pgn) {
       var data = []
-      var index = 0
-      var selectedIndex = parseInt(location.hash.replace('#', ''))
-      var symbols = [
-        { K: '♔', Q: '♕', B: '♗', N: '♘', R: '♖', p: '♙' },
-        { K: '♚', Q: '♛', B: '♝', N: '♞', R: '♜', p: '♟' }
-      ]
       pgn.split('.').forEach(function (turn, i) {
         const white = turn.split(' ')[1] || ''
         const black = turn.split(' ')[2] || ''
@@ -363,17 +352,17 @@ export default {
             white: white,
             black: black,
             i: Math.ceil(i * 2),
-            odd: i % 2 == 0
+            odd: i % 2 === 0
           })
         }
       })
       return data
     },
-    uciCmd: function (cmd, which) {
+    uciCmd (cmd, which) {
       // console.log("UCI: " + cmd);
       (which || this.evaler).postMessage(cmd)
     },
-    showPGN: function (pgn) {
+    showPGN () {
       var pgn = this.game.pgn() + ' ' + (this.data.result ? this.data.result : '')
       const template = (`
 <div class="content">
@@ -397,11 +386,11 @@ export default {
         }
       })
     },
-    gameStart: function () {
+    gameStart () {
+      /* global STOCKFISH */
       this.$root.loading = true
       const pref = JSON.parse(localStorage.getItem('player')) || {}
       axios.post('/game', { id: this.$route.params.game }).then((res) => {
-        if (!Object.keys(res.data).length) return location.href = '/404'
         var game = res.data
 
         this.evaler = typeof STOCKFISH === 'function' ? STOCKFISH() : new Worker('/js/stockfish.js')
@@ -418,8 +407,8 @@ export default {
 
           // console.log("evaler: " + line);
 
-          var match = null
-          if (match = line.match(/^Total evaluation: (\-?\d+\.\d+)/)) {
+          var match = line.match(/^Total evaluation: (-?\d+\.\d+)/)
+          if (match) {
             t.score = parseFloat(match[1])
             t.vscore = 50 - (t.score / 48 * 100)
             t.drawChart()
@@ -484,11 +473,11 @@ export default {
             this.game.load_pgn(this.data.pgn)
           }
 
-          $(window).resize(() => {
+          window.onresize = function (event) {
             this.board.resize()
             this.highlightLastMove()
             this.$root.fullscreenBoard()
-          })
+          }
 
           playSound('start.ogg')
           this.highlightLastMove()
@@ -496,7 +485,7 @@ export default {
         }, 100)
       })
     },
-    gameFlip: function () {
+    gameFlip () {
       this.board.flip()
       this.orientation = this.board.orientation()
       const white = document.querySelector('.board-container .white').innerHTML
@@ -505,7 +494,7 @@ export default {
       document.querySelector('.board-container .black').innerHTML = white
       this.highlightLastMove()
     },
-    gameSeek: function () {
+    gameSeek () {
       window.setTimeout(() => {
         this.selectedIndex = parseInt(location.hash.replace('#', ''))
         if (!isNaN(this.selectedIndex)) {
@@ -517,7 +506,8 @@ export default {
         }
       }, 10)
     },
-    gamePos: function (pos) {
+    gamePos (pos) {
+      /* global $ */
       if (pos > this.gameMoves.length) {
         return
       }
@@ -586,8 +576,6 @@ export default {
       orientation: null,
       announced_game_over: false,
       gameStarted: false,
-      score: 0.10,
-      vscore: 49,
       ecode: null,
       opening: null,
       board: null,

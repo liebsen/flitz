@@ -291,11 +291,11 @@ export default {
           this.board = Chessboard('board', this.boardCfg)
           this.orientation = this.board.orientation()
 
-          $(window).resize(() => {
+          window.onresize = function (event) {
             this.board.resize()
             this.$root.fullscreenBoard()
             this.highlightLastMove()
-          })
+          }
 
           playSound('start.ogg')
           $('.bar-progress').css({ width: '0%' })
