@@ -8,7 +8,6 @@ import Results from '../components/Results'
 import Contact from '../components/Contact'
 import Donate from '../components/Donate'
 import Play from '../components/Play'
-import Lobby from '../components/Lobby'
 import Live from '../components/Live'
 import Preferences from '../components/Preferences'
 import Stockfish from '../components/Stockfish'
@@ -88,11 +87,6 @@ const router = new Router({
       path: '/preferences',
       name: 'preferences',
       component: Preferences
-    },
-    {
-      path: '/lobby',
-      name: 'lobby',
-      component: Lobby
     },
     {
       path: '/stockfish',
