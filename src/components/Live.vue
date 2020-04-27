@@ -37,7 +37,7 @@
             <th>Plys</th>
           </thead>
           <tbody>
-            <tr v-for="item in data.games">
+            <tr v-for="(item, index) in data.games" :key="index">
               <td>
                 <router-link :to="'/watch/'+item._id">
                   <span class="icon">
@@ -66,7 +66,7 @@
       <!--a class="pagination-previous">Previous</a>
       <a class="pagination-next">Next page</a-->
       <ul class="pagination-list">
-        <li v-for="(page, index) in pages">
+        <li v-for="(page, index) in pages" :key="index">
           <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Ir a página ' + parseInt(page / limit + 1)"></router-link>
         </li>
       </ul>
@@ -76,7 +76,6 @@
 
 <script>
 import axios from 'axios'
-import { mapState } from 'vuex'
 import snackbar from '../components/Snackbar'
 export default {
   name: 'live',
@@ -141,7 +140,7 @@ export default {
         this.$root.loading = false
         axios.post(this.$root.endpoint + '/eco/search/pgn', { pgn: this.query }).then((res2) => {
           if (res2.data) {
-            t.eco = res2.data
+            this.eco = res2.data
           }
         })
       })

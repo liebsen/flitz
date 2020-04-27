@@ -48,7 +48,7 @@
               <div class="columns is-hidden-mobile">
                 <div class="movesTableContainer preservefilter">
                   <div class="movesTable">
-                    <div class="moveRow" v-for="(move,index) in pgnIndex">
+                    <div class="moveRow" v-for="(move, index) in pgnIndex" :key="index">
                       <div class="moveNumCell" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                         <span v-html="(index+1)"></span>
                       </div>
@@ -81,13 +81,12 @@
 import axios from 'axios'
 import Chess from 'chess.js'
 import Chessboard from '.././assets/js/chessboard'
-import snackbar from '../components/Snackbar'
 import swal from 'sweetalert'
 import playSound from '../components/playSound'
 
 export default {
   name: 'playeco',
-  mounted: function () {
+  mounted () {
     window.app = this
     if (localStorage.getItem('speed')) {
       this.speed = parseInt(localStorage.getItem('speed'))
@@ -95,7 +94,8 @@ export default {
     this.gameStart()
   },
   methods: {
-    gameMove: function () {
+    gameMove () {
+      /* global $ */
       if (!this.paused) {
         var move = this.gameMoves[this.index]
 
@@ -139,7 +139,7 @@ export default {
         setTimeout(this.gameMove, this.speed)
       }
     },
-    calcPoints: function () {
+    calcPoints () {
       this.chart.points = []
       if (this.chart.values.length > 1) {
         var points = '0,' + this.chart.height + ' '
@@ -153,7 +153,7 @@ export default {
         this.chart.points = points
       }
     },
-    drawChart: function () {
+    drawChart () {
       var score = parseInt(this.vscore)
 
       if (this.orientation === 'white') {
@@ -173,7 +173,7 @@ export default {
         this.updateChart()
       }
     },
-    updateChart: function () {
+    updateChart () {
       this.calcPoints()
 
       var element = document.getElementsByClassName('chart')[0]
@@ -195,7 +195,7 @@ export default {
         chart.appendChild(polygon)
       }
     },
-    moveSound: function (move) {
+    moveSound (move) {
       var sound = 'move.mp3'
 
       if (move.flags === 'c') {
@@ -216,7 +216,7 @@ export default {
 
       playSound(sound)
     },
-    get_moves: function () {
+    get_moves () {
       var moves = ''
       var pgn = []
       var history = this.game.history({ verbose: true })
@@ -228,7 +228,7 @@ export default {
 
       return moves
     },
-    gamePGN: function (pgn) {
+    gamePGN (pgn) {
       var data = []
       pgn.split('.').forEach(function (turn) {
         turn.split(' ').forEach(function (move) {
@@ -241,13 +241,8 @@ export default {
       })
       return data
     },
-    gamePGNIndex: function (pgn) {
+    gamePGNIndex (pgn) {
       var data = []
-      var index = 0
-      var symbols = [
-        { K: '♔', Q: '♕', B: '♗', N: '♘', R: '♖', p: '♙' },
-        { K: '♚', Q: '♛', B: '♝', N: '♞', R: '♜', p: '♟' }
-      ]
       pgn.split('.').forEach(function (turn, i) {
         const white = turn.split(' ')[1] || ''
         const black = turn.split(' ')[2] || ''
@@ -256,13 +251,13 @@ export default {
             white: white,
             black: black,
             i: Math.ceil(i * 2),
-            odd: i % 2 == 0
+            odd: i % 2 === 0
           })
         }
       })
       return data
     },
-    showPGN: function (pgn) {
+    showPGN () {
       var pgn = this.data.pgn + ' ' + (this.data.result ? this.data.result : '')
       const template = (`
 <div class="content">
@@ -286,18 +281,19 @@ export default {
         }
       })
     },
-    uciCmd: function (cmd, which) {
+    uciCmd (cmd, which) {
       // console.log("UCI: " + cmd);
       (which || this.evaler).postMessage(cmd)
     },
-    gameStart: function () {
+    gameStart () {
+      /* global $ */
+      /* global STOCKFISH */
       this.$root.loading = true
       axios.post('/eco/search', {
         query: this.$route.params.name,
         limit: 1,
         offset: 0
       }).then((res) => {
-        if (!Object.keys(res.data).length) return location.href = '/404'
         var game = res.data.games[0]
         const pref = JSON.parse(localStorage.getItem('player')) || {}
         const totalms = this.$root.countMoves(game.pgn) * this.speed
@@ -321,11 +317,11 @@ export default {
           this.board = Chessboard('board', this.boardCfg)
           this.orientation = this.board.orientation()
 
-          $(window).resize(() => {
+          window.onresize = function (event) {
             this.board.resize()
             this.highlightLastMove()
             this.$root.fullscreenBoard()
-          })
+          }
 
           playSound('start.ogg')
 
@@ -354,8 +350,8 @@ export default {
 
           // console.log("evaler: " + line);
 
-          var match = null
-          if (match = line.match(/^Total evaluation: (\-?\d+\.\d+)/)) {
+          var match = line.match(/^Total evaluation: (-?\d+\.\d+)/)
+          if (match) {
             t.score = parseFloat(match[1])
             t.vscore = 50 - (t.score / 48 * 100)
             t.drawChart()
@@ -368,13 +364,13 @@ export default {
         }
       })
     },
-    removeHighlight: function () {
+    removeHighlight () {
       document.getElementById('board').querySelectorAll('.square-55d63').forEach((item) => {
         item.classList.remove('highlight-move')
         item.classList.remove('in-check')
       })
     },
-    addHightlight: function (move) {
+    addHightlight (move) {
       this.removeHighlight()
       if (move) {
         if (this.game.in_check() === true) {
@@ -384,19 +380,20 @@ export default {
         document.getElementById('board').querySelector('.square-' + move.to).classList.add('highlight-move')
       }
     },
-    highlightLastMove: function () {
+    highlightLastMove () {
       var history = this.game.history({ verbose: true })
       if (history.length) {
         var move = history[history.length - 1]
         this.addHightlight(move)
       }
     },
-    gameFlip: function () {
+    gameFlip () {
       this.board.flip()
       this.orientation = this.board.orientation()
       this.highlightLastMove()
     },
-    gamePos: function (pos) {
+    gamePos (pos) {
+      /* global $ */
       if (pos > this.gameMoves.length) {
         return
       }
@@ -439,7 +436,7 @@ export default {
         this.gamePause()
       }
     },
-    gamePause: function () {
+    gamePause () {
       this.paused = !this.paused
       document.querySelector('.bar-progress').classList.remove('paused')
       if (this.paused) {
@@ -448,15 +445,15 @@ export default {
         setTimeout(this.gameMove, 500)
       }
     },
-    gameSpeed: function (s) {
+    gameSpeed (s) {
       this.speed += s
       if (this.speed >= 1000 && this.speed <= 10000) {
-        localStorage.setItem('speed', speed)
+        localStorage.setItem('speed', this.speed)
       } else {
         this.speed -= s
       }
     },
-    setClock: function () {
+    setClock () {
       this.gamePause()
       swal('Ingresa el intervalo en milisegundos entre 1000/60000', {
         content: {

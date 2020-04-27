@@ -11,6 +11,9 @@
 // ------------------------------------------------------------------------------
 // Chess Util Functions
 // ------------------------------------------------------------------------------
+
+/* global $ */
+
 var COLUMNS = 'abcdefgh'.split('')
 
 function validMove (move) {
@@ -121,9 +124,7 @@ function fenToObj (fen) {
       if (row[j].search(/[1-8]/) !== -1) {
         var emptySquares = parseInt(row[j], 10)
         colIndex += emptySquares
-      }
-      // piece
-      else {
+      } else {
         var square = COLUMNS[colIndex] + currentRow
         position[square] = fenToPieceCode(row[j])
         colIndex++
@@ -153,10 +154,7 @@ function objToFen (obj) {
       // piece exists
       if (obj.hasOwnProperty(square) === true) {
         fen += pieceCodeToFen(obj[square])
-      }
-
-      // empty space
-      else {
+      } else {
         fen += '1'
       }
     }
@@ -227,7 +225,6 @@ var ChessBoard = function (containerElOrId, cfg) {
 
   // constructor return object
   var widget = {}
-  var imgCache = {}
 
   // ------------------------------------------------------------------------------
   // Stateful
@@ -246,6 +243,7 @@ var ChessBoard = function (containerElOrId, cfg) {
   var SQUARE_ELS_IDS = {}
   var SQUARE_ELS_OFFSETS
 
+  console.log(ANIMATION_HAPPENING)
   // ------------------------------------------------------------------------------
   // JS Util Functions
   // ------------------------------------------------------------------------------
@@ -347,12 +345,7 @@ var ChessBoard = function (containerElOrId, cfg) {
 
       // set the containerEl
       containerEl = $(el)
-    }
-
-    // else it must be something that becomes a jQuery collection
-    // with size 1
-    // ie: a single DOM node or jQuery object
-    else {
+    } else {
       containerEl = $(containerElOrId)
 
       if (containerEl.length !== 1) {
@@ -519,7 +512,7 @@ var ChessBoard = function (containerElOrId, cfg) {
 
     // spare pieces
     var pieces = 'KQRBNP'.split('')
-    for (var i = 0; i < pieces.length; i++) {
+    for (i = 0; i < pieces.length; i++) {
       var whitePiece = 'w' + pieces[i]
       var blackPiece = 'b' + pieces[i]
       SPARE_PIECE_ELS_IDS[whitePiece] = whitePiece + '-' + uuid()
@@ -628,29 +621,7 @@ var buildSquare = function(color, size, id) {
     return html
   }
 
-  function cacheImages () {
-    var pieces = ['wK', 'wQ', 'wR', 'wB', 'wN', 'wP', 'bK', 'bQ', 'bR', 'bB', 'bN', 'bP']
-    pieces.forEach(function (piece) {
-      var img = new Image()
-      img.onload = function () {
-        imgCache[piece] = getBase64Image(img)
-      }
-      img.src = buildPieceImgSrc(piece)
-    })
-
-    function getBase64Image (img) {
-      var canvas = document.createElement('canvas')
-      canvas.width = img.width
-      canvas.height = img.height
-      var ctx = canvas.getContext('2d')
-      ctx.drawImage(img, 0, 0)
-      var dataURL = canvas.toDataURL('image/png')
-      return dataURL
-    }
-  }
-
   function buildPieceImgSrc (piece) {
-    if (imgCache[piece]) return imgCache[piece]
     if (typeof cfg.pieceTheme === 'function') {
       return cfg.pieceTheme(piece)
     }
@@ -880,7 +851,7 @@ var buildSquare = function(color, size, id) {
 
     // just return the square code
     var squares2 = []
-    for (var i = 0; i < squares.length; i++) {
+    for (i = 0; i < squares.length; i++) {
       squares2.push(squares[i].square)
     }
 
@@ -926,7 +897,7 @@ var buildSquare = function(color, size, id) {
     }
 
     // find all the "move" animations
-    for (var i in pos2) {
+    for (i in pos2) {
       if (pos2.hasOwnProperty(i) !== true) continue
 
       var closestPiece = findClosestPiece(pos1, pos2[i], i)
@@ -945,7 +916,7 @@ var buildSquare = function(color, size, id) {
     }
 
     // add pieces to pos2
-    for (var i in pos2) {
+    for (i in pos2) {
       if (pos2.hasOwnProperty(i) !== true) continue
 
       animations.push({
@@ -958,7 +929,7 @@ var buildSquare = function(color, size, id) {
     }
 
     // clear pieces from pos1
-    for (var i in pos1) {
+    for (i in pos1) {
       if (pos1.hasOwnProperty(i) !== true) continue
 
       // do not clear a piece if it is on a square that is the result
@@ -1433,9 +1404,7 @@ widget.highlight = function() {
 
       // set the new position
       setCurrentPosition(position)
-    }
-    // instant update
-    else {
+    } else {
       setCurrentPosition(position)
       drawPositionInstant()
     }

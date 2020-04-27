@@ -35,7 +35,7 @@
             <th>Plys</th>
           </thead>
           <tbody>
-            <tr v-for="item in data.games">
+            <tr v-for="(item, index) in data.games" :key="index">
               <td>
                 <router-link :to="'/eco/'+item.eco">
                   <span class="icon">
@@ -59,7 +59,7 @@
     </div>
     <nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">
       <ul class="pagination-list">
-        <li v-for="(page, index) in pages">
+        <li v-for="(page, index) in pages" :key="index">
           <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Ir a página ' + parseInt(page / limit + 1)"></router-link>
         </li>
       </ul>
