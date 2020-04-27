@@ -108,7 +108,57 @@
             </ul>
           </div>
           <div v-show="tab === 'results'">
-            <h1>Resultados</h1>
+            <div v-show="!data.results" class="column">
+              <h6>{{ 'group_no_results' | t }}</h6>
+            </div>
+            <div v-show="data.results" class="column">
+              <table class="table is-narrow is-striped is-fullwidth">
+                <thead>
+                  <th>Mesa</th>
+                  <th>Evento</th>
+                  <th>Blancas</th>
+                  <th>Negras</th>
+                  <th>Fecha</th>
+                  <th>Plys</th>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in data.results" :key="index">
+                    <td>
+                      <router-link :to="'/game/'+item._id">
+                        <span class="icon">
+                          <span class="fa fa-play"></span>
+                        </span>
+                      </router-link>
+                    </td>
+                    <td>
+                      <span v-html="item.event"></span>
+                    </td>
+                    <td>
+                      <span v-show="item.result==='1-0'" class="fa fa-trophy is-size-7 has-text-warning"></span>
+                      <span v-show="item.result==='1/2-1/2'" class="fa fa-handshake has-text-success"></span>
+                      <span v-if="item.whiteflag" class="icon">
+                        <span v-html="item.whiteflag"></span>
+                      </span>
+                      <span v-html="item.white"></span>
+                    </td>
+                    <td>
+                      <span v-show="item.result==='0-1'" class="fa fa-trophy is-size-7 has-text-warning"></span>
+                      <span v-show="item.result==='1/2-1/2'" class="fa fa-handshake has-text-success"></span>
+                      <span v-if="item.blackflag" class="icon">
+                        <span v-html="item.blackflag"></span>
+                      </span>
+                      <span v-html="item.black"></span>
+                    </td>
+                    <td>
+                      <span v-html="item.date"></span>
+                    </td>
+                    <td>
+                      <span v-html="$root.countMoves(item.pgn)"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div v-show="tab === 'chat'">
             <div class="column has-text-centered box is-padded">
@@ -116,9 +166,9 @@
                 <div class="column chatbox-container">
                   <div class="chatbox fadeIn">
                     <div v-for="(line, index) in chatLines" :key="index" class="chatline">
-                      <div class="chatbubble" :class="{ 'is-pulled-right has-text-right has-background-light' : line.owned, 'is-pulled-left has-text-left has-background-white' : !line.owned, 'has-background-primary' : line.sender === 'bot' }">
-                        <strong v-show="line.sender !== 'bot' && line.sender !== player.code" v-html="line.sender"></strong>
-                        <span v-html="line.text" :class="{ 'has-text-grey' : line.sender === 'bot' }"></span>
+                      <div class="chatbubble" :class="{ 'is-pulled-right has-text-right has-background-info' : line.owned, 'is-pulled-left has-text-left has-background-white' : !line.owned, 'has-background-light' : line.sender === 'bot' }">
+                        <strong v-show="line.sender !== 'bot' && !line.owned" v-html="line.sender"></strong>
+                        <span v-html="line.text" :class="{ 'has-text-grey' : line.sender === 'bot', 'has-text-white': line.owned }"></span>
                       </div>
                       <div v-show="line.sender != 'bot'" v-html="line.ts" class="ts is-size-7" :class="{  'is-pulled-right has-text-right' : line.owned, 'is-pulled-left has-text-left' : !line.owned, 'has-text-grey': line.sender !== 'bot', 'has-text-white': line.sender === 'bot' }"></div>
                     </div>

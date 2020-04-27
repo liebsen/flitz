@@ -21,8 +21,6 @@ import App from './App.vue'
 
 axios.defaults.baseURL = store.state.endpoint
 
-moment.locale('es')
-
 Vue.use(new VueSocketIO({
   debug: process.env.NODE_ENV === 'development',
   connection: store.state.endpoint

@@ -17,7 +17,6 @@ import PlayEco from '../components/PlayEco'
 import Game from '../components/Game'
 import Group from '../components/Group'
 import Groups from '../components/Groups'
-import Analysis from '../components/Analysis'
 import Watch from '../components/Watch'
 import About from '../components/About'
 import Register from '../components/Register'
@@ -74,11 +73,6 @@ const router = new Router({
       path: '/watch/:game',
       name: 'watch',
       component: Watch
-    },
-    {
-      path: '/analysis/:game',
-      name: 'analysis',
-      component: Analysis
     },
     {
       path: '/groups',
@@ -176,6 +170,9 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach(() => {
   document.querySelector('.menu').classList.remove('fs')
   document.querySelector('.menu-burger').classList.remove('cross')
+  if (store.state.menuStatus) {
+    store.commit('togglemenu')
+  }
 })
 
 export default router

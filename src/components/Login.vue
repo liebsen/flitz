@@ -52,7 +52,7 @@ export default {
     submit: function () {
       this.$root.processing = true
       this.$store
-        .dispatch('login', t.data)
+        .dispatch('login', this.data)
         .then(res => {
           this.$router.push('/dash')
         })

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import moment from 'moment'
 import ObjectId from '@/components/ObjectId'
 import languages from '@/components/Languages'
 
@@ -9,6 +10,7 @@ Vue.use(Vuex)
 let games = JSON.parse(localStorage.getItem('games')) || []
 export default new Vuex.Store({
   state: {
+    menuState: false,
     player: null,
     players: null,
     games: games,
@@ -21,7 +23,9 @@ export default new Vuex.Store({
     basic (state, payload) {
       state[payload.key] = payload.value
     },
-
+    togglemenu () {
+      this.state.menuState = !this.state.menuState
+    },
     /* Auth */
     auth (state, payload) {
       if (payload) {
@@ -32,14 +36,14 @@ export default new Vuex.Store({
     auth_request (state) {
       state.status = 'loading'
     },
-    auth_success(state, auth) {
+    auth_success (state, auth) {
       state.status = 'success'
       state.auth = auth
     },
-    auth_error(state) {
+    auth_error (state) {
       state.status = 'error'
     },
-    logout(state) {
+    logout (state) {
       state.status = ''
       state.auth = {}
     },
@@ -101,61 +105,58 @@ export default new Vuex.Store({
       if (data) {
         commit('games_success', data)
       } else {
-        commit('games_error') 
+        commit('games_error')
       }
     },
-    login({ commit }, user) {
+    login ({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios.post( this.state.endpoint + '/account/login', user ).then((res) => {
+        axios.post('/account/login', user).then((res) => {
           const auth = res.data
           localStorage.setItem('auth', JSON.stringify(auth))
           axios.defaults.headers.common['Authorization'] = auth.token
           commit('auth_success', auth)
           resolve(res)
-        })
-        .catch(err => {
+        }).catch(err => {
           commit('auth_error')
           localStorage.removeItem('auth')
           reject(err)
         })
       })
     },
-    register({ commit }, user) {
+    register ({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios.post( this.state.endpoint + '/account/create', user ).then((res) => {
+        axios.post('/account/create', user).then((res) => {
           const auth = res.data
           localStorage.setItem('auth', JSON.stringify(auth))
           axios.defaults.headers.common['Authorization'] = auth.token
           commit('auth_success', auth)
           resolve(res)
-        })
-        .catch(err => {
+        }).catch(err => {
           commit('auth_error', err)
           localStorage.removeItem('auth')
           reject(err)
         })
       })
     },
-    validate({ commit }, code) {
+    validate ({ commit }, code) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios.post( this.state.endpoint + '/account/validate/' + code, {}).then((res) => {
+        axios.post('/account/validate/' + code, {}).then((res) => {
           const auth = res.data
           localStorage.setItem('auth', JSON.stringify(auth))
           axios.defaults.headers.common['Authorization'] = auth.token
           commit('auth_success', auth)
           resolve(res)
-        })
-        .catch(err => {
+        }).catch(err => {
           commit('auth_error', err)
           localStorage.removeItem('auth')
           reject(err)
         })
       })
     },
-    logout({ commit }) {
+    logout ({ commit }) {
       return new Promise((resolve, reject) => {
         const user = this.state.auth.user
         commit('logout')
@@ -178,8 +179,8 @@ export default new Vuex.Store({
             ? navigator.languages[0]
             : (navigator.language || navigator.userLanguage)
           detected = detected.split('-')[0].toLowerCase()
-
           const lang = languages[detected] ? detected : Object.keys(languages)[0]
+          moment.locale(lang)
           const code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
           var preferences = {
             _id: ObjectId(),
@@ -193,7 +194,7 @@ export default new Vuex.Store({
             darkmode: false,
             sound: true,
             pieces: 'classic',
-            board:'classic'
+            board: 'classic'
           }
 
           axios.post('https://ipapi.co/json').then(json => {

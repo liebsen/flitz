@@ -18,6 +18,7 @@
                   </button>
                 </div>
               </div>
+
               <div class="field has-addons is-hidden-tablet is-flex-centered">
                 <div class="control">
                   <input v-model="query" class="input is-rounded" name="query" type="text" :placeholder="'search_in_groups' | t" autofocus>
@@ -46,46 +47,41 @@
                 </router-link>
               </div>
             </div>
-          </div>
-          <div class="column has-text-centered content">
-            <div class="field">
-              <h3>{{ 'play_against' | t }}</h3>
+            <div class="columns is-vcentered has-text-centered is-hidden-mobile">
+              <div class="column has-text-right">
+                <a @click="$root.play" class="button is-rounded is-medium is-success">
+                  <span class="icon">
+                    <span class="mdi mdi-handshake"></span>
+                  </span>
+                  <span>{{ 'play_against' | t }} {{ 'human' | t }}</span>
+                </a>
+              </div>
+              <div class="column has-text-left">
+                <router-link class="button is-rounded is-medium is-info" to="/stockfish">
+                  <span class="icon">
+                    <span class="mdi mdi-robot"></span>
+                  </span>
+                  <span>{{ 'play_against' | t }} Stockfish</span>
+                </router-link>
+              </div>
             </div>
-          </div>
-          <div class="columns is-vcentered has-text-centered is-hidden-mobile">
-            <div class="column has-text-right">
-              <a @click="$root.play" class="button is-rounded is-medium is-success">
-                <span class="icon">
-                  <span class="mdi mdi-handshake"></span>
-                </span>
-                <span>{{ 'human' | t }}</span>
-              </a>
-            </div>
-            <div class="column has-text-left">
-              <router-link class="button is-rounded is-medium is-info" to="/stockfish">
-                <span class="icon">
-                  <span class="mdi mdi-robot"></span>
-                </span>
-                <span>Stockfish</span>
-              </router-link>
-            </div>
-          </div>
-          <div class="columns is-vcentered has-text-centered is-hidden-tablet">
-            <div class="column">
-              <a @click="$root.play" class="button is-rounded is-success">
-                <span class="icon">
-                  <span class="mdi mdi-handshake"></span>
-                </span>
-                <span>{{ 'human' | t }}</span>
-              </a>
-            </div>
-            <div class="column">
-              <router-link class="button is-rounded is-info" to="/stockfish">
-                <span class="icon">
-                  <span class="mdi mdi-robot"></span>
-                </span>
-                <span>Stockfish</span>
-              </router-link>
+            <div class="columns is-vcentered has-text-centered is-hidden-tablet">
+              <div class="column">
+                <a @click="$root.play" class="button is-rounded is-success">
+                  <span class="icon">
+                    <span class="mdi mdi-handshake"></span>
+                  </span>
+                  <span>{{ 'play_against' | t }} {{ 'human' | t }}</span>
+                </a>
+              </div>
+              <div class="column">
+                <router-link class="button is-rounded is-info" to="/stockfish">
+                  <span class="icon">
+                    <span class="mdi mdi-robot"></span>
+                  </span>
+                  <span>{{ 'play_against' | t }}Stockfish</span>
+                </router-link>
+              </div>
             </div>
           </div>
         </div>

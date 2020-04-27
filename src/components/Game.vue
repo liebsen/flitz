@@ -12,7 +12,7 @@
             <div class="board-container">
               <h6 class="black has-text-left is-hidden-mobile" v-show="game">
                 <span v-show="data.result==='0-1'" class="icon">
-                  <span class="fa fa-trophy is-size-7 has-text-warning"></span>
+                  <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 </span>
                 <span class="is-size-6">
                   <span v-html="data.black"></span>
@@ -27,7 +27,7 @@
               </div>
               <h6 class="white has-text-right is-hidden-mobile" v-show="game">
                 <span v-show="data.result==='1-0'" class="icon">
-                  <span class="fa fa-trophy is-size-7 has-text-warning"></span>
+                  <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 </span>
                 <span class="is-size-6">
                   <span v-html="data.white"></span>
@@ -42,7 +42,7 @@
                 <div class="column">
                   <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Girar tablero">
                     <span class="icon">
-                      <span class="fa fa-retweet"></span>
+                      <span class="mdi mdi-flip-vertical"></span>
                     </span>
                   </button>
                   <button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">
@@ -66,7 +66,7 @@
               <div class="columns is-hidden-mobile">
                 <div class="movesTableContainer preservefilter">
                   <div class="movesTable">
-                    <div class="moveRow" v-for="(move,index) in pgnIndex">
+                    <div class="moveRow" v-for="(move, index) in pgnIndex" :key="index">
                       <div class="moveNumCell" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                         <span v-html="(index+1)"></span>
                       </div>
@@ -112,13 +112,12 @@ import axios from 'axios'
 import { mapState } from 'vuex'
 import Chess from 'chess.js'
 import Chessboard from '.././assets/js/chessboard'
-import snackbar from '../components/Snackbar'
 import swal from 'sweetalert'
 import playSound from '../components/playSound'
 
 export default {
   name: 'game',
-  mounted: function () {
+  mounted () {
     this.$root.loading = true
 
     window.app = this
@@ -138,8 +137,9 @@ export default {
     ])
   },
   methods: {
-    gameMove: function () {
+    gameMove () {
       if (!this.paused) {
+        /* global $ */
         var move = this.gameMoves[this.index]
         this.selectedIndex = parseInt(location.hash.replace('#', ''))
 
@@ -188,7 +188,7 @@ export default {
         setTimeout(this.gameMove, this.speed)
       }
     },
-    findEco: function (pgn) {
+    findEco (pgn) {
       let t = this
       axios.post('/eco/pgn', { pgn: pgn }).then((res) => {
         if (res.data.eco) {
@@ -197,9 +197,8 @@ export default {
         }
       })
     },
-    moveList: function () {
+    moveList () {
       var moves = ''
-      var pgn = []
       var history = this.game.history({ verbose: true })
 
       for (var i = 0; i < history.length; ++i) {
@@ -209,7 +208,7 @@ export default {
 
       return moves
     },
-    gamePGN: function (pgn) {
+    gamePGN (pgn) {
       var data = []
       pgn.split('.').forEach(function (turn) {
         turn.split(' ').forEach(function (move) {
@@ -222,7 +221,7 @@ export default {
       })
       return data
     },
-    showPGN: function (pgn) {
+    showPGN () {
       var pgn = this.data.pgn + ' ' + (this.data.result ? this.data.result : '')
       const template = (`
 <div class="content">
@@ -246,27 +245,8 @@ export default {
         }
       })
     },
-    gamePGN: function (pgn) {
+    gamePGNIndex (pgn) {
       var data = []
-      pgn.split('.').forEach(function (turn) {
-        turn.split(' ').forEach(function (move) {
-          if (move.length) {
-            if (isNaN(move) && move.length > 1) {
-              data.push(move)
-            }
-          }
-        })
-      })
-      return data
-    },
-    gamePGNIndex: function (pgn) {
-      var data = []
-      var index = 0
-      var selectedIndex = parseInt(location.hash.replace('#', ''))
-      var symbols = [
-        { K: '♔', Q: '♕', B: '♗', N: '♘', R: '♖', p: '♙' },
-        { K: '♚', Q: '♛', B: '♝', N: '♞', R: '♜', p: '♟' }
-      ]
       pgn.split('.').forEach(function (turn, i) {
         const white = turn.split(' ')[1] || ''
         const black = turn.split(' ')[2] || ''
@@ -275,21 +255,21 @@ export default {
             white: white,
             black: black,
             i: Math.ceil(i * 2),
-            odd: i % 2 == 0
+            odd: i % 2 === 0
           })
         }
       })
       return data
     },
-    uciCmd: function (cmd, which) {
+    uciCmd (cmd, which) {
       // console.log("UCI: " + cmd);
       (which || this.evaler).postMessage(cmd)
     },
-    gameStart: function () {
+    gameStart () {
+      /* global STOCKFISH */
       const pref = JSON.parse(localStorage.getItem('player')) || {}
       this.boardEl = document.getElementById('board')
       axios.post('/game', { id: this.$route.params.game }).then((res) => {
-        if (!Object.keys(res.data).length) return location.href = '/404'
         var game = res.data
         const totalms = this.$root.countMoves(game.pgn) * this.speed
 
@@ -344,9 +324,8 @@ export default {
           }
 
           // console.log("evaler: " + line);
-
-          var match = null
-          if (match = line.match(/^Total evaluation: (\-?\d+\.\d+)/)) {
+          var match = line.match(/^Total evaluation: (-?\d+\.\d+)/)
+          if (match) {
             t.score = parseFloat(match[1])
             t.vscore = 50 - (t.score / 48 * 100)
             setTimeout(() => {
@@ -361,7 +340,7 @@ export default {
         }
       })
     },
-    calcPoints: function () {
+    calcPoints () {
       this.chart.points = []
       if (this.chart.values.length > 1) {
         var points = '0,' + this.chart.height + ' '
@@ -375,9 +354,8 @@ export default {
         this.chart.points = points
       }
     },
-    drawChart: function () {
+    drawChart () {
       var score = this.vscore
-
       if (this.orientation === 'white') {
         score = 100 - score
       }
@@ -396,7 +374,7 @@ export default {
         this.updateChart()
       }
     },
-    updateChart: function () {
+    updateChart () {
       this.calcPoints()
 
       var element = document.getElementsByClassName('chart')[0]
@@ -418,7 +396,7 @@ export default {
         chart.appendChild(polygon)
       }
     },
-    moveSound: function (move) {
+    moveSound (move) {
       var sound = 'move.mp3'
 
       if (this.game.game_over()) {
@@ -443,13 +421,13 @@ export default {
 
       playSound(sound)
     },
-    removeHighlight: function () {
+    removeHighlight () {
       this.boardEl.querySelectorAll('.square-55d63').forEach((item) => {
         item.classList.remove('highlight-move')
         item.classList.remove('in-check')
       })
     },
-    addHightlight: function (move) {
+    addHightlight (move) {
       var t = this
       t.removeHighlight()
       if (move) {
@@ -462,14 +440,14 @@ export default {
         t.boardEl.querySelector('.square-' + move.to).classList.add('highlight-move')
       }
     },
-    highlightLastMove: function () {
+    highlightLastMove () {
       var history = this.game.history({ verbose: true })
       if (history.length) {
         var move = history[history.length - 1]
         this.addHightlight(move)
       }
     },
-    gameFlip: function () {
+    gameFlip () {
       this.board.flip()
       this.orientation = this.board.orientation()
       const white = document.querySelector('.board-container .white').innerHTML
@@ -478,7 +456,7 @@ export default {
       document.querySelector('.board-container .black').innerHTML = white
       this.highlightLastMove()
     },
-    gameSeek: function () {
+    gameSeek () {
       window.setTimeout(() => {
         this.selectedIndex = parseInt(location.hash.replace('#', ''))
         if (!isNaN(this.selectedIndex)) {
@@ -490,7 +468,7 @@ export default {
         }
       }, 10)
     },
-    gamePos: function (pos) {
+    gamePos (pos) {
       if (pos > this.gameMoves.length || pos < 0) {
         return
       }
@@ -538,7 +516,7 @@ export default {
         this.gamePause()
       }
     },
-    gamePause: function () {
+    gamePause () {
       this.paused = !this.paused
       document.querySelector('.bar-progress').classList.remove('paused')
       if (this.paused) {
@@ -547,15 +525,15 @@ export default {
         setTimeout(this.gameMove, 500)
       }
     },
-    gameSpeed: function (s) {
+    gameSpeed (s) {
       this.speed += s
       if (this.speed >= 1000 && this.speed <= 10000) {
-        localStorage.setItem('speed', speed)
+        localStorage.setItem('speed', this.speed)
       } else {
         this.speed -= s
       }
     },
-    setClock: function () {
+    setClock () {
       this.gamePause()
       swal('Ingresa el intervalo en milisegundos entre 1000/60000', {
         content: {

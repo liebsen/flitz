@@ -163,7 +163,7 @@ export default {
       var scriptTag = document.createElement('script')
       scriptTag.type = 'text/javascript'
       scriptTag.src = '/js/stockfish.js'
-      scriptTag.onload = init
+      // scriptTag.onload = init
       document.getElementsByTagName('head')[0].appendChild(scriptTag)
     }
 
@@ -297,6 +297,7 @@ export default {
       (which || this.engine).postMessage(cmd)
     },
     gameStart (level) {
+      /* global STOCKFISH */
       var t = this
       const pref = JSON.parse(localStorage.getItem('player')) || {}
 
@@ -337,12 +338,12 @@ export default {
               t.isEngineRunning = false
             }
             /// Is it sending feedback?
-          } else if (match = line.match(/^info .*\bdepth (\d+) .*\bnps (\d+)/)) {
+          } else if (line.match(/^info .*\bdepth (\d+) .*\bnps (\d+)/)) {
             t.engineStatus.search = 'Depth: ' + match[1] + ' Nps: ' + match[2]
           }
 
           /// Is it sending feed back with a score?
-          if (match = line.match(/^info .*\bscore (\w+) (-?\d+)/)) {
+          if (line.match(/^info .*\bscore (\w+) (-?\d+)/)) {
             var score = parseFloat(match[2]) * (t.game.turn() === 'w' ? 1 : -1)
             /// Is it measuring in centipawns?
             if (match[1] === 'cp') {
@@ -354,7 +355,7 @@ export default {
             }
 
             /// Is the score bounded?
-            if (match = line.match(/\b(upper|lower)bound\b/)) {
+            if (line.match(/\b(upper|lower)bound\b/)) {
               t.engineStatus.score = ((match[1] === 'upper') === (t.game.turn() === 'w') ? '<= ' : '>= ') + t.engineStatus.score
             }
             if (!t.hintMode) {
@@ -404,12 +405,12 @@ export default {
 
         // resize event handling
 
-        $(window).resize(() => {
+        window.onresize = function (event) {
           t.$root.fullscreenBoard()
           t.board.resize()
           t.highlightLastMove()
           t.boardTaps()
-        })
+        }
 
         t.$root.loading = false
         playSound('start.ogg')
@@ -433,7 +434,7 @@ export default {
           const square = target.id.substring(0, 2)
 
           if (!t.moveFrom) {
-            if (piece && piece[0] != t.playerColor[0]) return
+            if (piece && piece[0] !== t.playerColor[0]) return
             target.classList.add('highlight-move')
             if (!src) { // blank square
               t.removeHighlight()
@@ -474,7 +475,6 @@ export default {
     },
     moveList () {
       var moves = ''
-      var pgn = []
       var history = this.game.history({ verbose: true })
 
       for (var i = 0; i < history.length; ++i) {
@@ -745,11 +745,10 @@ export default {
     },
     gamePGNIndex (pgn) {
       var data = []
-      var index = 0
-      var symbols = [
+      /* var symbols = [
         { K: '♔', Q: '♕', B: '♗', N: '♘', R: '♖', p: '♙' },
         { K: '♚', Q: '♛', B: '♝', N: '♞', R: '♜', p: '♟' }
-      ]
+      ] */
       pgn.split('.').forEach(function (turn, i) {
         const white = turn.split(' ')[1] || ''
         const black = turn.split(' ')[2] || ''
@@ -776,9 +775,9 @@ export default {
     },
     setSkillLevel (skill) {
       var t = this
-      var max_err
-      var err_prob
-      var difficulty_slider
+      var maxErr
+      var errProb
+      // var difficultySlider
 
       if (skill < 0) {
         return
@@ -804,14 +803,14 @@ export default {
       t.uciCmd('setoption name Skill Level value ' + skill)
       /// NOTE: Stockfish level 20 does not make errors (intentially), so these numbers have no effect on level 20.
       /// Level 0 starts at 10
-      max_err = Math.round((skill * -0.5) + 300)
-      // max_err = Math.round((skill * -0.25) + 5);
+      maxErr = Math.round((skill * -0.5) + 300)
+      // maxErr = Math.round((skill * -0.25) + 5);
 
       /// Level 0 starts at 1
-      err_prob = Math.round((skill * 6.35) + 5)
+      errProb = Math.round((skill * 6.35) + 5)
 
-      t.uciCmd('setoption name Skill Level Maximum Error value ' + max_err)
-      t.uciCmd('setoption name Skill Level Probability value ' + err_prob)
+      t.uciCmd('setoption name Skill Level Maximum Error value ' + maxErr)
+      t.uciCmd('setoption name Skill Level Probability value ' + errProb)
     },
     displayStatus () {
       var t = this
@@ -884,6 +883,10 @@ export default {
         values: [51],
         points: []
       },
+      data: {
+        white: null,
+        black: null
+      },
       time: {
         level: -1
       },
@@ -901,10 +904,6 @@ export default {
       announced_game_over: false,
       playerColor: 'white',
       selectedColor: 'white',
-      data: {
-        white: null,
-        black: null
-      },
       eco: {},
       ecode: null,
       opening: null,

@@ -42,7 +42,7 @@
               <td>
                 <router-link :to="'/game/'+item._id">
                   <span class="icon">
-                    <span class="fa fa-play"></span>
+                    <span class="mdi mdi-play"></span>
                   </span>
                 </router-link>
               </td>
@@ -50,16 +50,16 @@
                 <span v-html="item.event"></span>
               </td>
               <td>
-                <span v-show="item.result==='1-0'" class="fa fa-trophy is-size-7 has-text-warning"></span>
-                <span v-show="item.result==='1/2-1/2'" class="fa fa-handshake has-text-success"></span>
+                <span v-show="item.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
+                <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
                 <span v-if="item.whiteflag" class="icon">
                   <span v-html="item.whiteflag"></span>
                 </span>
                 <span v-html="item.white"></span>
               </td>
               <td>
-                <span v-show="item.result==='0-1'" class="fa fa-trophy is-size-7 has-text-warning"></span>
-                <span v-show="item.result==='1/2-1/2'" class="fa fa-handshake has-text-success"></span>
+                <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
+                <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
                 <span v-if="item.blackflag" class="icon">
                   <span v-html="item.blackflag"></span>
                 </span>

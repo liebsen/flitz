@@ -23,7 +23,7 @@
                       <span v-html="data.white"></span>
                     </span>
                     <span v-show="data.result==='1-0'" class="icon">
-                      <span class="fa fa-trophy is-size-7 has-text-warning"></span>
+                      <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                     </span>
                   </span>
                   <span v-show="data.white === player.code">
@@ -34,7 +34,7 @@
                       <span v-html="data.black"></span>
                     </span>
                     <span v-show="data.result==='0-1'" class="icon">
-                      <span class="fa fa-trophy is-size-7 has-text-warning"></span>
+                      <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                     </span>
                   </span>
                 </h6>
@@ -47,7 +47,7 @@
                 <h6 class="has-text-right white is-hidden-mobile">
                   <span v-show="data.black === player.code">
                     <span v-show="data.result==='0-1'" class="icon">
-                      <span class="fa fa-trophy is-size-7 has-text-warning"></span>
+                      <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                     </span>
                     <span class="is-size-6">
                       <span class="icon">
@@ -58,7 +58,7 @@
                   </span>
                   <span v-show="data.white === player.code">
                     <span v-show="data.result==='1-0'" class="icon">
-                      <span class="fa fa-trophy is-size-7 has-text-warning"></span>
+                      <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                     </span>
                     <span class="is-size-6">
                       <span class="icon">
@@ -103,7 +103,7 @@
                   <div class="column has-text-right">
                     <span class="button is-large" :class="{ 'has-background-white has-text-black' : timer.w > 10, 'has-background-danger has-text-white' : timer.w <= 10}">
                       <span class="icon">
-                        <span class="fa fa-clock"></span>
+                        <span class="mdi mdi-clock"></span>
                       </span>
                       <span class="clock-text" v-html="tdisplay.w"></span>
                     </span>
@@ -111,7 +111,7 @@
                   <div class="column has-text-left">
                     <span class="button is-large" :class="{ 'has-background-black has-text-white' : timer.b > 10, 'has-background-danger has-text-white' : timer.b <= 10}">
                       <span class="icon">
-                        <span class="fa fa-clock"></span>
+                        <span class="mdi mdi-clock"></span>
                       </span>
                       <span class="clock-text" v-html="tdisplay.b"></span>
                     </span>
@@ -121,7 +121,7 @@
                   <div class="column has-text-left">
                     <span class="button is-small" :class="{ 'has-background-white has-text-black' : timer.w > 10, 'has-background-danger has-text-white' : timer.w <= 10}">
                       <span class="icon">
-                        <span class="fa fa-clock"></span>
+                        <span class="mdi mdi-clock"></span>
                       </span>
                       <span class="clock-text" v-html="tdisplay.w"></span>
                     </span>
@@ -129,7 +129,7 @@
                   <div class="column has-text-right">
                     <span class="button is-small" :class="{ 'has-background-black has-text-white' : timer.b > 10, 'has-background-danger has-text-white' : timer.b <= 10}">
                       <span class="icon">
-                        <span class="fa fa-clock"></span>
+                        <span class="mdi mdi-clock"></span>
                       </span>
                       <span class="clock-text" v-html="tdisplay.b"></span>
                     </span>
@@ -549,7 +549,12 @@ export default {
 </div>`)
         swal({
           title: `Resultado final`,
-          text: resultText,
+          content: {
+            element: 'div',
+            attributes: {
+              innerHTML: `${template}`
+            }
+          },
           closeOnClickOutside: false
         }).then(accept => {
           let match = JSON.parse(localStorage.getItem('match'))
@@ -693,12 +698,12 @@ export default {
         t.board = Chessboard('board', cfg)
         t.board.orientation(t.playerColor)
 
-        $(window).resize(() => {
+        window.onresize = function (event) {
           t.board.resize()
           t.highlightLastMove()
           t.$root.fullscreenBoard()
           t.boardTaps()
-        })
+        }
 
         if (t.data.result) {
           t.announced_game_over = true
@@ -724,7 +729,6 @@ export default {
 
       this.index = pos
       const moves = this.gameMoves.slice(0, this.index)
-      var move = this.gameMoves[this.index]
       var move = this.gameMoves[this.index].san
       this.vscore = this.gameMoves[this.index].vscore
 
@@ -762,6 +766,7 @@ export default {
       }
     },
     gameLoad () {
+      /* global STOCKFISH */
       this.$root.loading = true
       var t = this
       axios.post('/game', {
@@ -769,12 +774,8 @@ export default {
       }).then((res) => {
         t.$root.loading = false
 
-        if (!Object.keys(res.data).length) {
-          return location.href = '/404'
-        }
-
         var game = res.data
-        var pgn = game.pgn || ''
+        // var pgn = game.pgn || ''
 
         t.data = game
 
@@ -821,7 +822,7 @@ export default {
           // console.log("evaler: " + line);
 
           var match = null
-          if (match = line.match(/^Total evaluation: (\-?\d+\.\d+)/)) {
+          if (line.match(/^Total evaluation: (-?\d+\.\d+)/)) {
             let score = parseFloat(match[1])
             t.score = score
             t.vscore = 50 - (score / 48 * 100)
@@ -890,6 +891,7 @@ export default {
     boardTaps () {
       var t = this
       const events = ['click', 'mousedown']
+
       events.forEach((event) => {
         document.querySelector('.chessboard-63f37').addEventListener(event, e => {
           e.preventDefault()
@@ -1008,7 +1010,7 @@ export default {
             t.$socket.emit('game', {
               id: this.$route.params.game,
               wtime: t.timer.w,
-              wtime: t.timer.b,
+              btime: t.timer.b,
               result: result,
               match: match.match,
               score: t.chart.values
@@ -1230,12 +1232,6 @@ export default {
     },
     gamePGNIndex (pgn) {
       var data = []
-      var index = 0
-      var selectedIndex = parseInt(location.hash.replace('#', ''))
-      var symbols = [
-        { K: '♔', Q: '♕', B: '♗', N: '♘', R: '♖', p: '♙' },
-        { K: '♚', Q: '♛', B: '♝', N: '♞', R: '♜', p: '♟' }
-      ]
       pgn.split('.').forEach(function (turn, i) {
         const white = turn.split(' ')[1] || ''
         const black = turn.split(' ')[2] || ''

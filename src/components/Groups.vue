@@ -90,7 +90,7 @@ export default {
     inputTrigger: function () {
       if (this.interval) clearInterval(this.interval)
       this.interval = setTimeout(() => {
-        this.$router.push({ path: 'live', query: { q: this.query } })
+        this.$router.push({ path: 'groups', query: { q: this.query } })
       }, 1500)
     },
     clear: function () {

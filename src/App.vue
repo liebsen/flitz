@@ -3,7 +3,7 @@
     <svg v-show="$root.loading" class="spinner-container" viewBox="0 0 44 44">
       <circle class="path" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
     </svg>
-    <div class="menu preservefilter" :class="{ 'fs': showMenu }">
+    <div class="menu preservefilter" :class="{ 'fs': menuState }">
       <div class="menu-container is-flex columns is-vcentered">
         <div class="column menu-logo has-text-left">
           <router-link to="/">
@@ -42,7 +42,7 @@
             </div>
           </div>
         </div>
-        <div @click="toggleMenu" class="menu-burger" :class="{ 'cross': showMenu }" :title="'mainmenu' | t">
+        <div @click="toggleMenu" class="menu-burger" :class="{ 'cross': menuState }" :title="'mainmenu' | t">
           <svg viewBox="0 0 800 600">
             <path d="M300,220 C300,220 520,220 540,220 C740,220 640,540 520,420 C440,340 300,200 300,200" id="top"></path>
             <path d="M300,320 L540,320" id="middle"></path>
@@ -84,6 +84,14 @@
     <div class="ui-snackbar ui-snackbar--is-inactive preservefilter" :class="{ 'is-strong' : player && player.strongnotification }">
       <p class="ui-snackbar__message"></p>
     </div>
+    <div class="footprint">
+      <div v-show="latency" class="latency">
+        <span>
+          {{ 'latency' | t }} <span :class="{ 'has-text-danger': latency > 500, 'has-text-success': latency < 100 }">{{ latency }}ms
+        </span>
+      </span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -91,14 +99,9 @@
 import { mapState } from 'vuex'
 export default {
   name: 'app',
-  methods: {
-    toggleMenu () {
-      this.showMenu = !this.showMenu
-    }
-  },
   data () {
     return {
-      showMenu: false,
+      latency: 0,
       menu: [{
         tag: 'groups',
         to: '/groups',
@@ -113,7 +116,7 @@ export default {
         mdi: 'mdi-fire'
       }, {
         tag: 'results',
-        to: '/groups',
+        to: '/results',
         mdi: 'mdi-view-list'
       }, {
         tag: 'about',
@@ -132,9 +135,20 @@ export default {
   },
   computed: {
     ...mapState([
+      'menuState',
       'player',
       'games'
     ])
+  },
+  sockets: {
+    pong (ms) {
+      this.latency = ms
+    }
+  },
+  methods: {
+    toggleMenu () {
+      this.$store.commit('togglemenu')
+    }
   }
 }
 </script>

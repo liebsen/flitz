@@ -129,12 +129,12 @@
 
 <script>
 import axios from 'axios'
+import moment from 'moment'
 import Chess from 'chess.js'
 import { mapState } from 'vuex'
 import Chessboard from '.././assets/js/chessboard'
 import snackbar from '../components/Snackbar'
 import playSound from '../components/playSound'
-
 export default {
   name: 'preferences',
   watch: {
@@ -199,7 +199,6 @@ export default {
       }, 100)
     },
     previewStrongNotification () {
-      var contains = document.querySelector('.ui-snackbar').classList.contains('is-strong')
       var snackbarBar = document.querySelector('.ui-snackbar')
       snackbarBar.classList.remove('ui-snackbar--is-active')
       snackbarBar.classList.add('ui-snackbar--is-inactive')
@@ -247,13 +246,11 @@ export default {
         .then(data => {
           let checkLang = res => {
             return new Promise((resolve, reject) => {
-              console.log(this.anchor.lang)
-              console.log(res.lang)
               if (this.anchor.lang !== res.lang) {
                 axios.get(`/json/lang/${res.lang}.json`).then(json => {
-                  console.log('cargando lang: ' + res.lang)
                   this.$root.translations = json.data
                   this.$root.appKey++
+                  moment.locale(res.lang)
                   resolve()
                 })
               } else {
