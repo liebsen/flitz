@@ -4,11 +4,11 @@
       <div class="container is-flex-column is-vertical">
         <h1 class="title">
           <span class="icon is-margin-right">
-            <span class="fa fa-robot"></span>
+            <span class="mdi mdi-robot"></span>
           </span>
-          <span>Este recurso no existe</span>
+          <span>{{ 'resource_not_found' | t }}</span>
         </h1>
-        <p jsb-word="not-found-text">Si creés que se trata de un error contáctanos</p>
+        <p>{{ 'resource_not_found_text' | t }}</p>
       </div>
     </div>
   </section>
@@ -16,11 +16,6 @@
 
 <script>
 export default {
-  name: 'NotFound',
-  data () {
-    return {
-      msg: 'Welcome to JetsBooking'
-    }
-  }
+  name: 'NotFound'
 }
 </script>

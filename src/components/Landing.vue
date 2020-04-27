@@ -4,12 +4,6 @@
       <div class="columns is-vcentered fadeIn">
         <div class="column is-hidden-mobile"></div>
         <div class="column is-8 has-text-centered">
-          <div class="content is-hidden-mobile">
-            <h1 class="">{{ 'landing_title_mobile' | t }}</h1>
-          </div>
-          <div class="content is-hidden-tablet">
-            <h2 class="">{{ 'landing_title_desktop' | t }}</h2>
-          </div>
           <div class="has-text-centered">
             <form id="search" class="has-text-centered" @submit.prevent="submit">
               <div class="field has-addons is-hidden-mobile is-flex-centered">
@@ -37,8 +31,23 @@
                 </div>
               </div>
             </form>
+            <div class="content columns is-multiline has-text-centered">
+              <div v-for="(item, index) in groups" :key="index" class="column is-4">
+                <router-link :to="`/group/${item._id}`">
+                  <article class="box">
+                    <h2>
+                      <span class="icon">
+                        <span class="mdi mdi-layers"></span>
+                      </span>
+                      {{ item.code }}
+                    </h2>
+                    <p class="subtitle">{{ item.minutes }}+{{ item.compensation }}</p>
+                  </article>
+                </router-link>
+              </div>
+            </div>
           </div>
-          <div class="has-text-centered content">
+          <div class="column has-text-centered content">
             <div class="field">
               <h3>{{ 'play_against' | t }}</h3>
             </div>
@@ -92,30 +101,11 @@ import { mapState } from 'vuex'
 export default {
   name: 'landing',
   mounted () {
-    var t = this
-    const saved = JSON.parse(localStorage.getItem('player'))
-    const board = document.querySelector('.fakeboard')
-
-    if (board) {
-      board.classList = []
-      board.classList.add('fakeboard')
-      if (saved) {
-        board.classList.add(saved.board || 'classic')
-      }
-    }
-
     axios.post('/group/random').then((res) => {
       if (res.data.status === 'success') {
-        t.groups = res.data.data
+        this.groups = res.data.data
       }
     })
-
-    if (saved.pieces) {
-      document.querySelectorAll('.pieces li').forEach(e => {
-        let li = window.getComputedStyle(e)
-        e.style.backgroundImage = li.getPropertyValue('background-image').replace('classic', saved.pieces)
-      })
-    }
   },
   computed: {
     ...mapState([

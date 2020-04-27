@@ -97,12 +97,12 @@
             <ul>
               <li :class="{ 'is-active' : tab === 'chat' }">
                 <a @click="tab = 'chat'" title="Chat">
-                  <span class="icon"><i class="mdi mdi-comments" aria-hidden="true"></i></span>
+                  <span class="icon"><i class="mdi mdi-chat" aria-hidden="true"></i></span>
                 </a>
               </li>
               <li :class="{ 'is-active' : tab === 'results' }">
                 <a @click="tab = 'results'" title="Resultados">
-                  <span class="icon"><i class="mdi mdi-list" aria-hidden="true"></i></span>
+                  <span class="icon"><i class="mdi mdi-view-list" aria-hidden="true"></i></span>
                 </a>
               </li>
             </ul>

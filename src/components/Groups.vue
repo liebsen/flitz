@@ -36,11 +36,11 @@
             <th>Compensación</th>
           </thead>
           <tbody>
-            <tr v-for="item in data.data">
+            <tr v-for="(item, index) in data.data" :key="index">
               <td>
                 <router-link :to="'/group/'+item._id">
                   <span class="icon">
-                    <span class="fa fa-play"></span>
+                    <span class="fa fa-layers"></span>
                   </span>
                 </router-link>
               </td>
@@ -65,7 +65,7 @@
       <!--a class="pagination-previous">Previous</a>
       <a class="pagination-next">Next page</a-->
       <ul class="pagination-list">
-        <li v-for="(page, index) in pages">
+        <li v-for="(page, index) in pages" :key="index">
           <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Ir a página ' + parseInt(page / limit + 1)"></router-link>
         </li>
       </ul>
@@ -75,7 +75,6 @@
 
 <script>
 import axios from 'axios'
-import { mapState } from 'vuex'
 import snackbar from '../components/Snackbar'
 export default {
   name: 'groups',
