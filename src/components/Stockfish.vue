@@ -82,7 +82,7 @@
                 </button>
                 <button @click="showHint()" class="button is-small is-rounded is-warning" v-if="pgnIndex.length && !announced_game_over" title="Mostrar pista">
                   <span class="icon has-text-white">
-                    <span class="mdi mdi-question-circle"></span>
+                    <span class="mdi mdi-help"></span>
                   </span>
                 </button>
                 <button @click="askForRematch()" class="button is-small is-rounded is-success" v-if="announced_game_over" title="Jugar de nuevo">
@@ -98,8 +98,12 @@
             <div class="columns has-text-centered">
               <div class="column">
                 <strong v-html="ecode"></strong>
-                <span v-html="opening" class="has-text-black"></span>
-                <span v-html="status" class="has-text-black"></span>
+                <div class="field">
+                  <span v-html="opening" class="has-text-black"></span>
+                </div>
+                <div class="field">
+                  <span v-html="status" class="has-text-black"></span>
+                </div>
               </div>
             </div>
             <div class="columns is-hidden-mobile">
@@ -319,13 +323,15 @@ export default {
         } else if (line === 'readyok') {
           t.engineStatus.engineReady = true
         } else {
-          var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbn])?/)
-
+          var reBestmove = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbn])?/)
+          var reDepth = line.match(/^info .*\bdepth (\d+) .*\bnps (\d+)/)
           /// Did the AI move?
+          var reScore = line.match(/^info .*\bscore (\w+) (-?\d+)/)
+          var reBound = line.match(/\b(upper|lower)bound\b/)
 
-          if (match) {
+          if (reBestmove) {
             if (t.hintMode || t.isEngineRunning) {
-              const move = t.game.move({ from: match[1], to: match[2], promotion: match[3] })
+              const move = t.game.move({ from: reBestmove[1], to: reBestmove[2], promotion: reBestmove[3] })
               if (!t.hintMode) {
                 t.board.position(t.game.fen())
                 t.updateMoves(move)
@@ -338,25 +344,25 @@ export default {
               t.isEngineRunning = false
             }
             /// Is it sending feedback?
-          } else if (line.match(/^info .*\bdepth (\d+) .*\bnps (\d+)/)) {
-            t.engineStatus.search = 'Depth: ' + match[1] + ' Nps: ' + match[2]
+          } else if (reDepth) {
+            t.engineStatus.search = 'Depth: ' + reDepth[1] + ' Nps: ' + reDepth[2]
           }
 
           /// Is it sending feed back with a score?
-          if (line.match(/^info .*\bscore (\w+) (-?\d+)/)) {
-            var score = parseFloat(match[2]) * (t.game.turn() === 'w' ? 1 : -1)
+          if (reScore) {
+            var score = parseFloat(reScore[2]) * (t.game.turn() === 'w' ? 1 : -1)
             /// Is it measuring in centipawns?
-            if (match[1] === 'cp') {
+            if (reScore[1] === 'cp') {
               t.engineStatus.score = (score / 100.0).toFixed(2)
               /// Did it find a mate?
-            } else if (match[1] === 'mate') {
+            } else if (reScore[1] === 'mate') {
               // const abs = Math.abs(score) - 1
               // t.engineStatus.score = abs > 0 ? 'Mate en ' + abs : "Mate"
             }
 
             /// Is the score bounded?
-            if (line.match(/\b(upper|lower)bound\b/)) {
-              t.engineStatus.score = ((match[1] === 'upper') === (t.game.turn() === 'w') ? '<= ' : '>= ') + t.engineStatus.score
+            if (reBound) {
+              t.engineStatus.score = ((reBound[1] === 'upper') === (t.game.turn() === 'w') ? '<= ' : '>= ') + t.engineStatus.score
             }
             if (!t.hintMode) {
               t.displayStatus()

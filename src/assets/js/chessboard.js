@@ -230,7 +230,7 @@ var ChessBoard = function (containerElOrId, cfg) {
   // Stateful
   // ------------------------------------------------------------------------------
 
-  var ANIMATION_HAPPENING = false
+  var ANIMATION_HAPPENING = false // eslint-disable-line no-unused-vars
   var BOARD_BORDER_SIZE = 2
   var CURRENT_ORIENTATION = 'white'
   var CURRENT_POSITION = {}
@@ -243,7 +243,6 @@ var ChessBoard = function (containerElOrId, cfg) {
   var SQUARE_ELS_IDS = {}
   var SQUARE_ELS_OFFSETS
 
-  console.log(ANIMATION_HAPPENING)
   // ------------------------------------------------------------------------------
   // JS Util Functions
   // ------------------------------------------------------------------------------
@@ -299,7 +298,6 @@ var ChessBoard = function (containerElOrId, cfg) {
     if (cfg.showErrors === 'console' &&
       typeof console === 'object' &&
       typeof console.log === 'function') {
-      console.log(errorText)
       if (arguments.length >= 2) {
         console.log(obj)
       }
