@@ -84,7 +84,7 @@
                   </button>
                   <button @click="askForRematch()" class="button is-rounded is-success" v-if="announced_game_over" title="Jugar de nuevo">
                     <span class="icon">
-                      <span class="fa fa-retweet"></span>
+                      <span class="mdi mdi-replay"></span>
                     </span>
                   </button>
                   <button @click="showPGN()" class="button is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">

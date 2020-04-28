@@ -24,7 +24,7 @@
                 <div class="column preservefilter">
                   <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Girar tablero">
                     <span class="icon">
-                      <span class="fa fa-retweet"></span>
+                      <span class="Play Chess online"></span>
                     </span>
                   </button>
                   <button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">

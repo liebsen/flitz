@@ -3,7 +3,7 @@
     <section class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
-          <span class="fa fa-user-check"></span>
+          <span class="mdi mdi-user-check"></span>
         </span>
         <span>{{ 'login' | t }}</span>
       </h3>

@@ -3,7 +3,7 @@
     <section class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
-          <span class="fa fa-info"></span>
+          <span class="mdi mdi-info"></span>
         </span>
         <span>Acerca de Biltz</span>
       </h3>

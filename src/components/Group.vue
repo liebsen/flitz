@@ -6,7 +6,7 @@
           <div class="container is-flex-column is-vertical">
             <h1 class="title">
               <span class="icon is-margin-right">
-                <span class="fa fa-robot"></span>
+                <span class="mdi mdi-robot"></span>
               </span>
               <span>Este grupo no existe</span>
             </h1>
@@ -19,7 +19,7 @@
       <div class="group" v-show="$root.matches.length" :class="{ 'no-players': players.length < 2 }">
         <h6>
           <span class="icon">
-            <span class="fa fa-chess"></span>
+            <span class="mdi mdi-chess"></span>
           </span>
           <span>Jugando ahora</span>
         </h6>
@@ -30,14 +30,14 @@
                 <h6 class="has-text-left black is-clickable" @click="$root.gameFlip(match.id)">
                   <span class="button is-small" :class="{ 'has-background-grey has-text-white' : match.btime > 10, 'has-background-info has-text-white' : match.btime <= 10}">
                     <span class="icon">
-                      <span class="fa fa-clock"></span>
+                      <span class="mdi mdi-clock"></span>
                     </span>
                     <span v-html="$root.getTimeDisplay(match.btime)"></span>
                   </span>
                   <span class="button is-small is-text">
                     <span v-html="match.black"></span>
                     <span v-show="match.result==='0-1'" class="icon">
-                      <span class="fa fa-trophy is-size-7 has-text-warning"></span>
+                      <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                     </span>
                   </span>
                 </h6>
@@ -49,13 +49,13 @@
                 <h6 class="has-text-right white is-clickable" @click="$root.gameFlip">
                   <span class="button is-small is-text">
                     <span v-show="match.result==='1-0'" class="icon">
-                      <span class="fa fa-trophy is-size-7 has-text-warning"></span>
+                      <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                     </span>
                     <span v-html="match.white"></span>
                   </span>
                   <span class="button is-small" :class="{ 'has-background-white has-text-black' : match.wtime > 10, 'has-background-info has-text-white' : match.wtime <= 10}">
                     <span class="icon">
-                      <span class="fa fa-clock"></span>
+                      <span class="mdi mdi-clock"></span>
                     </span>
                     <span v-html="$root.getTimeDisplay(match.wtime)"></span>
                   </span>
@@ -126,7 +126,7 @@
                     <td>
                       <router-link :to="'/game/'+item._id">
                         <span class="icon">
-                          <span class="fa fa-play"></span>
+                          <span class="mdi mdi-play"></span>
                         </span>
                       </router-link>
                     </td>
@@ -134,16 +134,16 @@
                       <span v-html="item.event"></span>
                     </td>
                     <td>
-                      <span v-show="item.result==='1-0'" class="fa fa-trophy is-size-7 has-text-warning"></span>
-                      <span v-show="item.result==='1/2-1/2'" class="fa fa-handshake has-text-success"></span>
+                      <span v-show="item.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
+                      <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
                       <span v-if="item.whiteflag" class="icon">
                         <span v-html="item.whiteflag"></span>
                       </span>
                       <span v-html="item.white"></span>
                     </td>
                     <td>
-                      <span v-show="item.result==='0-1'" class="fa fa-trophy is-size-7 has-text-warning"></span>
-                      <span v-show="item.result==='1/2-1/2'" class="fa fa-handshake has-text-success"></span>
+                      <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
+                      <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
                       <span v-if="item.blackflag" class="icon">
                         <span v-html="item.blackflag"></span>
                       </span>

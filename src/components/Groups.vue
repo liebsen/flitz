@@ -40,7 +40,7 @@
               <td>
                 <router-link :to="'/group/'+item._id">
                   <span class="icon">
-                    <span class="fa fa-layers"></span>
+                    <span class="mdi mdi-layers"></span>
                   </span>
                 </router-link>
               </td>

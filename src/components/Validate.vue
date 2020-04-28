@@ -3,7 +3,7 @@
     <section class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
-          <span class="fa fa-hands"></span>
+          <span class="mdi mdi-hands"></span>
         </span>
         <span>Donate</span>
       </h3>

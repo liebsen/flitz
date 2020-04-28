@@ -7,7 +7,7 @@
             <div class="board-container">
               <h6 class="has-text-left black is-hidden-mobile is-clickable" @click="gameFlip">
                 <span v-show="data.result==='0-1'" class="icon">
-                  <span class="fa fa-trophy is-size-7 has-text-warning"></span>
+                  <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 </span>
                 <span v-html="data.black" class="is-size-6"></span>
               </h6>
@@ -20,7 +20,7 @@
               <h6 class="has-text-right white is-hidden-mobile is-clickable" @click="gameFlip">
                 <span v-html="data.white" class="is-size-6"></span>
                 <span v-show="data.result==='1-0'" class="icon">
-                  <span class="fa fa-trophy is-size-7 has-text-warning"></span>
+                  <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 </span>
               </h6>
             </div>
@@ -31,7 +31,7 @@
                 <div class="column has-text-right">
                   <span class="button is-large" :class="{ 'has-background-white has-text-black' : timer.w > 10, 'has-background-danger has-text-white' : timer.w <= 10}">
                     <span class="icon">
-                      <span class="fa fa-clock"></span>
+                      <span class="mdi mdi-clock"></span>
                     </span>
                     <span class="clock-text" v-html="tdisplay.w"></span>
                   </span>
@@ -39,7 +39,7 @@
                 <div class="column has-text-left">
                   <span class="button is-large" :class="{ 'has-background-black has-text-white' : timer.b > 10, 'has-background-danger has-text-white' : timer.b <= 10}">
                     <span class="icon">
-                      <span class="fa fa-clock"></span>
+                      <span class="mdi mdi-clock"></span>
                     </span>
                     <span class="clock-text" v-html="tdisplay.b"></span>
                   </span>
@@ -49,7 +49,7 @@
                 <div class="column has-text-left">
                   <span class="button is-small" :class="{ 'has-background-white has-text-black' : timer.w > 10, 'has-background-danger has-text-white' : timer.w <= 10}">
                     <span class="icon">
-                      <span class="fa fa-clock"></span>
+                      <span class="mdi mdi-clock"></span>
                     </span>
                     <span class="clock-text" v-html="tdisplay.w"></span>
                   </span>
@@ -57,7 +57,7 @@
                 <div class="column has-text-right">
                   <span class="button is-small" :class="{ 'has-background-black has-text-white' : timer.b > 10, 'has-background-danger has-text-white' : timer.b <= 10}">
                     <span class="icon">
-                      <span class="fa fa-clock"></span>
+                      <span class="mdi mdi-clock"></span>
                     </span>
                     <span class="clock-text" v-html="tdisplay.b"></span>
                   </span>
@@ -68,7 +68,7 @@
                   <div class="buttons levels has-addons" :title="'stockfish_settings' | t">
                     <button @click="gameFlip()" class="button is-rounded is-info" title="Girar tablero">
                       <span class="icon">
-                        <span class="fa fa-retweet"></span>
+                        <span class="Play Chess online"></span>
                       </span>
                     </button>
                     <button @click="showPGN()" class="button is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">

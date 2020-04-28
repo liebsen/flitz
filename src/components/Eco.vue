@@ -39,7 +39,7 @@
               <td>
                 <router-link :to="'/eco/'+item.eco">
                   <span class="icon">
-                    <span class="fa fa-play"></span>
+                    <span class="mdi mdi-play"></span>
                   </span>
                 </router-link>
               </td>

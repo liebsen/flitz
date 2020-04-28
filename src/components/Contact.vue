@@ -3,7 +3,7 @@
     <section class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
-          <span class="fa fa-envelope"></span>
+          <span class="mdi mdi-envelope"></span>
         </span>
         <span>Contacto</span>
       </h3>
