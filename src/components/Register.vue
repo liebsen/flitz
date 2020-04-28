@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import snackbar from '@/components/Snackbar'
 export default {
   name: 'register',
   data () {
@@ -57,11 +58,12 @@ export default {
   },
   methods: {
     submit: function () {
-      var t = this
-      if (!t.acceptTerms) { return snackbar('error', 'Tenés que aceptar nuestros términos y condiciones para crear una cuenta') }
-      t.$root.processing = true
+      if (!this.acceptTerms) {
+        return snackbar('error', 'Tenés que aceptar nuestros términos y condiciones para crear una cuenta')
+      }
+      this.$root.processing = true
       this.$store
-        .dispatch('register', t.data)
+        .dispatch('register', this.data)
         .then(res => {
           this.$router.push('/register-success')
         })

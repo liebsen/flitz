@@ -218,7 +218,6 @@ export default {
     },
     get_moves () {
       var moves = ''
-      var pgn = []
       var history = this.game.history({ verbose: true })
 
       for (var i = 0; i < history.length; ++i) {
