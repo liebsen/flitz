@@ -99,6 +99,9 @@
 import { mapState } from 'vuex'
 export default {
   name: 'app',
+  created () {
+    console.log('App!')
+  },
   data () {
     return {
       latency: 0,
