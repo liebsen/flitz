@@ -71,13 +71,18 @@
           <div v-show="data.owner._id === player._id">
             <h3 class="is-clickable" @click="setGroupRules" title="Configurar Grupo">
               <span class="icon">
-                <span class="mdi mdi-cog"></span>
+                <span class="mdi mdi-layers"></span>
               </span>
               <span>{{data.code}}</span>
             </h3>
           </div>
           <div v-show="data.owner.code !== player.code">
-            <h3>{{data.code}}</h3>
+            <h3>
+              <span class="icon">
+                <span class="mdi mdi-layers"></span>
+              </span>
+              <span>{{data.code}}</span>
+            </h3>
           </div>
           <div>
             <div v-for="(plyer, index) in players" :key="index">

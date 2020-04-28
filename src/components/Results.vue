@@ -3,7 +3,7 @@
     <div class="content column fadeIn">
       <h3>
         <span class="icon">
-          <span class="mdi mdi-list"></span>
+          <span class="mdi mdi-view-list"></span>
         </span>
         <span>Resultados</span>
       </h3>
@@ -16,7 +16,7 @@
           <div class="control">
             <button v-show="this.searching" type="button" @click="clear" class="button is-rounded is-danger">
               <span class="icon">
-                <span class="mdi mdi-times"></span>
+                <span class="mdi mdi-close"></span>
               </span>
             </button>
             <button v-show="!this.searching" type="submit" id="searchbtn" class="button is-rounded is-success">

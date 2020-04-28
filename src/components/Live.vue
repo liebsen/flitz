@@ -16,7 +16,7 @@
           <div class="control">
             <button v-show="query.length" type="button" @click="clear" class="button is-rounded is-danger">
               <span class="icon">
-                <span class="mdi mdi-times"></span>
+                <span class="mdi mdi-close"></span>
               </span>
             </button>
             <button v-show="!query.length" type="submit" id="searchbtn" class="button is-rounded is-success">
