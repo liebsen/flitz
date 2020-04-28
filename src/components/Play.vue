@@ -74,29 +74,31 @@
               <div class="board-assistant">
                 <div class="columns has-text-centered">
                   <div class="column preservefilter">
-                    <!--button @click="inviteRematch()" class="button is-small is-rounded is-danger" v-show="announced_game_over" title="Rematch">
-                      <span class="icon has-text-white">
-                        <span class="mdi mdi-chess-knight"></span>
-                      </span>
-                    </button-->
-                    <button @click="gameCapitulate()" class="button is-small is-rounded is-danger" v-show="pgnIndex.length && !announced_game_over" title="Abandonar partida">
-                      <span class="icon has-text-white">
-                        <span class="mdi mdi-flag"></span>
-                      </span>
-                    </button>
-                    <button @click="gameAskForDraw()" class="button is-small is-rounded is-success" v-show="pgnIndex.length && !announced_game_over" title="Solicitar tablas">
-                      <span class="icon has-text-white">
-                        <span class="mdi mdi-handshake"></span>
-                      </span>
-                    </button>
-                    <!--button @click="showLiveURL()" class="button is-small is-rounded is-info" v-show="pgnIndex.length && !announced_game_over" title="Mostrar URL de transmisión">
-                      <span class="icon has-text-white">
-                        <span class="mdi mdi-user-astronaut"></span>
-                      </span>
-                    </button>
-                    <button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length && announced_game_over" title="Mostrar PGN">
-                      <strong>PGN</strong>
-                    </button-->
+                    <div class="buttons levels has-addons" :title="'game_settings' | t">
+                      <!--button @click="inviteRematch()" class="button is-small is-rounded is-danger" v-show="announced_game_over" title="Rematch">
+                        <span class="icon has-text-white">
+                          <span class="mdi mdi-chess-knight"></span>
+                        </span>
+                      </button-->
+                      <button @click="gameCapitulate()" class="button is-small is-rounded is-danger" v-show="pgnIndex.length && !announced_game_over" title="Abandonar partida">
+                        <span class="icon has-text-white">
+                          <span class="mdi mdi-flag"></span>
+                        </span>
+                      </button>
+                      <button @click="gameAskForDraw()" class="button is-small is-rounded is-success" v-show="pgnIndex.length && !announced_game_over" title="Solicitar tablas">
+                        <span class="icon has-text-white">
+                          <span class="mdi mdi-handshake"></span>
+                        </span>
+                      </button>
+                      <!--button @click="showLiveURL()" class="button is-small is-rounded is-info" v-show="pgnIndex.length && !announced_game_over" title="Mostrar URL de transmisión">
+                        <span class="icon has-text-white">
+                          <span class="mdi mdi-user-astronaut"></span>
+                        </span>
+                      </button>
+                      <button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length && announced_game_over" title="Mostrar PGN">
+                        <strong>PGN</strong>
+                      </button-->
+                    </div>
                   </div>
                 </div>
                 <div class="columns is-hidden-mobile preservefilter">

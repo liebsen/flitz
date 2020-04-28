@@ -49,11 +49,7 @@
           <div class="board-container">
             <h6 class="has-text-left black is-hidden-mobile">
               <span v-show="data.result==='0-1'">🏆</span>
-              <span>Stockfish</span>
-              <span>
-                <span>nivel</span>
-                <span v-html="time.level / 2"></span>
-              </span>
+              <span>{{ opponentName }}</span>
               <span class="button is-small thinking" :class="{'is-loading' : thinking}"></span>
             </h6>
             <div class="board preservefilter" :class="{ 'black' : playerColor==='black' }">
@@ -75,31 +71,33 @@
           <div class="board-assistant">
             <div class="columns has-text-centered" v-show="pgnIndex.length">
               <div class="column preservefilter">
-                <button @click="askForRematch()" class="button is-small is-rounded is-danger" v-if="!announced_game_over" title="Abandonar partida">
-                  <span class="icon has-text-white">
-                    <span class="mdi mdi-flag"></span>
-                  </span>
-                </button>
-                <button @click="showHint()" class="button is-small is-rounded is-warning" v-if="pgnIndex.length && !announced_game_over" title="Mostrar pista">
-                  <span class="icon has-text-white">
-                    <span class="mdi mdi-help"></span>
-                  </span>
-                </button>
-                <button @click="askForRematch()" class="button is-small is-rounded is-success" v-if="announced_game_over" title="Jugar de nuevo">
-                  <span class="icon">
-                    <span class="fa fa-retweet"></span>
-                  </span>
-                </button>
-                <button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">
-                  <strong>PGN</strong>
-                </button>
+                <div class="buttons levels has-addons" :title="'stockfish_options' | t">
+                  <button @click="askForRematch()" class="button is-rounded is-danger" v-if="!announced_game_over" title="Abandonar partida">
+                    <span class="icon has-text-white">
+                      <span class="mdi mdi-flag"></span>
+                    </span>
+                  </button>
+                  <button @click="showHint()" class="button is-rounded is-success" v-if="pgnIndex.length && !announced_game_over" title="Mostrar pista">
+                    <span class="icon has-text-white">
+                      <span class="mdi mdi-timeline-help"></span>
+                    </span>
+                  </button>
+                  <button @click="askForRematch()" class="button is-rounded is-success" v-if="announced_game_over" title="Jugar de nuevo">
+                    <span class="icon">
+                      <span class="fa fa-retweet"></span>
+                    </span>
+                  </button>
+                  <button @click="showPGN()" class="button is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">
+                    <strong>PGN</strong>
+                  </button>
+                </div>
               </div>
             </div>
             <div class="columns has-text-centered">
               <div class="column">
-                <strong v-html="ecode"></strong>
                 <div class="field">
-                  <span v-html="opening" class="has-text-black"></span>
+                  <strong class="has-text-grey is-size-5" v-html="ecode"></strong>
+                  <span v-html="opening" class="has-text-black is-size-5"></span>
                 </div>
                 <div class="field">
                   <span v-html="status" class="has-text-black"></span>
@@ -305,6 +303,7 @@ export default {
       var t = this
       const pref = JSON.parse(localStorage.getItem('player')) || {}
 
+      t.opponentName = 'Stockfish ' + (level / 2)
       t.engine = typeof STOCKFISH === 'function' ? STOCKFISH() : new Worker('/js/stockfish.js')
       t.engineStatus = {}
 
@@ -662,7 +661,7 @@ export default {
               }).then((value) => {
                 switch (value) {
                   case 'defeat':
-                    let opponent = 'Stockfish nivel ' + (this.time.level / 2)
+                    let opponent = this.opponentName
                     let white = this.playerColor === 'white' ? this.player.code : opponent
                     let black = this.playerColor === 'black' ? this.player.code : opponent
                     let whiteflag = this.playerColor === 'white' ? this.player.flag : ''
@@ -731,7 +730,7 @@ export default {
       let t = this
       axios.post('/eco/pgn', { pgn: pgn }).then((res) => {
         if (res.data.eco) {
-          t.opening = res.data.name
+          t.opening = t.$root.translate(res.data.eco)
           t.ecode = res.data.eco
         }
       })
@@ -896,6 +895,7 @@ export default {
       time: {
         level: -1
       },
+      opponentName: 'Stockfish',
       index: -1,
       gameMoves: [],
       displayScore: true,

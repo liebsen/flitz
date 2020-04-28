@@ -11,7 +11,7 @@
                 </span>
                 <span v-html="data.black" class="is-size-6"></span>
               </h6>
-              <div class="board preservefilter" :class="{ 'black' : orientation === 'black' }">
+              <div class="board preservefilter" :class="{ 'black': orientation === 'black' }">
                 <div class="score-container">
                   <div class="score" :style="'max-height:' + vscore + '%'"></div>
                 </div>
@@ -65,14 +65,16 @@
               </div>
               <div class="columns has-text-centered">
                 <div class="column has-text-left preservefilter">
-                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Girar tablero">
-                    <span class="icon">
-                      <span class="fa fa-retweet"></span>
-                    </span>
-                  </button>
-                  <button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">
-                    <strong>PGN</strong>
-                  </button>
+                  <div class="buttons levels has-addons" :title="'stockfish_settings' | t">
+                    <button @click="gameFlip()" class="button is-rounded is-info" title="Girar tablero">
+                      <span class="icon">
+                        <span class="fa fa-retweet"></span>
+                      </span>
+                    </button>
+                    <button @click="showPGN()" class="button is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">
+                      <strong>PGN</strong>
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="columns has-text-centered">

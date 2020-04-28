@@ -79,21 +79,21 @@ export default {
       this.triggerSearch()
     }
   },
-  mounted: function () {
+  mounted () {
     this.triggerSearch()
   },
   methods: {
-    inputTrigger: function () {
+    inputTrigger () {
       if (this.interval) clearInterval(this.interval)
       this.interval = setTimeout(() => {
         this.$router.push({ path: 'eco', query: { q: this.query } })
       }, 1500)
     },
-    clear: function () {
+    clear () {
       this.query = ''
       this.submit()
     },
-    triggerSearch: function () {
+    triggerSearch () {
       if (this.$route.query.q) {
         this.query = this.$route.query.q
       }
@@ -103,7 +103,7 @@ export default {
       this.$nextTick(() => this.$refs.input.focus())
       this.search()
     },
-    search: function () {
+    search () {
       this.$root.loading = true
       axios.post('/eco/search', { query: this.query, offset: this.offset, limit: this.limit }).then((res) => {
         this.data = res.data
@@ -134,7 +134,7 @@ export default {
         this.$root.loading = false
       })
     },
-    submit: function () {
+    submit () {
       this.$router.push('/eco?q=' + this.query.trim())
     }
   },

@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="game-container" :class="boardColor" v-show="!$root.loading">
     <div class="status">
       <div class="bar is-clickable" @click="setClock">
@@ -40,14 +40,16 @@
             <div class="board-assistant" v-if="Object.keys(data).length">
               <div class="columns has-text-centered">
                 <div class="column">
-                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Girar tablero">
-                    <span class="icon">
-                      <span class="mdi mdi-flip-vertical"></span>
-                    </span>
-                  </button>
-                  <button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">
-                    <strong>PGN</strong>
-                  </button>
+                  <div class="buttons levels has-addons" :title="'game_settings' | t">
+                    <button @click="gameFlip()" class="button is-rounded is-info" title="Girar tablero">
+                      <span class="icon">
+                        <span class="mdi mdi-flip-vertical"></span>
+                      </span>
+                    </button>
+                    <button @click="showPGN()" class="button is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">
+                      <strong>PGN</strong>
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="columns has-text-centered">

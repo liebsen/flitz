@@ -178,6 +178,18 @@ label {
   display: none;
 }
 
+.has-text-right {
+  .icon {
+    margin-right: 0.25rem;
+  }
+}
+
+.has-text-left {
+  .icon {
+    margin-left: 0.25rem;
+  }
+}
+
 .icon {
   font-size: 1.5rem;
 }
@@ -564,7 +576,7 @@ table {
 .footprint {
   position: fixed;
   bottom: 0.75rem;
-  right: 0.75rem;
+  right: 1rem;
 }
 
 /*
