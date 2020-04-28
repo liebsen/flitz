@@ -105,7 +105,7 @@
                   <div class="column has-text-right">
                     <span class="button is-large" :class="{ 'has-background-white has-text-black' : timer.w > 10, 'has-background-danger has-text-white' : timer.w <= 10}">
                       <span class="icon">
-                        <span class="mdi mdi-clock"></span>
+                        <span class="mdi mdi-clock-fast"></span>
                       </span>
                       <span class="clock-text" v-html="tdisplay.w"></span>
                     </span>
@@ -113,7 +113,7 @@
                   <div class="column has-text-left">
                     <span class="button is-large" :class="{ 'has-background-black has-text-white' : timer.b > 10, 'has-background-danger has-text-white' : timer.b <= 10}">
                       <span class="icon">
-                        <span class="mdi mdi-clock"></span>
+                        <span class="mdi mdi-clock-fast"></span>
                       </span>
                       <span class="clock-text" v-html="tdisplay.b"></span>
                     </span>
@@ -123,7 +123,7 @@
                   <div class="column has-text-left">
                     <span class="button is-small" :class="{ 'has-background-white has-text-black' : timer.w > 10, 'has-background-danger has-text-white' : timer.w <= 10}">
                       <span class="icon">
-                        <span class="mdi mdi-clock"></span>
+                        <span class="mdi mdi-clock-fast"></span>
                       </span>
                       <span class="clock-text" v-html="tdisplay.w"></span>
                     </span>
@@ -131,7 +131,7 @@
                   <div class="column has-text-right">
                     <span class="button is-small" :class="{ 'has-background-black has-text-white' : timer.b > 10, 'has-background-danger has-text-white' : timer.b <= 10}">
                       <span class="icon">
-                        <span class="mdi mdi-clock"></span>
+                        <span class="mdi mdi-clock-fast"></span>
                       </span>
                       <span class="clock-text" v-html="tdisplay.b"></span>
                     </span>

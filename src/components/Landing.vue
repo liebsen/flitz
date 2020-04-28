@@ -42,7 +42,12 @@
                       </span>
                       {{ item.code }}
                     </h2>
-                    <p class="subtitle">{{ item.minutes }}+{{ item.compensation }}</p>
+                    <p class="subtitle">
+                      <span class="icon">
+                        <span class="mdi mdi-clock-fast"></span>
+                      </span>
+                      {{ item.minutes }}+{{ item.compensation }}
+                    </p>
                   </article>
                 </router-link>
               </div>
