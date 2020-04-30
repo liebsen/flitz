@@ -21,6 +21,7 @@
                         <span v-html="data.whiteflag"></span>
                       </span>
                       <span v-html="data.white"></span>
+                      <span class="has-text-grey" v-html="data.whiteelo"></span>
                     </span>
                     <span v-show="data.result==='1-0'" class="icon">
                       <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
@@ -32,6 +33,7 @@
                         <span v-html="data.blackflag"></span>
                       </span>
                       <span v-html="data.black"></span>
+                      <span class="has-text-grey" v-html="data.blackelo"></span>
                     </span>
                     <span v-show="data.result==='0-1'" class="icon">
                       <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
@@ -54,6 +56,7 @@
                         <span v-html="data.blackflag"></span>
                       </span>
                       <span v-html="data.black"></span>
+                      <span class="has-text-grey" v-html="data.blackelo"></span>
                     </span>
                   </span>
                   <span v-show="data.white === player.code">
@@ -65,6 +68,7 @@
                         <span v-html="data.whiteflag"></span>
                       </span>
                       <span v-html="data.white"></span>
+                      <span class="has-text-grey" v-html="data.whiteelo"></span>
                     </span>
                   </span>
                 </h6>
@@ -244,6 +248,7 @@ export default {
   mounted () {
     var t = this
     t.$root.loading = true
+    t.usersJoined = []
     window.app = this
     window.addEventListener('beforeunload', t.beforeunload)
     document.getElementById('board').addEventListener('wheel', event => {
@@ -276,6 +281,16 @@ export default {
     },
     game_updated (data) {
       if (data.result) {
+        let elo = data.whiteelo
+        if (this.playerColor[0] === 'b') {
+          elo = data.blackelo
+        }
+        this.$store
+          .dispatch('player', { elo: elo })
+          .then(data => {
+            console.log(`elo updated: ${elo}`)
+          })
+
         this.data = data
         this.showResultGame()
       }
@@ -304,23 +319,23 @@ export default {
       var exists = false
       if (data.code !== t.player.code && !t.announced_game_over) {
         snackbar('success', '👤 ' + data.code + ' se unió a la partida')
-      }
-      for (var i in t.usersJoined) {
-        if (t.usersJoined[i] === data.code) {
-          exists = true
+        for (var i in t.usersJoined) {
+          if (t.usersJoined[i] === data.code) {
+            exists = true
+          }
         }
-      }
-      if (exists === false) {
-        t.usersJoined.push(data.code)
-      }
-      setTimeout(() => {
-        if (t.usersJoined.length === 2 && !t.data.result && t.player.code === t.data.white) {
-          t.$socket.emit('start', {
-            player: t.player,
-            id: t.$route.params.game
-          })
+        if (exists === false) {
+          t.usersJoined.push(data.code)
         }
-      }, 1500)
+        setTimeout(() => {
+          if (t.usersJoined.length === 2 && !t.data.result) {
+            t.$socket.emit('start', {
+              player: t.player,
+              id: t.$route.params.game
+            })
+          }
+        }, 1500)
+      }
     },
     gone (data) {
       if (data.player !== this.player.code) {
@@ -399,15 +414,7 @@ export default {
         playSound('defeat.mp3')
       } else {
         result = (t.playerColor === 'white' ? '1-0' : '0-1')
-        let match = JSON.parse(localStorage.getItem('match'))
-        t.$socket.emit('game', {
-          id: t.data._id,
-          wtime: t.timer.w,
-          btime: t.timer.b,
-          result: result,
-          match: match.match,
-          score: t.chart.values
-        })
+        t.sendResults(result)
         playSound('victory.mp3')
       }
       t.announced_game_over = true
@@ -418,23 +425,14 @@ export default {
       if (data.player === t.player.code) {
         swal({
           title: '¿Aceptas tablas?',
-          text: 'Tu oponente ' + t.opponentName + ' solicita tablas',
+          text: 'Tu oponente ' + t.opponent.code + ' solicita tablas',
           buttons: ['No', 'Sí'],
           closeOnClickOutside: false
         })
           .then(accept => {
             if (accept) {
               result = '1/2-1/2'
-              let match = JSON.parse(localStorage.getItem('match'))
-              t.$socket.emit('game', {
-                id: t.$route.params.game,
-                wtime: t.timer.w,
-                btime: t.timer.b,
-                result: result,
-                match: match.match,
-                score: t.chart.values
-              })
-
+              t.sendResults(result)
               t.$socket.emit('acceptdraw', data)
               t.announced_game_over = true
               playSound('game-end.mp3')
@@ -444,7 +442,7 @@ export default {
             }
           })
       } else {
-        swal('Esperando respuesta...', 'Has solicitado tablas a ' + t.opponentName, 'info')
+        swal('Esperando respuesta...', 'Has solicitado tablas a ' + t.opponent.code, 'info')
       }
     },
     chat (data) {
@@ -459,6 +457,24 @@ export default {
     }
   },
   methods: {
+    sendResults (result) {
+      let match = JSON.parse(localStorage.getItem('match'))
+      var white = this.playerColor === 'white' ? this.player : this.opponent
+      var black = this.playerColor === 'black' ? this.player : this.opponent
+      this.$socket.emit('game', {
+        id: this.$route.params.game,
+        wtime: this.timer.w,
+        btime: this.timer.b,
+        white: white.code,
+        black: black.code,
+        whiteelo: white.elo,
+        blackelo: black.elo,
+        result: result,
+        match: match.match,
+        group: match.group,
+        score: this.chart.values
+      })
+    },
     showResultGame () {
       let data = this.data
       let winner = ''
@@ -565,13 +581,16 @@ export default {
       }
     },
     createNewGame (game) {
-      console.log('createNewGame')
       let t = this
+      var white = t.playerColor === 'white' ? this.player : this.opponent
+      var black = t.playerColor === 'black' ? this.player : this.opponent
       axios.post('/game/create', {
-        white: (t.playerColor === 'white' ? this.player.code : this.opponentName),
-        black: (t.playerColor === 'black' ? this.player.code : this.opponentName),
-        whiteflag: (t.playerColor === 'white' ? this.player.flag : this.opponentFlag),
-        blackflag: (t.playerColor === 'black' ? this.player.flag : this.opponentFlag),
+        white: white.code,
+        black: black.code,
+        whiteelo: white.elo,
+        blackelo: white.elo,
+        whiteflag: white.flag,
+        blackflag: black.flag,
         minutes: t.data.minutes,
         games: t.data.games,
         game: game,
@@ -630,7 +649,7 @@ export default {
           if (accept) {
             this.$socket.emit('capitulate', {
               asker: this.player.code,
-              player: this.opponentName,
+              player: this.opponent.code,
               id: this.$route.params.game
             })
           } else {
@@ -649,7 +668,7 @@ export default {
           if (accept) {
             this.$socket.emit('askfordraw', {
               asker: this.player.code,
-              player: this.opponentName,
+              player: this.opponent.code,
               id: this.$route.params.game
             })
           } else {
@@ -661,6 +680,10 @@ export default {
       var t = this
       var pos = 'start'
       const pref = JSON.parse(localStorage.getItem('player')) || {}
+
+      if (!document.getElementById('board')) {
+        return
+      }
 
       setTimeout(() => {
         t.game = new Chess()
@@ -783,12 +806,14 @@ export default {
 
         if (game.white === t.player.code) {
           t.playerColor = 'white'
-          t.opponentName = game.black
-          t.opponentFlag = game.blackflag
+          t.opponent.code = game.black
+          t.opponent.elo = game.blackelo
+          t.opponent.flag = game.blackflag
         } else if (game.black === t.player.code) {
           t.playerColor = 'black'
-          t.opponentName = game.white
-          t.opponentFlag = game.whiteflag
+          t.opponent.code = game.white
+          t.opponent.elo = game.whiteelo
+          t.opponent.flag = game.whiteflag
         }
 
         if (game.wtime) {
@@ -823,8 +848,8 @@ export default {
 
           // console.log("evaler: " + line);
 
-          var match = null
-          if (line.match(/^Total evaluation: (-?\d+\.\d+)/)) {
+          var match = line.match(/^Total evaluation: (-?\d+\.\d+)/)
+          if (match) {
             let score = parseFloat(match[1])
             t.score = score
             t.vscore = 50 - (score / 48 * 100)
@@ -864,15 +889,7 @@ export default {
               playSound('victory.mp3')
             }
             if (turn === 'w') {
-              let match = JSON.parse(localStorage.getItem('match'))
-              t.$socket.emit('game', {
-                id: t.data._id,
-                wtime: t.timer.w,
-                btime: t.timer.b,
-                result: result,
-                match: match.match,
-                score: t.chart.values
-              })
+              t.sendResults(result)
             }
             t.announced_game_over = true
           } else {
@@ -884,65 +901,63 @@ export default {
     inviteRematch () {
       this.$socket.emit('invite_rematch', {
         asker: this.player,
-        player: {
-          code: this.opponentName,
-          flag: this.opponentFlag
-        }
+        player: this.opponent
       })
     },
     boardTaps () {
       var t = this
       const events = ['click', 'mousedown']
+      if (document.querySelector('.chessboard-63f37')) {
+        events.forEach((event) => {
+          document.querySelector('.chessboard-63f37').addEventListener(event, e => {
+            e.preventDefault()
+            const turn = t.game.turn() === t.playerColor[0]
+            const piece = e.target.getAttribute('data-piece')
 
-      events.forEach((event) => {
-        document.querySelector('.chessboard-63f37').addEventListener(event, e => {
-          e.preventDefault()
-          const turn = t.game.turn() === t.playerColor[0]
-          const piece = e.target.getAttribute('data-piece')
+            if (!turn) return
+            if (e.target.classList.contains('row-5277c') || e.target.classList.contains('board-b72b1')) return
 
-          if (!turn) return
-          if (e.target.classList.contains('row-5277c') || e.target.classList.contains('board-b72b1')) return
+            const src = e.target.getAttribute('src')
+            const target = src ? e.target.parentNode : e.target
+            const square = target.id.substring(0, 2)
 
-          const src = e.target.getAttribute('src')
-          const target = src ? e.target.parentNode : e.target
-          const square = target.id.substring(0, 2)
-
-          if (!t.moveFrom) {
-            if (piece && piece[0] !== t.playerColor[0]) return
-            target.classList.add('highlight-move')
-            if (!src) { // blank square
-              t.removeHighlight()
-              return
-            }
-
-            t.moveFrom = square
-          } else {
-            if (square === t.moveFrom) return
-            var moveObj = ({
-              from: t.moveFrom,
-              to: square,
-              promotion: 'q' // NOTE: always promote to a queen for example simplicity
-            })
-
-            t.moveFrom = null
-            var move = t.game.move(moveObj)
-
-            // illegal move
-            if (move === null) {
-              t.removeHighlight()
-              t.moveFrom = square
-              if (src) {
-                target.classList.add('highlight-move')
+            if (!t.moveFrom) {
+              if (piece && piece[0] !== t.playerColor[0]) return
+              target.classList.add('highlight-move')
+              if (!src) { // blank square
+                t.removeHighlight()
+                return
               }
-              return 'snapback'
-            }
 
-            t.board.position(t.game.fen())
-            t.updateMoves(move)
-            t.emitMove(move)
-          }
+              t.moveFrom = square
+            } else {
+              if (square === t.moveFrom) return
+              var moveObj = ({
+                from: t.moveFrom,
+                to: square,
+                promotion: 'q' // NOTE: always promote to a queen for example simplicity
+              })
+
+              t.moveFrom = null
+              var move = t.game.move(moveObj)
+
+              // illegal move
+              if (move === null) {
+                t.removeHighlight()
+                t.moveFrom = square
+                if (src) {
+                  target.classList.add('highlight-move')
+                }
+                return 'snapback'
+              }
+
+              t.board.position(t.game.fen())
+              t.updateMoves(move)
+              t.emitMove(move)
+            }
+          })
         })
-      })
+      }
     },
     onDragStart  (source, piece, position, orientation) {
       var t = this
@@ -1004,19 +1019,8 @@ export default {
           } else {
             result = t.playerColor === 'white' ? '1-0' : '0-1'
           }
-          console.log('1a')
-          console.log(t.game.turn())
-
           if (t.playerColor[0] === 'w') {
-            let match = JSON.parse(localStorage.getItem('match'))
-            t.$socket.emit('game', {
-              id: this.$route.params.game,
-              wtime: t.timer.w,
-              btime: t.timer.b,
-              result: result,
-              match: match.match,
-              score: t.chart.values
-            })
+            t.sendResults(result)
           }
           t.announced_game_over = true
         }
@@ -1150,14 +1154,15 @@ export default {
           sound = 'check.ogg'
         }
       }
-
       playSound(sound)
     },
     removeHighlight  () {
-      document.getElementById('board').querySelectorAll('.square-55d63').forEach((item) => {
-        item.classList.remove('highlight-move')
-        item.classList.remove('in-check')
-      })
+      if (document.getElementById('board')) {
+        document.getElementById('board').querySelectorAll('.square-55d63').forEach((item) => {
+          item.classList.remove('highlight-move')
+          item.classList.remove('in-check')
+        })
+      }
     },
     addHightlight  (move) {
       var t = this
@@ -1285,8 +1290,7 @@ export default {
       pgnIndex: [],
       moveFrom: null,
       playerColor: null,
-      opponentName: null,
-      opponentFlag: null
+      opponent: {}
     }
   }
 }

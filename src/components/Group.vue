@@ -92,6 +92,7 @@
                     <span v-html="plyer.flag"></span>
                   </span>
                   <span v-html="plyer.code"></span>
+                  <span class="has-text-grey" v-html="plyer.elo"></span>
                 </span>
               </router-link>
             </div>
@@ -145,6 +146,7 @@
                         <span v-html="item.whiteflag"></span>
                       </span>
                       <span v-html="item.white"></span>
+                      <span class="has-text-grey" v-html="item.whiteelo"></span>
                     </td>
                     <td>
                       <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
@@ -153,6 +155,7 @@
                         <span v-html="item.blackflag"></span>
                       </span>
                       <span v-html="item.black"></span>
+                      <span class="has-text-grey" v-html="item.whiteelo"></span>
                     </td>
                     <td>
                       <span v-html="item.date"></span>
@@ -252,7 +255,7 @@ export default {
     group_join (data) {
       setTimeout(() => {
         this.chatLines.push({
-          text: `<span class="mdi mdi-arrow-right"></span> ${data.code} ${data.flag}`,
+          text: `<span class="mdi mdi-arrow-right"></span> ${data.flag} ${data.code}`,
           ts: moment().fromNow(true),
           sender: 'bot',
           owned: false
@@ -262,7 +265,7 @@ export default {
     },
     group_leave (data) {
       this.chatLines.push({
-        text: `<span class="mdi mdi-arrow-left"></span> ${data.code} ${data.flag}`,
+        text: `<span class="mdi mdi-arrow-left"></span> ${data.flag} ${data.code}`,
         ts: moment().fromNow(true),
         sender: 'bot',
         owned: false

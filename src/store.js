@@ -1,9 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import moment from 'moment'
-import ObjectId from '@/components/ObjectId'
-import languages from '@/components/Languages'
+import defaultPreferences from '@/components/defaultPreferences'
 
 Vue.use(Vuex)
 
@@ -16,7 +14,7 @@ export default new Vuex.Store({
     games: games,
     status: null,
     auth: JSON.parse(localStorage.getItem('auth')) || {},
-    endpoint: (process.env.NODE_ENV === 'production' ? 'https://biltzapi.herokuapp.com' : 'http://localhost:4000')
+    endpoint: (process.env.NODE_ENV === 'production' ? 'https://biltzapi.herokuapp.com' : 'http://192.168.2.13:4000')
   },
   mutations: {
     /* A fit-them-all commit */
@@ -166,8 +164,21 @@ export default new Vuex.Store({
     },
     player ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        const stored = data || JSON.parse(localStorage.getItem('player')) || {}
+        const stored = JSON.parse(localStorage.getItem('player')) || {}
+        const props = data || {}
+
         if (Object.keys(stored).length && stored._id) {
+
+          if (!stored.elo) {
+            stored.elo = 1500
+          }
+          
+          if (Object.keys(props).length) {
+            Object.keys(props).map(i => {
+              stored[i] = props[i]
+            })
+          }
+
           if (stored.darkmode) {
             document.documentElement.classList.add('dark-mode')
           }
@@ -175,28 +186,7 @@ export default new Vuex.Store({
           commit('player_success', stored)
           resolve(stored)
         } else {
-          let detected = navigator.languages
-            ? navigator.languages[0]
-            : (navigator.language || navigator.userLanguage)
-          detected = detected.split('-')[0].toLowerCase()
-          const lang = languages[detected] ? detected : Object.keys(languages)[0]
-          moment.locale(lang)
-          const code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5)
-          var preferences = {
-            _id: ObjectId(),
-            code: code,
-            flag: '🇷🇪',
-            country: '🇷🇪',
-            lang: lang,
-            observe: false,
-            autoaccept: false,
-            strongnotification: false,
-            darkmode: false,
-            sound: true,
-            pieces: 'classic',
-            board: 'classic'
-          }
-
+          var preferences = defaultPreferences
           axios.post('https://ipapi.co/json').then(json => {
             axios.get('/json/flags.json').then(flags => {
               if (flags.data[json.data.country_code]) {

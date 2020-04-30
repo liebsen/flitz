@@ -178,19 +178,9 @@ label {
   display: none;
 }
 
-.has-text-right {
-  .icon {
-    margin-right: 0.25rem;
-  }
-}
-
-.has-text-left {
-  .icon {
-    margin-left: 0.25rem;
-  }
-}
-
 .icon {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
   font-size: 1.5rem;
 }
 

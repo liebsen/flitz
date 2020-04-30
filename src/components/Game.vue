@@ -294,9 +294,11 @@ export default {
           this.orientation = this.board.orientation()
 
           window.onresize = function (event) {
-            this.board.resize()
-            this.$root.fullscreenBoard()
-            this.highlightLastMove()
+            if (this.board) {
+              this.board.resize()
+              this.$root.fullscreenBoard()
+              this.highlightLastMove()
+            }
           }
 
           playSound('start.ogg')

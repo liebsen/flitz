@@ -593,10 +593,12 @@ export default {
       playSound(sound)
     },
     removeHighlight () {
-      document.getElementById('board').querySelectorAll('.square-55d63').forEach((item) => {
-        item.classList.remove('highlight-move')
-        item.classList.remove('in-check')
-      })
+      if (document.getElementById('board')) {
+        document.getElementById('board').querySelectorAll('.square-55d63').forEach((item) => {
+          item.classList.remove('highlight-move')
+          item.classList.remove('in-check')
+        })
+      }
     },
     addHightlight (move) {
       var t = this
@@ -604,11 +606,15 @@ export default {
       if (move) {
         if (t.game.in_check() === true) {
           setTimeout(() => {
-            document.getElementById('board').querySelector('img[data-piece="' + t.game.turn() + 'K"]').parentNode.classList.add('in-check')
+            if (document.getElementById('board')) {
+              document.getElementById('board').querySelector('img[data-piece="' + t.game.turn() + 'K"]').parentNode.classList.add('in-check')
+            }
           }, 200)
         }
-        document.getElementById('board').querySelector('.square-' + move.from).classList.add('highlight-move')
-        document.getElementById('board').querySelector('.square-' + move.to).classList.add('highlight-move')
+        if (document.getElementById('board')) {
+          document.getElementById('board').querySelector('.square-' + move.from).classList.add('highlight-move')
+          document.getElementById('board').querySelector('.square-' + move.to).classList.add('highlight-move')
+        }
       }
     },
     highlightLastMove () {

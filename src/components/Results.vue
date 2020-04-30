@@ -8,7 +8,6 @@
         <span>Resultados</span>
       </h3>
       <form @submit.prevent="submit">
-        <label class="label"><span v-html="eco.name" class="has-text-grey"></span></label>
         <div class="field has-addons">
           <div class="control">
             <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" placeholder="Evento, lugar, fecha, jugador o PGN" autofocus>
@@ -122,7 +121,6 @@ export default {
       this.search()
     },
     search: function () {
-      var t = this
       this.$root.loading = true
       this.searching = this.$route.query || false
       axios.post('/search', {
@@ -146,7 +144,7 @@ export default {
             for (var i = 0; i < numPages; i++) {
               pages[i] = i * this.limit
             }
-            snackbar('success', 'Se econtraron ' + this.data.count + ' partida' + (this.data.count > 1 ? 's' : '') + '. Mostrando resultados de ' + (this.offset + 1) + ' a ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit), 5000)
+            snackbar('success', 'Se encontraron ' + this.data.count + ' partida' + (this.data.count > 1 ? 's' : '') + '. Mostrando resultados de ' + (this.offset + 1) + ' a ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit), 5000)
           }
         }
 
@@ -158,11 +156,6 @@ export default {
 
         this.pages = pages
         this.$root.loading = false
-        axios.post(this.$root.endpoint + '/eco/search/pgn', { pgn: this.query }).then((res2) => {
-          if (res2.data) {
-            t.eco = res2.data
-          }
-        })
       })
     },
     submit: function () {
@@ -173,7 +166,6 @@ export default {
     return {
       data: { count: 0, games: [] },
       pages: {},
-      eco: {},
       searching: false,
       query: '',
       limit: 10,
