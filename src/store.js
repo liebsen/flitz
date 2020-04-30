@@ -168,11 +168,10 @@ export default new Vuex.Store({
         const props = data || {}
 
         if (Object.keys(stored).length && stored._id) {
-
           if (!stored.elo) {
             stored.elo = 1500
           }
-          
+
           if (Object.keys(props).length) {
             Object.keys(props).map(i => {
               stored[i] = props[i]
