@@ -2,10 +2,10 @@
   <div class="container is-widescreen">
     <div class="content column fadeIn">
       <h3>
-        <span class="icon">
+        <span class="icon has-margin">
           <span class="mdi mdi-view-list"></span>
         </span>
-        <span>Resultados</span>
+        <span>{{ 'results' | t }}</span>
       </h3>
       <form @submit.prevent="submit">
         <div class="field has-addons">
@@ -14,12 +14,12 @@
           </div>
           <div class="control">
             <button v-show="this.searching" type="button" @click="clear" class="button is-rounded is-danger">
-              <span class="icon">
+              <span class="icon has-margin">
                 <span class="mdi mdi-close"></span>
               </span>
             </button>
             <button v-show="!this.searching" type="submit" id="searchbtn" class="button is-rounded is-success">
-              <span class="icon">
+              <span class="icon has-margin">
                 <span class="mdi mdi-search"></span>
               </span>
             </button>
@@ -51,7 +51,7 @@
               <td>
                 <span v-show="item.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
-                <span v-if="item.whiteflag" class="icon">
+                <span v-if="item.whiteflag" class="icon has-margin">
                   <span v-html="item.whiteflag"></span>
                 </span>
                 <span v-html="item.white"></span>
@@ -59,7 +59,7 @@
               <td>
                 <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
-                <span v-if="item.blackflag" class="icon">
+                <span v-if="item.blackflag" class="icon has-margin">
                   <span v-html="item.blackflag"></span>
                 </span>
                 <span v-html="item.black"></span>
@@ -130,21 +130,21 @@ export default {
         strict: this.$route.query.strict
       }).then((res) => {
         this.data = res.data
-
+        let t = this.$root.t
         var pages = []
         if (res.data.error) {
           if (res.data.error === 'not_enough_params') {
-            snackbar('info', 'Ingresá una palabra clave para ver partidas. Podés buscar por evento, lugar, jugador o PGN.', 15000)
+            snackbar('info', this.$root.t('results_toast'), 15000)
           }
         } else {
           if (res.data.count === 0) {
-            snackbar('danger', 'No hay partidas que coincidan con tu palabra clave.', 5000)
+            snackbar('danger', t('results_nomatch'), 5000)
           } else {
             var numPages = Math.ceil(res.data.count / this.limit)
             for (var i = 0; i < numPages; i++) {
               pages[i] = i * this.limit
             }
-            snackbar('success', 'Se encontraron ' + this.data.count + ' partida' + (this.data.count > 1 ? 's' : '') + '. Mostrando resultados de ' + (this.offset + 1) + ' a ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit), 5000)
+            snackbar('success', t('results_found') + this.data.count + (this.data.count > 1 ? t('games') : t('game')) + '.' + t('showing_results') + (this.offset + 1) + t('of') + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit), 5000)
           }
         }
 

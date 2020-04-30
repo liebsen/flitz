@@ -11,12 +11,15 @@
           <div class="column">
             <div class="board-container">
               <h6 class="black has-text-left is-hidden-mobile" v-show="game">
-                <span v-show="data.result==='0-1'" class="icon">
+                <span v-show="data.result==='0-1'" class="icon has-margin">
                   <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 </span>
                 <span class="is-size-6">
+                  <span v-show="data.blackflag" class="icon">
+                    <span v-html="data.blackflag"></span>
+                  </span>
                   <span v-html="data.black"></span>
-                  <span class="has-text-grey" v-html="data.blackelo"></span>
+                  <span v-show="data.blackelo && data.blackelo !== '0'" class="has-text-grey" v-html="data.blackelo"></span>
                 </span>
               </h6>
               <div class="board preservefilter" :class="{ 'black' : orientation==='black' }">
@@ -26,12 +29,15 @@
                 <div id="board" class="is-clickable" @click="gamePause"></div>
               </div>
               <h6 class="white has-text-right is-hidden-mobile" v-show="game">
-                <span v-show="data.result==='1-0'" class="icon">
+                <span v-show="data.result==='1-0'" class="icon has-margin">
                   <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 </span>
                 <span class="is-size-6">
+                  <span v-show="data.whiteflag" class="icon">
+                    <span v-html="data.whiteflag"></span>
+                  </span>
                   <span v-html="data.white"></span>
-                  <span class="has-text-grey" v-html="data.whiteelo"></span>
+                  <span v-show="data.whiteelo && data.whiteelo !== '0'" class="has-text-grey" v-html="data.whiteelo"></span>
                 </span>
               </h6>
             </div>
@@ -495,7 +501,9 @@ export default {
         item.parentNode.classList.remove('active')
       })
 
-      document.querySelector('.moveindex.m' + this.index).parentNode.classList.add('active')
+      if (document.querySelector('.moveindex.m' + this.index)) {
+        document.querySelector('.moveindex.m' + this.index).parentNode.classList.add('active')
+      }
 
       var perc = (this.index + 1) / this.gameMoves.length * 100
       $('.bar-progress').animate({ width: perc + '%' }, 100, 'linear')

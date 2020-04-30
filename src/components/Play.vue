@@ -905,59 +905,60 @@ export default {
       })
     },
     boardTaps () {
+      if (!document.querySelector('.chessboard-63f37')) {
+        return
+      }
       var t = this
       const events = ['click', 'mousedown']
-      if (document.querySelector('.chessboard-63f37')) {
-        events.forEach((event) => {
-          document.querySelector('.chessboard-63f37').addEventListener(event, e => {
-            e.preventDefault()
-            const turn = t.game.turn() === t.playerColor[0]
-            const piece = e.target.getAttribute('data-piece')
+      events.forEach((event) => {
+        document.querySelector('.chessboard-63f37').addEventListener(event, e => {
+          e.preventDefault()
+          const turn = t.game.turn() === t.playerColor[0]
+          const piece = e.target.getAttribute('data-piece')
 
-            if (!turn) return
-            if (e.target.classList.contains('row-5277c') || e.target.classList.contains('board-b72b1')) return
+          if (!turn) return
+          if (e.target.classList.contains('row-5277c') || e.target.classList.contains('board-b72b1')) return
 
-            const src = e.target.getAttribute('src')
-            const target = src ? e.target.parentNode : e.target
-            const square = target.id.substring(0, 2)
+          const src = e.target.getAttribute('src')
+          const target = src ? e.target.parentNode : e.target
+          const square = target.id.substring(0, 2)
 
-            if (!t.moveFrom) {
-              if (piece && piece[0] !== t.playerColor[0]) return
-              target.classList.add('highlight-move')
-              if (!src) { // blank square
-                t.removeHighlight()
-                return
-              }
-
-              t.moveFrom = square
-            } else {
-              if (square === t.moveFrom) return
-              var moveObj = ({
-                from: t.moveFrom,
-                to: square,
-                promotion: 'q' // NOTE: always promote to a queen for example simplicity
-              })
-
-              t.moveFrom = null
-              var move = t.game.move(moveObj)
-
-              // illegal move
-              if (move === null) {
-                t.removeHighlight()
-                t.moveFrom = square
-                if (src) {
-                  target.classList.add('highlight-move')
-                }
-                return 'snapback'
-              }
-
-              t.board.position(t.game.fen())
-              t.updateMoves(move)
-              t.emitMove(move)
+          if (!t.moveFrom) {
+            if (piece && piece[0] !== t.playerColor[0]) return
+            target.classList.add('highlight-move')
+            if (!src) { // blank square
+              t.removeHighlight()
+              return
             }
-          })
+
+            t.moveFrom = square
+          } else {
+            if (square === t.moveFrom) return
+            var moveObj = ({
+              from: t.moveFrom,
+              to: square,
+              promotion: 'q' // NOTE: always promote to a queen for example simplicity
+            })
+
+            t.moveFrom = null
+            var move = t.game.move(moveObj)
+
+            // illegal move
+            if (move === null) {
+              t.removeHighlight()
+              t.moveFrom = square
+              if (src) {
+                target.classList.add('highlight-move')
+              }
+              return 'snapback'
+            }
+
+            t.board.position(t.game.fen())
+            t.updateMoves(move)
+            t.emitMove(move)
+          }
         })
-      }
+      })
     },
     onDragStart  (source, piece, position, orientation) {
       var t = this

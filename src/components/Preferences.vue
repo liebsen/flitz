@@ -262,7 +262,7 @@ export default {
             this.anchor.code = data.code
             this.$root.saving = false
             this.$socket.emit('preferences', data)
-            snackbar('success', 'preferences_saved')
+            snackbar('success', this.$root.t('preferences_saved'))
           })
         }).catch(err => {
           console.log(`Algo malo sucedió ` + err)

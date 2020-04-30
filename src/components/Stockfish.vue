@@ -60,7 +60,7 @@
             </div>
             <h6 class="has-text-right white is-hidden-mobile">
               <span v-show="data.result==='1-0'">🏆</span>
-              <span class="icon">
+              <span class="icon has-margin">
                 <span v-html="player.flag"/>
               </span>
               <span v-html="player.code"></span>
@@ -423,6 +423,9 @@ export default {
       }, 100)
     },
     boardTaps () {
+      if (!document.querySelector('.chessboard-63f37')) {
+        return
+      }
       var t = this
       const events = ['click', 'mousedown']
       events.forEach((event) => {
@@ -736,7 +739,7 @@ export default {
       let t = this
       axios.post('/eco/pgn', { pgn: pgn }).then((res) => {
         if (res.data.eco) {
-          t.opening = t.$root.translate(res.data.eco)
+          t.opening = t.$root.t(res.data.eco)
           t.ecode = res.data.eco
         }
       })

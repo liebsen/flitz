@@ -263,7 +263,7 @@ new Vue({ // eslint-disable-line no-new
         }
       }
     },
-    translate (value) {
+    t (value) {
       return this.translations[value] || value.charAt(0).toUpperCase() + value.slice(1)
     },
     fullscreenBoard: function () {

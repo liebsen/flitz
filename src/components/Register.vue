@@ -24,7 +24,7 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" v-model="acceptTerms"> <span v-html="$root.translate('accept_terms')"></span>
+                  <input type="checkbox" v-model="acceptTerms"> <span v-html="$root.t('accept_terms')"></span>
                 </label>
               </div>
             </div>
