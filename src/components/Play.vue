@@ -79,11 +79,6 @@
                 <div class="columns has-text-centered">
                   <div class="column preservefilter">
                     <div class="buttons levels has-addons" :title="'game_settings' | t">
-                      <!--button @click="inviteRematch()" class="button is-small is-rounded is-danger" v-show="announced_game_over" title="Rematch">
-                        <span class="icon has-text-white">
-                          <span class="mdi mdi-chess-knight"></span>
-                        </span>
-                      </button-->
                       <button @click="gameCapitulate()" class="button is-small is-rounded is-danger" v-show="pgnIndex.length && !announced_game_over" title="Abandonar partida">
                         <span class="icon has-text-white">
                           <span class="mdi mdi-flag"></span>
@@ -94,12 +89,7 @@
                           <span class="mdi mdi-handshake"></span>
                         </span>
                       </button>
-                      <!--button @click="showLiveURL()" class="button is-small is-rounded is-info" v-show="pgnIndex.length && !announced_game_over" title="Mostrar URL de transmisión">
-                        <span class="icon has-text-white">
-                          <span class="mdi mdi-user-astronaut"></span>
-                        </span>
-                      </button>
-                      <button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length && announced_game_over" title="Mostrar PGN">
+                      <!--button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length && announced_game_over" title="Mostrar PGN">
                         <strong>PGN</strong>
                       </button-->
                     </div>
@@ -164,12 +154,12 @@
                   <ul>
                     <li :class="{ 'is-active' : tab === 'pgn' }">
                       <a @click="tab = 'pgn'" title="Plys">
-                        <span class="icon"><i class="mdi mdi-clipboard-list" aria-hidden="true"></i></span>
+                        <span class="icon"><i class="mdi mdi-view-list" aria-hidden="true"></i></span>
                       </a>
                     </li>
                     <li :class="{ 'is-active' : tab === 'chat' }">
                       <a @click="tab = 'chat'" title="Chat">
-                        <span class="icon"><i class="mdi mdi-comments" aria-hidden="true"></i></span>
+                        <span class="icon"><i class="mdi mdi-chat" aria-hidden="true"></i></span>
                       </a>
                     </li>
                   </ul>
@@ -236,6 +226,7 @@
 
 <script>
 import axios from 'axios'
+import moment from 'moment'
 import { mapState } from 'vuex'
 import Chess from 'chess.js'
 import Chessboard from '.././assets/js/chessboard'
@@ -267,15 +258,23 @@ export default {
     },
     game_updated (data) {
       if (data.result) {
-        let elo = data.whiteelo
-        if (this.playerColor[0] === 'b') {
-          elo = data.blackelo
+        let elo = data.blackelo
+        if (this.playerColor[0] === 'w') {
+          elo = data.whiteelo
+          console.log('***!')
+          console.log(data.whiteelo)
+          console.log(data.blackelo)
+          this.player.elo = data.whiteelo
+          this.opponent.elo = data.blackelo
         }
-        this.$store
-          .dispatch('player', { elo: elo })
-          .then(data => {
-            console.log(`elo updated: ${elo}`)
-          })
+
+        if (elo) {
+          this.$store
+            .dispatch('player', { elo: elo })
+            .then(data => {
+              console.log(`elo updated: ${elo}`)
+            })
+        }
 
         this.data = data
         this.showResultGame()
@@ -442,8 +441,38 @@ export default {
   methods: {
     sendResults (result) {
       let match = JSON.parse(localStorage.getItem('match'))
-      var white = this.playerColor === 'white' ? this.player : this.opponent
-      var black = this.playerColor === 'black' ? this.player : this.opponent
+      var white = this.player
+      var black = this.opponent
+
+      if (!match.results) {
+        match.results = []
+      }
+
+      let fullResult = {
+        game: this.$route.params.game,
+        white: {
+          code: white.code,
+          flag: white.flag,
+          elo: white.elo
+        },
+        black: black,
+        result: result,
+        date: moment().format('YYYY.MM.DD HH:mm'),
+        plys: this.$root.countMoves(this.game.pgn())
+      }
+
+      match.results.push(fullResult)
+      localStorage.setItem('match', JSON.stringify(match))
+
+      this.$socket.emit('group_result', {
+        _id: match.group,
+        match: match.match,
+        result: fullResult
+      })
+
+      console.log('a1')
+      console.log(white.elo)
+      console.log(black.elo)
       this.$socket.emit('game', {
         _id: this.$route.params.game,
         wtime: this.timer.w,
@@ -460,17 +489,13 @@ export default {
     },
     showResultGame () {
       let data = this.data
-      let winner = ''
+      let winner = null
       switch (data.result) {
         case '1-0':
           winner = data.white
           break
         case '0-1':
           winner = data.black
-          break
-        case '1/2-1/2':
-        default:
-          winner = null
           break
       }
 
@@ -533,6 +558,7 @@ export default {
         if (data.result !== '1/2-1/2') {
           setTimeout(() => {
             let sel = data.result === '1-0' ? 'white' : 'black'
+            console.log(data.result)
             document.querySelector(`.result-${sel}`).classList.add('is-success', 'is-outlined')
           }, 100)
         }
@@ -565,13 +591,16 @@ export default {
     },
     createNewGame (game) {
       let t = this
-      var white = t.playerColor === 'white' ? this.player : this.opponent
-      var black = t.playerColor === 'black' ? this.player : this.opponent
+      var white = this.opponent
+      var black = this.player
+      console.log('**2')
+      console.log(white.elo)
+      console.log(black.elo)
       axios.post('/game/create', {
         white: white.code,
         black: black.code,
         whiteelo: white.elo,
-        blackelo: white.elo,
+        blackelo: black.elo,
         whiteflag: white.flag,
         blackflag: black.flag,
         minutes: t.data.minutes,
@@ -1249,7 +1278,7 @@ export default {
         values: [51],
         points: []
       },
-      secondsToProceed: 30,
+      secondsToProceed: 10,
       data: {},
       eco: {},
       tab: 'pgn',

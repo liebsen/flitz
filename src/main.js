@@ -22,7 +22,8 @@ import App from './App.vue'
 axios.defaults.baseURL = store.state.endpoint
 
 Vue.use(new VueSocketIO({
-  debug: process.env.NODE_ENV === 'development',
+  // debug: process.env.NODE_ENV === 'development',
+  debug: false,
   connection: store.state.endpoint
 }))
 
@@ -293,12 +294,8 @@ new Vue({ // eslint-disable-line no-new
       loading: true,
       saving: false,
       processing: false,
-      games: [],
-      boards: [],
       translations: {},
-      chatlast: null,
-      documentTitle: null,
-      boardColor: null
+      documentTitle: null
     }
   },
   render: h => h(App)

@@ -37,12 +37,12 @@
           <div>
             <div v-for="(plyer, index) in players" :key="index">
               <router-link :to="`/results?q=${plyer.code}&strict=1`" :title="'Invitar a ' + plyer.code">
-                <span class="button is-small is-text is-rounded is-grey">
+                <span class="mini-button has-background-light">
                   <span class="icon">
                     <span v-html="plyer.flag"></span>
                   </span>
-                  <span v-html="plyer.code"></span>
-                  <span class="has-text-grey" v-html="plyer.elo"></span>
+                  <span class="has-text-grey" v-html="plyer.code"></span>
+                  <span class="has-text-primary" v-html="plyer.elo"></span>
                   <span v-show="plyer.plying" class="icon is-size-6 has-margin has-text-success">
                     <span class="mdi mdi-chess-king"></span>
                   </span>
@@ -124,48 +124,44 @@
             <div v-show="data.results" class="column">
               <table class="table is-narrow is-striped is-fullwidth">
                 <thead>
-                  <th>Mesa</th>
-                  <th>Evento</th>
-                  <th>Blancas</th>
-                  <th>Negras</th>
-                  <th>Fecha</th>
-                  <th>Plys</th>
+                  <th></th>
+                  <th>{{ 'white' | t }}</th>
+                  <th>{{ 'black' | t }}</th>
+                  <th>{{ 'date' | t }}</th>
+                  <th>{{ 'plys' | t }}</th>
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in data.results" :key="index">
                     <td>
-                      <router-link :to="'/game/'+item._id">
+                      <router-link :to="'/game/'+item.game">
                         <span class="icon">
-                          <span class="mdi mdi-play"></span>
+                          <span class="mdi mdi-chess-king"></span>
                         </span>
                       </router-link>
                     </td>
                     <td>
-                      <span v-html="item.event"></span>
-                    </td>
-                    <td>
                       <span v-show="item.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                       <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
-                      <span v-if="item.whiteflag" class="icon">
-                        <span v-html="item.whiteflag"></span>
+                      <span v-if="item.white.flag" class="icon">
+                        <span v-html="item.white.flag"></span>
                       </span>
-                      <span v-html="item.white"></span>
-                      <span class="has-text-grey" v-html="item.whiteelo"></span>
+                      <span v-html="item.white.code"></span>
+                      <span class="has-text-grey" v-html="item.white.elo"></span>
                     </td>
                     <td>
                       <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                       <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
-                      <span v-if="item.blackflag" class="icon">
-                        <span v-html="item.blackflag"></span>
+                      <span v-if="item.black.flag" class="icon">
+                        <span v-html="item.black.flag"></span>
                       </span>
-                      <span v-html="item.black"></span>
-                      <span class="has-text-grey" v-html="item.whiteelo"></span>
+                      <span v-html="item.black.code"></span>
+                      <span class="has-text-grey" v-html="item.black.elo"></span>
                     </td>
                     <td>
                       <span v-html="item.date"></span>
                     </td>
                     <td>
-                      <span v-html="$root.countMoves(item.pgn)"></span>
+                      <span v-html="item.plys"></span>
                     </td>
                   </tr>
                 </tbody>
@@ -226,10 +222,13 @@ export default {
       chat: '',
       tab: 'chat',
       tried: false,
+      games: [],
+      boards: [],
       data: {},
       group: {},
-      games: {},
+      chatlast: null,
       onlineGames: [],
+      boardColor: null,
       players: [],
       chatLines: []
     }
@@ -239,22 +238,22 @@ export default {
       'player'
     ])
   },
-  mounted () {
+  created () {
     this.loadGroup()
   },
   beforeDestroy () {
-    if (this.$route.to.name !== 'play') {
+    if (this.$route.name && this.$route.name !== 'play') {
       this.$socket.emit('group_leave', this.group)
     }
   },
   sockets: {
     group_updated (data) {
       this.data = data
-      if (data.owner.code === this.player.code) {
+      if (data.owner._id === this.player._id) {
         swal.close()
       }
       this.chatLines.push({
-        text: `<span class="mdi mdi-cog"></span> Configurción actualizada`,
+        text: `<span class="mdi mdi-cog"></span> ` + this.$root.t('group_updated'),
         ts: moment().fromNow(true),
         sender: 'bot',
         owned: false
@@ -418,12 +417,9 @@ export default {
       console.log('games')
       console.log(data)
       this.onlineGames = data
-      var gamesContainer = document.querySelector('.live-games')
-      if (gamesContainer) {
-        for (var i in data) {
-          if (!this.games[data[i].id]) {
-            this.gameStart(data[i])
-          }
+      for (var i in data) {
+        if (!this.games[data[i].id]) {
+          this.gameStart(data[i])
         }
       }
     },
@@ -596,7 +592,7 @@ export default {
 
           setTimeout(() => {
             let group = {
-              id: this.data._id,
+              _id: this.data._id,
               minutes: minutes,
               games: games,
               broadcast: broadcast,
@@ -652,6 +648,8 @@ export default {
       })
     },
     gameStart (data) {
+      console.log('gameStart')
+      let t = this
       return new Promise(function (resolve, reject) {
         var pos = 'start'
         var pieces = '/img/chesspieces/classic/{piece}.png'
@@ -660,9 +658,9 @@ export default {
           pos = data.fen
         }
 
-        if (this.player.pieces) {
-          pieces = '/img/chesspieces/' + this.player.pieces + '/{piece}.png'
-          this.boardColor = this.player.board
+        if (t.player.pieces) {
+          pieces = '/img/chesspieces/' + t.player.pieces + '/{piece}.png'
+          t.boardColor = t.player.board
         }
 
         var cfg = {
@@ -672,11 +670,11 @@ export default {
         }
 
         setTimeout(() => {
-          this.games[data.id] = new Chess()
-          this.boards[data.id] = new Chessboard('board' + data.id, cfg)
+          t.games[data.id] = new Chess()
+          t.boards[data.id] = new Chessboard('board' + data.id, cfg)
 
           if (data.pgn) {
-            this.games[data.id].load_pgn(data.pgn)
+            t.games[data.id].load_pgn(data.pgn)
           }
           resolve()
         }, 500)

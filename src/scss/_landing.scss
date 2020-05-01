@@ -9,22 +9,6 @@
     }
   }
 
-  .area {
-    display: inline-flex;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 60px;
-    bottom: 0;
-    padding: 0 2rem;
-    background-color: transparent;
-
-    > .columns {
-      width: 100%;
-      margin: auto 0;
-    } 
-  }
-
   body.fs .area {
     top: 0;
   }
@@ -176,5 +160,25 @@
 
   100%{
     transform: translateY(1500px) rotate(0deg);
+  }
+}
+
+@include desktop {
+  .landing {
+    .area {
+      display: inline-flex;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 60px;
+      bottom: 0;
+      padding: 0 2rem;
+      background-color: transparent;
+
+      > .columns {
+        width: 100%;
+        margin: auto 0;
+      } 
+    }
   }
 }
