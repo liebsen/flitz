@@ -16,56 +16,6 @@
       </section>
     </div>
     <div v-show="data.owner" class="content column fadeIn">
-      <div class="group" v-show="$root.matches.length" :class="{ 'no-players': players.length < 2 }">
-        <h6>
-          <span class="icon">
-            <span class="mdi mdi-chess"></span>
-          </span>
-          <span>Jugando ahora</span>
-        </h6>
-        <div class="columns is-multiline">
-          <div v-for="(match, index) in $root.matches" :key="index" class="column is-3">
-            <div :class="'board-container b' + match.id">
-              <div :class="$root.boardColor">
-                <h6 class="has-text-left black is-clickable" @click="$root.gameFlip(match.id)">
-                  <span class="button is-small" :class="{ 'has-background-grey has-text-white' : match.btime > 10, 'has-background-info has-text-white' : match.btime <= 10}">
-                    <span class="icon">
-                      <span class="mdi mdi-clock"></span>
-                    </span>
-                    <span v-html="$root.getTimeDisplay(match.btime)"></span>
-                  </span>
-                  <span class="button is-small is-text">
-                    <span v-html="match.black"></span>
-                    <span v-show="match.result==='0-1'" class="icon">
-                      <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
-                    </span>
-                  </span>
-                </h6>
-                <router-link :to="'/watch/' + match.id">
-                  <div class="board preservefilter">
-                    <div :id="'board' + match.id"></div>
-                  </div>
-                </router-link>
-                <h6 class="has-text-right white is-clickable" @click="$root.gameFlip">
-                  <span class="button is-small is-text">
-                    <span v-show="match.result==='1-0'" class="icon">
-                      <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
-                    </span>
-                    <span v-html="match.white"></span>
-                  </span>
-                  <span class="button is-small" :class="{ 'has-background-white has-text-black' : match.wtime > 10, 'has-background-info has-text-white' : match.wtime <= 10}">
-                    <span class="icon">
-                      <span class="mdi mdi-clock"></span>
-                    </span>
-                    <span v-html="$root.getTimeDisplay(match.wtime)"></span>
-                  </span>
-                </h6>
-              </div>
-              <div class="match-status has-text-info"></div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="columns">
         <div v-if="players && data && data.owner" class="column is-lobby-list is-3">
           <div v-show="data.owner._id === player._id">
@@ -87,12 +37,15 @@
           <div>
             <div v-for="(plyer, index) in players" :key="index">
               <router-link :to="`/results?q=${plyer.code}&strict=1`" :title="'Invitar a ' + plyer.code">
-                <span class="button is-text is-rounded is-grey">
+                <span class="button is-small is-text is-rounded is-grey">
                   <span class="icon">
                     <span v-html="plyer.flag"></span>
                   </span>
                   <span v-html="plyer.code"></span>
                   <span class="has-text-grey" v-html="plyer.elo"></span>
+                  <span v-show="plyer.plying" class="icon is-size-6 has-margin has-text-success">
+                    <span class="mdi mdi-chess-king"></span>
+                  </span>
                 </span>
               </router-link>
             </div>
@@ -102,16 +55,67 @@
           <div class="tabs is-boxed is-marginless">
             <ul>
               <li :class="{ 'is-active' : tab === 'chat' }">
-                <a @click="tab = 'chat'" title="Chat">
+                <a @click="setTab('chat')" title="Chat">
                   <span class="icon"><i class="mdi mdi-chat" aria-hidden="true"></i></span>
                 </a>
               </li>
+              <li :class="{ 'is-active' : tab === 'playing' }">
+                <a @click="setTab('playing')" :title="'playing_now' | t">
+                  <span class="icon"><i class="mdi mdi-chess-king" aria-hidden="true"></i></span>
+                </a>
+              </li>
               <li :class="{ 'is-active' : tab === 'results' }">
-                <a @click="tab = 'results'" title="Resultados">
+                <a @click="setTab('results')" :title="'results' | t">
                   <span class="icon"><i class="mdi mdi-view-list" aria-hidden="true"></i></span>
                 </a>
               </li>
             </ul>
+          </div>
+          <div v-show="tab === 'playing'">
+            <div class="group" v-show="onlineGames.length" :class="{ 'no-players': players.length < 2 }">
+              <div class="columns is-multiline">
+                <div v-for="(match, index) in onlineGames" :key="index" class="column is-4">
+                  <div :class="'board-container b' + match.id">
+                    <div :class="$root.boardColor">
+                      <h6 class="has-text-left black is-clickable" @click="$root.gameFlip(match.id)">
+                        <span class="button is-small" :class="{ 'has-background-grey has-text-white' : match.btime > 10, 'has-background-info has-text-white' : match.btime <= 10}">
+                          <span class="icon">
+                            <span class="mdi mdi-clock"></span>
+                          </span>
+                          <span v-html="$root.getTimeDisplay(match.btime)"></span>
+                        </span>
+                        <span class="button is-small is-text">
+                          <span v-html="match.black"></span>
+                          <span v-show="match.result==='0-1'" class="icon">
+                            <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
+                          </span>
+                        </span>
+                      </h6>
+                      <router-link :to="'/watch/' + match.id">
+                        <div class="board preservefilter">
+                          <div :id="'board' + match.id"></div>
+                        </div>
+                      </router-link>
+                      <h6 class="has-text-right white is-clickable" @click="$root.gameFlip">
+                        <span class="button is-small is-text">
+                          <span v-show="match.result==='1-0'" class="icon">
+                            <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
+                          </span>
+                          <span v-html="match.white"></span>
+                        </span>
+                        <span class="button is-small" :class="{ 'has-background-white has-text-black' : match.wtime > 10, 'has-background-info has-text-white' : match.wtime <= 10}">
+                          <span class="icon">
+                            <span class="mdi mdi-clock"></span>
+                          </span>
+                          <span v-html="$root.getTimeDisplay(match.wtime)"></span>
+                        </span>
+                      </h6>
+                    </div>
+                    <div class="match-status has-text-info"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div v-show="tab === 'results'">
             <div v-show="!data.results" class="column">
@@ -175,10 +179,10 @@
                   <div class="chatbox fadeIn">
                     <div v-for="(line, index) in chatLines" :key="index" class="chatline">
                       <div class="chatbubble" :class="{ 'is-pulled-right has-text-right has-background-info' : line.owned, 'is-pulled-left has-text-left has-background-white' : !line.owned, 'has-background-light' : line.sender === 'bot' }">
-                        <strong v-show="line.sender !== 'bot' && !line.owned" v-html="line.sender"></strong>
-                        <span v-html="line.text" :class="{ 'has-text-grey' : line.sender === 'bot', 'has-text-white': line.owned }"></span>
+                        <strong v-show="line.sender !== 'bot' && !line.owned">{{ line.sender }} </strong>
+                        <span :class="{ 'has-text-grey' : line.sender === 'bot', 'has-text-white': line.owned }" v-html="line.text"></span>
                       </div>
-                      <div v-show="line.sender != 'bot'" v-html="line.ts" class="ts is-size-7" :class="{  'is-pulled-right has-text-right' : line.owned, 'is-pulled-left has-text-left' : !line.owned, 'has-text-grey': line.sender !== 'bot', 'has-text-white': line.sender === 'bot' }"></div>
+                      <!--div v-show="line.sender != 'bot'" v-html="line.ts" class="ts is-size-7" :class="{  'is-pulled-right has-text-right' : line.owned, 'is-pulled-left has-text-left' : !line.owned, 'has-text-grey': line.sender !== 'bot', 'has-text-white': line.sender === 'bot' }"></div-->
                     </div>
                   </div>
                 </div>
@@ -218,11 +222,14 @@ export default {
   name: 'group',
   data () {
     return {
+      groupKey: 0,
       chat: '',
       tab: 'chat',
       tried: false,
       data: {},
       group: {},
+      games: {},
+      onlineGames: [],
       players: [],
       chatLines: []
     }
@@ -236,7 +243,9 @@ export default {
     this.loadGroup()
   },
   beforeDestroy () {
-    this.$socket.emit('group_leave', this.group)
+    if (this.$route.to.name !== 'play') {
+      this.$socket.emit('group_leave', this.group)
+    }
   },
   sockets: {
     group_updated (data) {
@@ -280,6 +289,7 @@ export default {
     players (data) {
       if (this.$route.name === 'play') return
       this.players = data
+      this.groupKey++
     },
     player (data) {
       if (data._id === this.player._id) {
@@ -404,8 +414,10 @@ export default {
         }
       }
     },
-    matches_live (data) {
-      this.matches = data
+    games (data) {
+      console.log('games')
+      console.log(data)
+      this.onlineGames = data
       var gamesContainer = document.querySelector('.live-games')
       if (gamesContainer) {
         for (var i in data) {
@@ -415,18 +427,20 @@ export default {
         }
       }
     },
-    match_live (data) {
+    game (data) {
+      console.log('game')
+      console.log(data)
       var gamesContainer = document.querySelector('.live-games')
       if (gamesContainer) {
         var exists = false
-        for (var i in this.matches) {
-          if (this.matches[i].id === data.id) {
+        for (var i in this.onlineGames) {
+          if (this.onlineGames[i].id === data.id) {
             exists = true
           }
         }
 
         if (exists === false) {
-          this.matches.push(data)
+          this.onlineGames.push(data)
         }
 
         setTimeout(() => {
@@ -436,6 +450,12 @@ export default {
     }
   },
   methods: {
+    setTab (tab) {
+      this.tab = tab
+      if (tab === 'chat') {
+        this.scrollToBottom()
+      }
+    },
     setGroupName () {
       swal('Ingresá un nombre para tu grupo', {
         content: {
@@ -732,10 +752,10 @@ export default {
           return 'snapback'
         }
 
-        for (var i in this.matches) {
-          if (this.matches[i].id === data.id) {
-            this.matches[i].wtime = data.wtime
-            this.matches[i].btime = data.btime
+        for (var i in this.onlineGames) {
+          if (this.onlineGames[i].id === data.id) {
+            this.onlineGames[i].wtime = data.wtime
+            this.onlineGames[i].btime = data.btime
           }
         }
 
@@ -756,9 +776,9 @@ export default {
       var game = this.games[id]
       var data = {}
 
-      for (var i in this.matches) {
-        if (this.matches[i].id === id) {
-          data = this.matches[i]
+      for (var i in this.onlineGames) {
+        if (this.onlineGames[i].id === id) {
+          data = this.onlineGames[i]
         }
       }
 

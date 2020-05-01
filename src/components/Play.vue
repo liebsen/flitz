@@ -14,7 +14,7 @@
           <div class="columns is-marginless-top">
             <div class="column">
               <div class="board-container">
-                <h6 class="has-text-left black is-hidden-mobile">
+                <h6 class="has-text-left black">
                   <span v-show="data.black === player.code">
                     <span class="is-size-6">
                       <span class="icon">
@@ -46,7 +46,7 @@
                   </div>
                   <div id="board"></div>
                 </div>
-                <h6 class="has-text-right white is-hidden-mobile">
+                <h6 class="has-text-right white">
                   <span v-show="data.black === player.code">
                     <span v-show="data.result==='0-1'" class="icon">
                       <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
@@ -124,7 +124,7 @@
                   </div>
                 </div>
                 <div class="columns is-hidden-tablet is-mobile preservefilter">
-                  <div class="column has-text-left">
+                  <div class="column has-text-centered">
                     <span class="button is-small" :class="{ 'has-background-white has-text-black' : timer.w > 10, 'has-background-danger has-text-white' : timer.w <= 10}">
                       <span class="icon">
                         <span class="mdi mdi-clock-fast"></span>
@@ -132,7 +132,7 @@
                       <span class="clock-text" v-html="tdisplay.w"></span>
                     </span>
                   </div>
-                  <div class="column has-text-right">
+                  <div class="column has-text-centered">
                     <span class="button is-small" :class="{ 'has-background-black has-text-white' : timer.b > 10, 'has-background-danger has-text-white' : timer.b <= 10}">
                       <span class="icon">
                         <span class="mdi mdi-clock-fast"></span>
@@ -157,7 +157,7 @@
                 <div class="columns has-text-centered">
                   <div class="column">
                     <strong v-html="ecode" class=""></strong>
-                    <span v-html="opening" class="has-text-black"></span>
+                    <span class="has-text-black">{{ ecode | t }}</span>
                   </div>
                 </div>
                 <div class="tabs is-boxed is-hidden-mobile">
@@ -250,13 +250,7 @@ export default {
     t.$root.loading = true
     t.usersJoined = []
     window.app = this
-    window.addEventListener('beforeunload', t.beforeunload)
-    document.getElementById('board').addEventListener('wheel', event => {
-      this.gamePos(Math.sign(event.deltaY) < 0 ? this.index + 1 : this.index - 1)
-    })
-
     t.gameLoad()
-    t.$socket.emit('join', t.$route.params.game)
   },
   computed: {
     ...mapState([
@@ -266,14 +260,6 @@ export default {
   beforeDestroy () {
     this.$socket.emit('leave', this.data._id)
     clearInterval(this.clock)
-    this.$socket.emit('gone', {
-      player: this.player.code,
-      id: this.data._id
-    })
-    this.$socket.emit('leave', this.data._id)
-    this.$socket.emit('match_end', {
-      id: this.data._id
-    })
   },
   sockets: {
     play (data) {
@@ -299,43 +285,40 @@ export default {
       var t = this
       setTimeout(() => {
         if (!t.gameStarted && !t.data.result) {
-          var secs = t.data.minutes * 60
           t.gameStarted = true
           t.boardTaps()
           t.startClock()
           playSound('start.ogg')
-          this.$socket.emit('match_start', {
-            id: t.data._id,
-            white: t.data.white,
-            black: t.data.black,
-            wtime: secs,
-            btime: secs
-          })
         }
       }, 100)
     },
-    resume (data) {
+    joined (data) {
       var t = this
-      var exists = false
+
       if (data.code !== t.player.code && !t.announced_game_over) {
         snackbar('success', '👤 ' + data.code + ' se unió a la partida')
-        for (var i in t.usersJoined) {
-          if (t.usersJoined[i] === data.code) {
-            exists = true
-          }
-        }
-        if (exists === false) {
-          t.usersJoined.push(data.code)
-        }
-        setTimeout(() => {
-          if (t.usersJoined.length === 2 && !t.data.result) {
-            t.$socket.emit('start', {
-              player: t.player,
-              id: t.$route.params.game
-            })
-          }
-        }, 1500)
       }
+
+      var exists = false
+      for (var i in t.usersJoined) {
+        if (t.usersJoined[i] === data.code) {
+          exists = true
+        }
+      }
+      if (exists === false) {
+        t.usersJoined.push(data.code)
+      }
+
+      setTimeout(() => {
+        if (t.usersJoined.length === 2 && !t.data.result) {
+          let match = JSON.parse(localStorage.getItem('match'))
+          t.$socket.emit('start', {
+            player: t.player,
+            group: match.group,
+            id: t.$route.params.game
+          })
+        }
+      }, 3000)
     },
     gone (data) {
       if (data.player !== this.player.code) {
@@ -462,7 +445,7 @@ export default {
       var white = this.playerColor === 'white' ? this.player : this.opponent
       var black = this.playerColor === 'black' ? this.player : this.opponent
       this.$socket.emit('game', {
-        id: this.$route.params.game,
+        _id: this.$route.params.game,
         wtime: this.timer.w,
         btime: this.timer.b,
         white: white.code,
@@ -616,13 +599,6 @@ export default {
       })
       this.chat = ''
     },
-    beforeunload: function handler (event) {
-      this.$socket.emit('gone', {
-        player: this.player.code,
-        id: this.data._id
-      })
-      this.$socket.emit('leave', this.$route.params.game)
-    },
     uciCmd (cmd, which) {
       // console.log("UCI: " + cmd);
       (which || this.evaler).postMessage(cmd)
@@ -737,11 +713,6 @@ export default {
         }
 
         if (t.data.pgn) {
-          t.$socket.emit('start', {
-            player: t.player,
-            id: t.$route.params.game
-          })
-
           t.pgnIndex = this.gamePGNIndex(t.data.pgn)
           t.highlightLastMove()
         }
@@ -799,7 +770,9 @@ export default {
       }).then((res) => {
         t.$root.loading = false
 
+        var match = JSON.parse(localStorage.getItem('match'))
         var game = res.data
+        var secs = game.minutes * 60
         // var pgn = game.pgn || ''
 
         t.data = game
@@ -830,9 +803,21 @@ export default {
           t.timer.b = parseInt(game.minutes * 60)
         }
 
+        let gameObject = {
+          _id: t.data._id,
+          group: match.group,
+          white: t.data.white,
+          black: t.data.black,
+          wtime: secs,
+          btime: secs
+        }
+
         t.tdisplay.b = t.$root.getTimeDisplay(t.timer.b)
         t.gameStart()
-        t.$socket.emit('resume', this.player)
+        t.$socket.emit('join', {
+          game: gameObject,
+          player: t.player
+        })
 
         t.evaler = typeof STOCKFISH === 'function' ? STOCKFISH() : new Worker('/js/stockfish.js')
 

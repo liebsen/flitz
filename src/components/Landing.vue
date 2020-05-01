@@ -18,7 +18,6 @@
                   </button>
                 </div>
               </div>
-
               <div class="field has-addons is-hidden-tablet is-flex-centered">
                 <div class="control">
                   <input v-model="query" class="input is-rounded" name="query" type="text" :placeholder="'search_in_groups' | t" autofocus>
@@ -40,13 +39,16 @@
                       <span class="icon">
                         <span class="mdi mdi-layers"></span>
                       </span>
-                      {{ item.code }}
+                      <span>{{ item.code }}</span>
+                      <span class="has-text-grey">{{ item.users }}</span>
                     </h2>
                     <p class="subtitle">
                       <span class="icon">
                         <span class="mdi mdi-clock-fast"></span>
                       </span>
-                      {{ item.minutes }}+{{ item.compensation }}
+                      <span>{{ item.minutes }}</span>
+                      <span>+</span>
+                      <span>{{ item.compensation }}</span>
                     </p>
                   </article>
                 </router-link>

@@ -47,6 +47,7 @@ export default new Vuex.Store({
     },
     preferences_success (state, data) {
       state.player = data
+      axios.post('/account', data)
       localStorage.setItem('player', JSON.stringify(data))
     },
     preferences_error (state) {
@@ -55,6 +56,7 @@ export default new Vuex.Store({
     },
     player_success (state, data) {
       state.player = data
+      axios.post('/account', data)
       localStorage.setItem('player', JSON.stringify(data))
     },
     player_error (state) {

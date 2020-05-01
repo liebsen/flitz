@@ -106,13 +106,15 @@ new Vue({ // eslint-disable-line no-new
       snackbar('default', `No se encontraron oponentes`)
     },
     game_spawn (data) {
-      this.isFindingOpponent = false
-      let match = {
-        match: data.match,
-        group: data.group
+      if (data.white === this.player.code || data.black === this.player.code) {
+        this.isFindingOpponent = false
+        let match = {
+          match: data.match,
+          group: data.group
+        }
+        localStorage.setItem('match', JSON.stringify(match))
+        this.$router.push(`/play/${data.game}`)
       }
-      localStorage.setItem('match', JSON.stringify(match))
-      this.$router.push(`/play/${data.game}`)
     }
   },
   methods: {
@@ -291,7 +293,6 @@ new Vue({ // eslint-disable-line no-new
       loading: true,
       saving: false,
       processing: false,
-      matches: [],
       games: [],
       boards: [],
       translations: {},

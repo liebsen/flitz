@@ -20,7 +20,7 @@
             </button>
             <button v-show="!this.searching" type="submit" id="searchbtn" class="button is-rounded is-success">
               <span class="icon has-margin">
-                <span class="mdi mdi-search"></span>
+                <span class="mdi mdi-magnify"></span>
               </span>
             </button>
           </div>
@@ -41,7 +41,7 @@
               <td>
                 <router-link :to="'/game/'+item._id">
                   <span class="icon">
-                    <span class="mdi mdi-play"></span>
+                    <span class="mdi mdi-chess-king"></span>
                   </span>
                 </router-link>
               </td>
@@ -122,7 +122,7 @@ export default {
     },
     search: function () {
       this.$root.loading = true
-      this.searching = this.$route.query || false
+      this.searching = this.$route.query.length || false
       axios.post('/search', {
         query: this.query,
         offset: this.offset,

@@ -281,8 +281,10 @@ export default {
         var game = res.data
         const totalms = this.$root.countMoves(game.pgn) * this.speed
 
-        this.gameMoves = this.gamePGN(game.pgn)
-        this.pgnIndex = this.gamePGNIndex(game.pgn)
+        if (game.pgn) {
+          this.gameMoves = this.gamePGN(game.pgn)
+          this.pgnIndex = this.gamePGNIndex(game.pgn)
+        }
         this.data = game
         this.duration = totalms / 1000
         this.$root.loading = false
