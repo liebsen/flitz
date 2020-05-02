@@ -133,10 +133,10 @@
                 </div>
 
                 <!--div class="columns has-text-centered">
-                  <pre v-html="scoreChart"/>  ½
+                  <pre v-html="performance"/>  ½
                   <div class="column">
                     <table class="table">
-                      <tr v-for="(row, i) in scoreChart" :key="i">
+                      <tr v-for="(row, i) in performance" :key="i">
                         <td>{{row.player}}</td>
                         <td v-for="(item, j) in row.partials" :key="j">{{item}}</td>
                       </tr>
@@ -263,9 +263,6 @@ export default {
         let elo = data.blackelo
         if (this.playerColor[0] === 'w') {
           elo = data.whiteelo
-          console.log('***!')
-          console.log(data.whiteelo)
-          console.log(data.blackelo)
           this.player.elo = data.whiteelo
           this.opponent.elo = data.blackelo
         }
@@ -472,9 +469,6 @@ export default {
         result: fullResult
       })
 
-      console.log('a1')
-      console.log(white.elo)
-      console.log(black.elo)
       this.$socket.emit('game', {
         _id: this.$route.params.game,
         wtime: this.timer.w,
@@ -486,7 +480,8 @@ export default {
         result: result,
         match: match.match,
         group: match.group,
-        score: this.chart.values
+        chart: this.chart.values,
+        score: this.performance
       })
     },
     showResultGame () {
@@ -560,7 +555,6 @@ export default {
         if (data.result !== '1/2-1/2') {
           setTimeout(() => {
             let sel = data.result === '1-0' ? 'white' : 'black'
-            console.log(data.result)
             document.querySelector(`.result-${sel}`).classList.add('is-success', 'is-outlined')
           }, 100)
         }
@@ -595,9 +589,6 @@ export default {
       let t = this
       var white = this.opponent
       var black = this.player
-      console.log('**2')
-      console.log(white.elo)
-      console.log(black.elo)
       axios.post('/game/create', {
         white: white.code,
         black: black.code,
@@ -1118,6 +1109,7 @@ export default {
         this.drawChartPosition(false)
         this.chart.values = this.chart.values.slice(0, index)
         this.chart.values[index] = score
+        this.performance[index] = this.vscore.toFixed(2)
         this.updateChart()
       }
     },
@@ -1293,7 +1285,7 @@ export default {
       tdisplay: { w: null, b: null },
       opening: null,
       score: 0.10,
-      scoreChart: [],
+      performance: [],
       vscore: 49,
       orientation: null,
       announced_game_over: false,

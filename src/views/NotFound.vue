@@ -14,7 +14,7 @@
         <div v-show="!section.content">
           <h1 class="title">
             <span class="icon is-margin-right">
-              <span class="mdi mdi-robot"></span>
+              <span class="mdi mdi-space-invaders"></span>
             </span>
             <span>{{ 'resource_not_found' | t }}</span>
           </h1>

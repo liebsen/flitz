@@ -59,14 +59,14 @@
                   <span class="icon"><i class="mdi mdi-chat" aria-hidden="true"></i></span>
                 </a>
               </li>
-              <li v-show="!games.length" :class="{ 'is-active' : tab === 'playing' }">
-                <a @click="setTab('playing')" :title="'playing_now' | t" class="has-background-warning">
-                  <span class="icon"><i class="mdi mdi-chess-king" aria-hidden="true"></i></span>
-                </a>
-              </li>
               <li :class="{ 'is-active' : tab === 'results' }">
                 <a @click="setTab('results')" :title="'results' | t">
                   <span class="icon"><i class="mdi mdi-view-list" aria-hidden="true"></i></span>
+                </a>
+              </li>
+              <li v-show="games.length" :class="{ 'is-active' : tab === 'playing' }">
+                <a @click="setTab('playing')" :title="'playing_now' | t" class="has-background-light">
+                  <span class="icon"><i class="mdi mdi-chess-king" aria-hidden="true"></i></span>
                 </a>
               </li>
             </ul>

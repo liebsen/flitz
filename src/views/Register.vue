@@ -5,7 +5,7 @@
         <span class="icon">
           <span class="mdi mdi-account"></span>
         </span>
-        <span>{{ 'already_loggedin' | t }}</span>
+        <span>{{ 'already_loggedin' | t }} {{ player.code }}</span>
       </h3>
     </section>
     <section v-show="!player.email" class="content column fadeIn">

@@ -146,7 +146,7 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach(() => {
   document.querySelector('.menu').classList.remove('fs')
   document.querySelector('.menu-burger').classList.remove('cross')
-  if (store.state.menuStatus) {
+  if (store.getters.menuState) {
     store.commit('togglemenu')
   }
 })

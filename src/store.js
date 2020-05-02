@@ -91,6 +91,9 @@ export default new Vuex.Store({
   getters: {
     nombre (state) {
       return state.userName
+    },
+    menuState (state) {
+      return state.menuState
     }
   },
   actions: {

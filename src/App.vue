@@ -9,6 +9,7 @@
           <router-link to="/">
             <img src="/img/logo.png" alt="Flitz">
           </router-link>
+          <pre v-html="$store.state.menuState"/>
         </div>
         <div class="column menu-primary has-text-right">
           <div v-if="Object.keys(player).length">

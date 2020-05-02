@@ -539,6 +539,7 @@ export default {
         this.drawChartPosition(false)
         this.chart.values = this.chart.values.slice(0, index)
         this.chart.values[index] = score
+        this.performance[index] = this.vscore.toFixed(2)
         this.updateChart()
       }
     },
@@ -628,6 +629,7 @@ export default {
       }
     },
     updateMoves (move) {
+      if (!move) return
       var t = this
       if (t.game.game_over()) {
         if (t.game.in_draw() || t.game.in_stalemate() || t.game.in_threefold_repetition()) {
@@ -670,6 +672,7 @@ export default {
               }).then((value) => {
                 switch (value) {
                   case 'defeat':
+                    let event = [this.$root.t('play_against'), 'Stockfish'].join(' ')
                     let opponent = this.opponentName
                     let white = this.playerColor === 'white' ? this.player.code : opponent
                     let black = this.playerColor === 'black' ? this.player.code : opponent
@@ -677,13 +680,14 @@ export default {
                     let blackflag = this.playerColor === 'black' ? this.player.flag : ''
                     let result = this.playerColor === 'white' ? '1-0' : '0-1'
                     let game = {
-                      event: 'Jugá contra Stockfish',
+                      event: event,
                       white: white,
                       black: black,
                       whiteflag: whiteflag,
                       blackflag: blackflag,
                       result: result,
-                      score: this.chart.values,
+                      chart: this.chart.values,
+                      score: this.performance,
                       eco: this.ecode,
                       opening: this.opening,
                       orientation: this.board.orientation(),
@@ -910,6 +914,7 @@ export default {
       displayScore: true,
       status: '',
       score: 0.10,
+      performance: [],
       vscore: 49,
       moveFrom: null,
       hintMode: false,
