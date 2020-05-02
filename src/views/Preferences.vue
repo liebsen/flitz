@@ -18,8 +18,8 @@
             <div class="field is-horizontal">
               <div class="field-body">
                 <div class="field">
-                  <label class="label">{{ 'nick' | t }}</label>
-                  <input type="text" v-model="data.code" class="input is-rounded" maxlength="10" title="Ingresa tu nombre!" required>
+                  <label class="label">{{ 'username' | t }}</label>
+                  <input @input="checkUsername" type="text" v-model="data.code" class="input is-rounded" maxlength="10" title="Ingresa tu nombre!" required>
                 </div>
                 <span></span>
               </div>
@@ -186,6 +186,12 @@ export default {
     }
   },
   methods: {
+    checkUsername ({ type, target }) {
+      if (target.value.match(/^[a-zA-Z0-9]+$/) === null) {
+        snackbar('error', this.$root.t('username_regex'))
+        this.data.code = this.data.code.replace(/[\W_]+/g, ' ')
+      }
+    },
     addWindowListeners () {
       this.board.resize()
       document.querySelector('.square-b5').classList.add('highlight-move')
@@ -293,13 +299,13 @@ export default {
           'bit',
           'blue',
           'bubblegum',
-          'burled-wood',
-          'dark-wood',
+          'burled_wood',
+          'dark_wood',
           'dash',
           'glass',
           'graffiti',
           'green',
-          'green-plastic',
+          'green_plastic',
           'ocean',
           'lolz',
           'marble',

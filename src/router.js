@@ -1,29 +1,26 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from '../store'
+import store from './store'
 import axios from 'axios'
 import $ from 'jquery'
-import Landing from '../components/Landing'
-import Results from '../components/Results'
-import Contact from '../components/Contact'
-import Donate from '../components/Donate'
-import Play from '../components/Play'
-import Live from '../components/Live'
-import Preferences from '../components/Preferences'
-import Stockfish from '../components/Stockfish'
-import Eco from '../components/Eco'
-import PlayEco from '../components/PlayEco'
-import Game from '../components/Game'
-import Group from '../components/Group'
-import Groups from '../components/Groups'
-import Watch from '../components/Watch'
-import About from '../components/About'
-import Register from '../components/Register'
-import Login from '../components/Login'
-import RegisterSuccess from '../components/RegisterSuccess'
-import ForgotPass from '../components/ForgotPass'
-import Validate from '../components/Validate'
-import NotFound from '../components/NotFound'
+import Landing from '@/views/Landing'
+import Results from '@/views/Results'
+import Play from '@/views/Play'
+import Live from '@/views/Live'
+import Preferences from '@/views/Preferences'
+import Stockfish from '@/views/Stockfish'
+import Eco from '@/views/Eco'
+import PlayEco from '@/views/PlayEco'
+import Game from '@/views/Game'
+import Group from '@/views/Group'
+import Groups from '@/views/Groups'
+import Watch from '@/views/Watch'
+import Register from '@/views/Register'
+import Login from '@/views/Login'
+import RegisterSuccess from '@/views/RegisterSuccess'
+import ForgotPass from '@/views/ForgotPass'
+import Validate from '@/views/Validate'
+import NotFound from '@/views/NotFound'
 
 window.jQuery = $
 window.$ = $
@@ -94,21 +91,6 @@ const router = new Router({
       component: Stockfish
     },
     {
-      path: '/contact',
-      name: 'contact',
-      component: Contact
-    },
-    {
-      path: '/donate',
-      name: 'donate',
-      component: Donate
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: About
-    },
-    {
       path: '/register',
       name: 'register',
       component: Register
@@ -143,7 +125,7 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   await Vue.nextTick()
-  if (!store.state.player) {
+  if (!Object.keys(store.state.player).length) {
     store
       .dispatch('player')
       .then(res => {

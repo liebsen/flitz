@@ -13,7 +13,7 @@
             <p>{{ 'login_text' | t }}</p>
             <div class="field">
               <div class="control">
-                <input v-model="data.email" class="input is-rounded" type="email" :placeholder="'email' | t" required autofocus>
+                <input v-model="data.email_or_username" class="input is-rounded" type="email" :placeholder="'email_or_username' | t" required autofocus>
               </div>
             </div>
             <div class="field">
@@ -29,8 +29,8 @@
             <hr>
             <div class="field">
               <div class="control">
-                <router-link to="/forgot-password">{{ 'forgot_password' | t }}</router-link>
-                <router-link to="/register">{{ 'register' | t }}</router-link>
+                <router-link to="/forgot-password" class="button is-text">{{ 'forgot_password' | t }}</router-link>
+                <router-link to="/register" class="button is-text">{{ 'register' | t }}</router-link>
               </div>
             </div>
           </form>
@@ -41,12 +41,21 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'login',
   data () {
     return {
       data: {}
     }
+  },
+  created () {
+    this.data.email = this.player.email || this.player.code
+  },
+  computed: {
+    ...mapState([
+      'player'
+    ])
   },
   methods: {
     submit: function () {

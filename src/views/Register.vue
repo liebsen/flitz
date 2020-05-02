@@ -1,9 +1,17 @@
 <template>
   <div class="container">
-    <section class="content column fadeIn">
+    <section v-show="player.email" class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
-          <span class="mdi mdi-user-plus"></span>
+          <span class="mdi mdi-account"></span>
+        </span>
+        <span>{{ 'already_loggedin' | t }}</span>
+      </h3>
+    </section>
+    <section v-show="!player.email" class="content column fadeIn">
+      <h3 class="title">
+        <span class="icon">
+          <span class="mdi mdi-account-plus"></span>
         </span>
         <span>{{ 'register' | t }}</span>
       </h3>
@@ -11,6 +19,11 @@
         <div class="column is-narrow">
           <form class="form has-text-centered slideIn has-margin-top" @submit.prevent="submit">
             <p>{{ 'register_text' | t }}</p>
+            <div class="field">
+              <div class="control">
+                <input @input="checkUsername" v-model="data.code" class="input is-rounded" type="text" :placeholder="'username' | t" required autofocus>
+              </div>
+            </div>
             <div class="field">
               <div class="control">
                 <input v-model="data.email" class="input is-rounded" type="email" :placeholder="'email' | t" required autofocus>
@@ -36,7 +49,12 @@
             <hr>
             <div class="field">
               <div class="control">
-                <router-link to="/login">{{ 'login' | t }}</router-link>
+                <router-link to="/login" class="button is-text">
+                  {{ 'login' | t }}
+                </router-link>
+                <router-link to="/forgot-password" class="button is-text">
+                  {{ 'forgot_password' | t }}
+                </router-link>
               </div>
             </div>
           </form>
@@ -47,6 +65,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import snackbar from '@/components/Snackbar'
 export default {
   name: 'register',
@@ -56,14 +75,28 @@ export default {
       data: {}
     }
   },
+  created () {
+    this.data = this.player
+  },
+  computed: {
+    ...mapState([
+      'player'
+    ])
+  },
   methods: {
+    checkUsername ({ type, target }) {
+      if (target.value.match(/^[a-zA-Z0-9]+$/) === null) {
+        snackbar('error', this.$root.t('username_regex'))
+        this.data.code = this.data.code.replace(/[\W_]+/g, ' ')
+      }
+    },
     submit: function () {
       if (!this.acceptTerms) {
         return snackbar('error', 'Tenés que aceptar nuestros términos y condiciones para crear una cuenta')
       }
       this.$root.processing = true
       this.$store
-        .dispatch('register', this.data)
+        .dispatch('player', this.data)
         .then(res => {
           this.$router.push('/register-success')
         })

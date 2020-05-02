@@ -11,34 +11,36 @@
           </router-link>
         </div>
         <div class="column menu-primary has-text-right">
-          <div class="is-hidden-mobile">
-            <div class="buttons levels has-addons is-pulled-right">
-              <router-link v-if="player" to="/preferences" class="button is-rounded is-grey" :title="'set_your_preferences' | t">
-                <span class="icon">
-                  <span v-html="player.flag"></span>
-                </span>
-                <span v-html="player.code"></span>
-              </router-link>
-              <a @click="$root.play" class="button is-rounded is-success" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
-                <span class="icon has-text-white">
-                  <span class="mdi mdi-handshake"></span>
-                </span>
-              </a>
+          <div v-if="Object.keys(player).length">
+            <div class="is-hidden-mobile">
+              <div class="buttons levels has-addons is-pulled-right">
+                <router-link to="/preferences" class="button is-rounded is-grey" :title="'set_your_preferences' | t">
+                  <span class="icon">
+                    <span v-html="player.flag"></span>
+                  </span>
+                  <span v-html="player.code"></span>
+                </router-link>
+                <a @click="$root.play" class="button is-rounded is-success" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
+                  <span class="icon has-text-white">
+                    <span class="mdi mdi-handshake"></span>
+                  </span>
+                </a>
+              </div>
             </div>
-          </div>
-          <div v-if="player" class="is-hidden-tablet">
-            <div class="buttons levels has-addons is-pulled-right">
-              <router-link to="/preferences" class="button is-small is-rounded" :title="'set_your_preferences' | t">
-                <span class="icon">
-                 <span v-html="player.flag"></span>
-                </span>
-                <span v-html="player.code"></span>
-              </router-link>
-              <a @click="$root.play" class="button is-small is-success is-rounded" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
-                <span class="icon has-text-white">
-                  <span class="mdi mdi-handshake"></span>
-                </span>
-              </a>
+            <div class="is-hidden-tablet">
+              <div class="buttons levels has-addons is-pulled-right">
+                <router-link to="/preferences" class="button is-small is-rounded" :title="'set_your_preferences' | t">
+                  <span class="icon">
+                   <span v-html="player.flag"></span>
+                  </span>
+                  <span v-html="player.code"></span>
+                </router-link>
+                <a @click="$root.play" class="button is-small is-success is-rounded" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
+                  <span class="icon has-text-white">
+                    <span class="mdi mdi-handshake"></span>
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -66,12 +68,26 @@
           </div>
           <div class="column">
             <div class="has-text-centered">
-              <a @click="$root.createGroup" class="button is-rounded is-white is-outlined" :class="{ 'is-loading': $root.isCreatingGroup }">
+              <a v-show="player.email" @click="$root.createGroup" class="button is-rounded is-white is-outlined" :class="{ 'is-loading': $root.isCreatingGroup }">
                 <span class="icon">
                   <span class="mdi mdi-layers-plus"></span>
                 </span>
                 <span>{{ 'create_group' | t }}</span>
               </a>
+              <div v-show="!player.email">
+                <router-link to="/login" class="button is-rounded is-white is-outlined">
+                  <span class="icon">
+                    <span class="mdi mdi-account"></span>
+                  </span>
+                  <span>{{ 'login' | t }}</span>
+                </router-link>
+                <router-link to="/register" class="button is-rounded is-white is-outlined">
+                  <span class="icon">
+                    <span class="mdi mdi-account-plus"></span>
+                  </span>
+                  <span>{{ 'register' | t }}</span>
+                </router-link>
+              </div>
             </div>
           </div>
         </div>
@@ -81,7 +97,7 @@
       <router-view :key="$route.fullPath" />
     </keep-alive>
     <div class="tosprompt preservefilter"></div>
-    <div class="ui-snackbar ui-snackbar--is-inactive preservefilter" :class="{ 'is-strong' : player && player.strongnotification }">
+    <div class="ui-snackbar ui-snackbar--is-inactive preservefilter" :class="{ 'is-strong' : player.strongnotification }">
       <p class="ui-snackbar__message"></p>
     </div>
     <div class="footprint">

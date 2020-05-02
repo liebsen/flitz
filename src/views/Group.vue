@@ -59,8 +59,8 @@
                   <span class="icon"><i class="mdi mdi-chat" aria-hidden="true"></i></span>
                 </a>
               </li>
-              <li :class="{ 'is-active' : tab === 'playing' }">
-                <a @click="setTab('playing')" :title="'playing_now' | t">
+              <li v-show="!games.length" :class="{ 'is-active' : tab === 'playing' }">
+                <a @click="setTab('playing')" :title="'playing_now' | t" class="has-background-warning">
                   <span class="icon"><i class="mdi mdi-chess-king" aria-hidden="true"></i></span>
                 </a>
               </li>

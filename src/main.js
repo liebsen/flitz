@@ -104,7 +104,7 @@ new Vue({ // eslint-disable-line no-new
   sockets: {
     opponent_not_found () {
       this.isFindingOpponent = false
-      snackbar('default', `No se encontraron oponentes`)
+      snackbar('default', this.t('opponent_not_found'))
     },
     game_spawn (data) {
       if (data.white === this.player.code || data.black === this.player.code) {

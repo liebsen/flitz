@@ -9,7 +9,7 @@ let games = JSON.parse(localStorage.getItem('games')) || []
 export default new Vuex.Store({
   state: {
     menuState: false,
-    player: null,
+    player: {},
     players: null,
     games: games,
     status: null,

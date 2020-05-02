@@ -5,13 +5,13 @@
         <span class="icon">
           <span class="mdi mdi-fire"></span>
         </span>
-        <span>En vivo</span>
+        <span>{{ 'live' | t }}</span>
       </h3>
       <form @submit.prevent="submit">
         <label class="label"><span v-html="eco.name" class="has-text-grey"></span></label>
         <div class="field has-addons">
           <div class="control">
-            <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" placeholder="Evento, lugar, fecha, jugador o PGN" autofocus>
+            <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" :placeholder="'live_input_placeholder' | t" autofocus>
           </div>
           <div class="control">
             <button v-show="query.length" type="button" @click="clear" class="button is-rounded is-danger">
@@ -30,11 +30,11 @@
       <div v-if="Object.keys(data).length" class="has-text-left">
         <table class="table">
           <thead>
-            <th>Mesa</th>
-            <th>Evento</th>
-            <th>Blancas</th>
-            <th>Negras</th>
-            <th>Plys</th>
+            <th></th>
+            <th>{{ 'event' | t }}</th>
+            <th>{{ 'white' | t }}</th>
+            <th>{{ 'black' | t }}</th>
+            <th>{{ 'plys' | t }}</th>
           </thead>
           <tbody>
             <tr v-for="(item, index) in data.games" :key="index">
