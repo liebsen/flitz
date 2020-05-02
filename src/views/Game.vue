@@ -60,8 +60,10 @@
               </div>
               <div class="columns has-text-centered">
                 <div class="column">
-                  <strong v-html="ecode" class=""></strong>
-                  <span v-html="opening" class="has-text-black"></span>
+                  <div class="field">
+                    <span class="has-text-black is-size-5">{{ opening }}</span>
+                    <strong class="has-text-grey is-size-5">{{ ecode }}</strong>
+                  </div>
                 </div>
               </div>
               <div class="columns is-hidden-mobile">
@@ -200,7 +202,7 @@ export default {
       let t = this
       axios.post('/eco/pgn', { pgn: pgn }).then((res) => {
         if (res.data.eco) {
-          t.opening = res.data.name
+          t.opening = t.$root.t(res.data.eco)
           t.ecode = res.data.eco
         }
       })

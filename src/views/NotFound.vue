@@ -2,7 +2,7 @@
   <section class="hero fadeIn">
     <div class="hero-body">
       <div class="container is-flex-column is-vertical">
-        <div v-show="section">
+        <div v-show="section.content">
           <h1 class="title">
             <span class="icon is-margin-right">
               <span :class="'mdi mdi-' + section.icon"></span>
@@ -11,7 +11,7 @@
           </h1>
           <p v-html="section.content"></p>
         </div>
-        <div v-show="!section">
+        <div v-show="!section.content">
           <h1 class="title">
             <span class="icon is-margin-right">
               <span class="mdi mdi-robot"></span>
@@ -30,7 +30,11 @@ export default {
   name: 'NotFound',
   data () {
     return {
-      section: null
+      section: {
+        icon: null,
+        title: null,
+        content: null
+      }
     }
   },
   created () {

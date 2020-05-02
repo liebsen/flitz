@@ -96,8 +96,8 @@
             <div class="columns has-text-centered">
               <div class="column">
                 <div class="field">
-                  <strong class="has-text-grey is-size-5" v-html="ecode"></strong>
-                  <span v-html="opening" class="has-text-black is-size-5"></span>
+                  <span class="has-text-black is-size-5">{{ opening }}</span>
+                  <strong class="has-text-grey is-size-5">{{ ecode }}</strong>
                 </div>
                 <div class="field">
                   <span v-html="status" class="has-text-black"></span>
