@@ -7,7 +7,7 @@
       <div class="menu-container is-flex columns is-vcentered">
         <div class="column menu-logo has-text-left">
           <router-link to="/">
-            <img src="/img/logo.png" alt="Biltz">
+            <img src="/img/logo.png" alt="Flitz">
           </router-link>
         </div>
         <div class="column menu-primary has-text-right">
