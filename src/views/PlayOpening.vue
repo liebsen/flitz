@@ -85,7 +85,7 @@ import swal from 'sweetalert'
 import playSound from '../components/playSound'
 
 export default {
-  name: 'playeco',
+  name: 'playopening',
   mounted () {
     window.app = this
     if (localStorage.getItem('speed')) {

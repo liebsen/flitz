@@ -46,6 +46,9 @@
                   <span v-show="plyer.plying" class="icon is-size-6 has-margin has-text-success">
                     <span class="mdi mdi-chess-king"></span>
                   </span>
+                  <span v-show="plyer.observe" class="icon is-size-6 has-margin has-text-grey">
+                    <span class="mdi mdi-eye"></span>
+                  </span>
                 </span>
               </router-link>
             </div>
@@ -56,7 +59,7 @@
             <ul>
               <li :class="{ 'is-active' : tab === 'chat' }">
                 <a @click="setTab('chat')" title="Chat">
-                  <span class="icon"><i class="mdi mdi-chat" aria-hidden="true"></i></span>
+                  <span class="icon"><i class="mdi mdi-comment-text-outline" aria-hidden="true"></i></span>
                 </a>
               </li>
               <li :class="{ 'is-active' : tab === 'results' }">
@@ -294,7 +297,7 @@ export default {
       if (data._id === this.player._id) {
         if (data.exists) {
           snackbar('error', `El nombre ${data.code} ya está en uso, por favor elige otro`)
-          this.$router.push('/preferences')
+          this.$router.push('/settings')
         } else {
           snackbar('success', `Ahora eres ${data.code}`)
           this.$socket.emit('group_chat', {

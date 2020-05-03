@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import defaultPreferences from '@/components/defaultPreferences'
+import defaultSettings from '@/components/defaultSettings'
 
 Vue.use(Vuex)
 
@@ -45,12 +45,12 @@ export default new Vuex.Store({
       state.status = ''
       state.auth = {}
     },
-    preferences_success (state, data) {
+    settings_success (state, data) {
       state.player = data
       axios.post('/account', data)
       localStorage.setItem('player', JSON.stringify(data))
     },
-    preferences_error (state) {
+    settings_error (state) {
       state.status = 'error'
       localStorage.removeItem('player')
     },
@@ -190,15 +190,15 @@ export default new Vuex.Store({
           commit('player_success', stored)
           resolve(stored)
         } else {
-          var preferences = defaultPreferences
+          var settings = defaultSettings
           axios.post('https://ipapi.co/json').then(json => {
             axios.get('/json/flags.json').then(flags => {
               if (flags.data[json.data.country_code]) {
-                preferences.flag = flags.data[json.data.country_code].emoji || ''
-                preferences.country = flags.data[json.data.country_code].name || ''
+                settings.flag = flags.data[json.data.country_code].emoji || ''
+                settings.country = flags.data[json.data.country_code].name || ''
               }
-              commit('player_success', preferences)
-              resolve(preferences)
+              commit('player_success', settings)
+              resolve(settings)
             })
           })
         }

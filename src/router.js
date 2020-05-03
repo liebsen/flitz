@@ -7,10 +7,10 @@ import Landing from '@/views/Landing'
 import Results from '@/views/Results'
 import Play from '@/views/Play'
 import Live from '@/views/Live'
-import Preferences from '@/views/Preferences'
+import Settings from '@/views/Settings'
 import Stockfish from '@/views/Stockfish'
-import Eco from '@/views/Eco'
-import PlayEco from '@/views/PlayEco'
+import Openings from '@/views/Openings'
+import PlayOpening from '@/views/PlayOpening'
 import Game from '@/views/Game'
 import Group from '@/views/Group'
 import Groups from '@/views/Groups'
@@ -41,14 +41,14 @@ const router = new Router({
       component: Results
     },
     {
-      path: '/eco',
-      name: 'eco',
-      component: Eco
+      path: '/openings',
+      name: 'Openings',
+      component: Openings
     },
     {
-      path: '/eco/:name',
-      name: 'playeco',
-      component: PlayEco
+      path: '/openings/:name',
+      name: 'PlayOpening',
+      component: PlayOpening
     },
     {
       path: '/live',
@@ -81,9 +81,9 @@ const router = new Router({
       component: Group
     },
     {
-      path: '/preferences',
-      name: 'preferences',
-      component: Preferences
+      path: '/settings',
+      name: 'Settings',
+      component: Settings
     },
     {
       path: '/stockfish',
@@ -132,7 +132,7 @@ router.beforeEach(async (to, from, next) => {
         axios.get(`/json/lang/${res.lang}.json`).then(json => {
           router.app.translations = json.data
           console.log('🙌 Player identification successfully performed')
-          router.app.$socket.emit('preferences', res)
+          router.app.$socket.emit('Settings', res)
           next()
         })
       }).catch(err => {

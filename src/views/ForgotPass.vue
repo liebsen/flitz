@@ -3,7 +3,7 @@
     <section class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
-          <span class="mdi mdi-question"></span>
+          <span class="mdi mdi-account-key"></span>
         </span>
         <span>{{ 'forgot_password' | t }}</span>
       </h3>

@@ -10,7 +10,7 @@
       <form @submit.prevent="submit">
         <div class="field has-addons">
           <div class="control">
-            <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" placeholder="Evento, lugar, fecha, jugador o PGN" autofocus>
+            <input ref="input" @keyup="inputTrigger" v-model="pager.query" class="input is-rounded is-success" type="text" placeholder="Evento, lugar, fecha, jugador o PGN" autofocus>
           </div>
           <div class="control">
             <button v-show="this.searching" type="button" @click="clear" class="button is-rounded is-danger">
@@ -29,12 +29,12 @@
       <div v-if="data.count" class="has-text-left">
         <table class="table is-narrow is-striped is-fullwidth">
           <thead>
-            <th>Mesa</th>
-            <th>Evento</th>
-            <th>Blancas</th>
-            <th>Negras</th>
-            <th>Fecha</th>
-            <th>Plys</th>
+            <th></th>
+            <th>{{ 'event' | t }}</th>
+            <th>{{ 'white' | t }}</th>
+            <th>{{ 'black' | t }}</th>
+            <th>{{ 'date' | t }}</th>
+            <th>{{ 'plys' | t }}</th>
           </thead>
           <tbody>
             <tr v-for="(item, index) in data.games" :key="index">
@@ -75,15 +75,7 @@
         </table>
       </div>
     </div>
-    <nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">
-      <!--a class="pagination-previous">Previous</a>
-      <a class="pagination-next">Next page</a-->
-      <ul class="pagination-list">
-        <li v-for="(page, index) in pages" :key="index">
-          <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Ir a página ' + parseInt(page / limit + 1)"></router-link>
-        </li>
-      </ul>
-    </nav>
+    <table-pager :dataSet="pager"/>
   </div>
 </template>
 
@@ -91,6 +83,7 @@
 
 import axios from 'axios'
 import snackbar from '../components/Snackbar'
+import TablePager from '@/components/TablePager'
 export default {
   name: 'results',
   watch: {
@@ -98,24 +91,27 @@ export default {
       this.triggerSearch()
     }
   },
+  components: {
+    TablePager
+  },
   mounted: function () {
-    this.query = this.$route.query.q || ''
+    this.pager.query = this.$route.query.q || ''
     this.triggerSearch()
   },
   methods: {
     inputTrigger: function () {
       if (this.interval) clearInterval(this.interval)
       this.interval = setTimeout(() => {
-        this.$router.push({ path: 'results', query: { q: this.query } })
+        this.$router.push({ path: 'results', query: { q: this.pager.query } })
       }, 1500)
     },
     clear: function () {
-      this.query = ''
+      this.pager.query = ''
       this.submit()
     },
     triggerSearch: function () {
       if (this.$route.query.offset) {
-        this.offset = parseInt(this.$route.query.offset)
+        this.pager.offset = parseInt(this.$route.query.offset)
       }
       // this.$nextTick(() => this.$refs.input.focus())
       this.search()
@@ -123,12 +119,9 @@ export default {
     search: function () {
       this.$root.loading = true
       this.searching = this.$route.query.length || false
-      axios.post('/search', {
-        query: this.query,
-        offset: this.offset,
-        limit: this.limit,
-        strict: this.$route.query.strict
-      }).then((res) => {
+      let req = this.pager
+      req.strict = this.$route.query.strict
+      axios.post('/search', req).then((res) => {
         this.data = res.data
         let t = this.$root.t
         var pages = []
@@ -140,11 +133,11 @@ export default {
           if (res.data.count === 0) {
             snackbar('danger', t('results_nomatch'), 5000)
           } else {
-            var numPages = Math.ceil(res.data.count / this.limit)
+            var numPages = Math.ceil(res.data.count / this.pager.limit)
             for (var i = 0; i < numPages; i++) {
-              pages[i] = i * this.limit
+              pages[i] = i * this.pager.limit
             }
-            snackbar('success', t('results_found') + this.data.count + (this.data.count > 1 ? t('games') : t('game')) + '.' + t('showing_results') + (this.offset + 1) + t('of') + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit), 5000)
+            snackbar('success', t('results_found') + this.data.count + ' ' + (this.data.count > 1 ? t('games') : t('game')) + '. ' + t('showing_results') + (this.pager.offset + 1) + ' ' + t('to') + ' ' + (this.pager.offset + this.pager.limit > this.data.count ? this.data.count : this.pager.offset + this.pager.limit), 5000)
           }
         }
 
@@ -154,22 +147,27 @@ export default {
           pages.splice(max / 2, pages.length - max)
         }
 
-        this.pages = pages
+        this.pager.pages = pages
         this.$root.loading = false
       })
     },
     submit: function () {
-      this.$router.push('/results?q=' + this.query.trim())
+      this.$router.push('/results?q=' + this.pager.query.trim())
     }
   },
   data () {
     return {
-      data: { count: 0, games: [] },
-      pages: {},
+      data: {
+        count: 0,
+        games: []
+      },
+      pager: {
+        pages: {},
+        query: '',
+        limit: 25,
+        offset: 0
+      },
       searching: false,
-      query: '',
-      limit: 10,
-      offset: 0,
       msg: 'Results'
     }
   }

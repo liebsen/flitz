@@ -5,22 +5,22 @@
         <span class="icon">
           <span class="mdi mdi-book"></span>
         </span>
-        <span>Aperturas</span>
+        <span>{{ 'openings' | t }}</span>
       </h3>
       <form @submit.prevent="submit">
         <div class="field has-addons">
           <div class="control">
-            <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" placeholder="Nombre o PGN" autofocus>
+            <input ref="input" @keyup="inputTrigger" v-model="pager.query" class="input is-rounded is-success" type="text" placeholder="Nombre o PGN" autofocus>
           </div>
           <div class="control">
-            <button v-show="query.length" type="button" @click="clear" class="button is-rounded is-danger">
+            <button v-show="pager.query.length" type="button" @click="clear" class="button is-rounded is-danger">
               <span class="icon">
                 <span class="mdi mdi-close"></span>
               </span>
             </button>
-            <button v-show="!query.length" type="submit" id="searchbtn" class="button is-rounded is-success">
+            <button v-show="!pager.query.length" type="submit" id="searchbtn" class="button is-rounded is-success">
               <span class="icon">
-                <span class="mdi mdi-search"></span>
+                <span class="mdi mdi-book-search"></span>
               </span>
             </button>
           </div>
@@ -30,9 +30,9 @@
         <table class="table is-narrow is-striped is-fullwidth">
           <thead>
             <th></th>
-            <th>ECO</th>
-            <th>Nombre</th>
-            <th>Plys</th>
+            <th>{{ 'name' | t }}</th>
+            <th>{{ 'eco' | t }}</th>
+            <th>{{ 'plys' | t }}</th>
           </thead>
           <tbody>
             <tr v-for="(item, index) in data.games" :key="index">
@@ -44,10 +44,10 @@
                 </router-link>
               </td>
               <td>
-                <span v-html="item.eco"></span>
+                <span v-html="item.name"></span>
               </td>
               <td>
-                <span v-html="item.name"></span>
+                <span v-html="item.eco"></span>
               </td>
               <td>
                 <span v-html="$root.countMoves(item.pgn)"></span>
@@ -57,27 +57,23 @@
         </table>
       </div>
     </div>
-    <nav class="pagination is-centered is-rounded" role="navigation" aria-label="pagination">
-      <ul class="pagination-list">
-        <li v-for="(page, index) in pages" :key="index">
-          <router-link :to="'?q=' + query + '&offset=' + page" class="pagination-link" :class="{'is-current': offset == page}" :title="'Ir a página ' + parseInt(page / limit + 1)"></router-link>
-        </li>
-      </ul>
-    </nav>
+    <table-pager :dataSet="pager"/>
   </div>
 </template>
 
 <script>
-
 import axios from 'axios'
 import snackbar from '../components/Snackbar'
-
+import TablePager from '@/components/TablePager'
 export default {
-  name: 'eco',
+  name: 'openings',
   watch: {
     '$route': function () {
       this.triggerSearch()
     }
+  },
+  components: {
+    TablePager
   },
   mounted () {
     this.triggerSearch()
@@ -86,27 +82,28 @@ export default {
     inputTrigger () {
       if (this.interval) clearInterval(this.interval)
       this.interval = setTimeout(() => {
-        this.$router.push({ path: 'eco', query: { q: this.query } })
+        this.$router.push({ path: 'eco', query: { q: this.pager.query } })
       }, 1500)
     },
     clear () {
-      this.query = ''
+      this.pager.query = ''
       this.submit()
     },
     triggerSearch () {
       if (this.$route.query.q) {
-        this.query = this.$route.query.q
+        this.pager.query = this.$route.query.q
       }
       if (this.$route.query.offset) {
-        this.offset = parseInt(this.$route.query.offset)
+        this.pager.offset = parseInt(this.$route.query.offset)
       }
       this.$nextTick(() => this.$refs.input.focus())
       this.search()
     },
     search () {
       this.$root.loading = true
-      axios.post('/eco/search', { query: this.query, offset: this.offset, limit: this.limit }).then((res) => {
+      axios.post('/eco/search', this.pager).then((res) => {
         this.data = res.data
+        let t = this.$root.t
         var pages = []
         if (res.data.error) {
           if (res.data.error === 'not_enough_params') {
@@ -116,11 +113,11 @@ export default {
           if (res.data.count === 0) {
             snackbar('danger', 'No hay aperturas que coincidan con tu palabra clave.', 5000)
           } else {
-            var numPages = Math.ceil(res.data.count / this.limit)
+            var numPages = Math.ceil(res.data.count / this.pager.limit)
             for (var i = 0; i < numPages; i++) {
-              pages[i] = i * this.limit
+              pages[i] = i * this.pager.limit
             }
-            snackbar('success', 'Se econtraron ' + this.data.count + ' apertura' + (this.data.count > 1 ? 's' : '') + '. Mostrando resultados de ' + (this.offset + 1) + ' a ' + (this.offset + this.limit > this.data.count ? this.data.count : this.offset + this.limit), 5000)
+            snackbar('success', t('results_found') + this.data.count + ' ' + (this.data.count > 1 ? t('games') : t('game')) + '. ' + t('showing_results') + (this.pager.offset + 1) + ' ' + t('to') + ' ' + (this.pager.offset + this.pager.limit > this.data.count ? this.data.count : this.pager.offset + this.pager.limit), 5000)
           }
         }
 
@@ -130,21 +127,26 @@ export default {
           pages.splice(max / 2, pages.length - max)
         }
 
-        this.pages = pages
+        this.pager.pages = pages
         this.$root.loading = false
       })
     },
     submit () {
-      this.$router.push('/eco?q=' + this.query.trim())
+      this.$router.push('/openings?q=' + this.pager.query.trim())
     }
   },
   data () {
     return {
-      data: { count: 0, games: [] },
-      pages: {},
-      query: '',
-      limit: 10,
-      offset: 0
+      data: {
+        count: 0,
+        games: []
+      },
+      pager: {
+        pages: {},
+        query: '',
+        limit: 25,
+        offset: 0
+      }
     }
   }
 }

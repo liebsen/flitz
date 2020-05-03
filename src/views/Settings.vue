@@ -3,9 +3,9 @@
     <section class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
-          <span class="mdi mdi-paint-brush"></span>
+          <span class="mdi mdi-palette"></span>
         </span>
-        <span>{{ 'preferences' | t }}</span>
+        <span>{{ 'settings' | t }}</span>
       </h3>
       <div class="columns is-marginless">
         <div class="column">
@@ -29,7 +29,7 @@
             </div>
             <div class="field">
               <div class="field-group">
-                <label class="label">{{ 'preferences_general' | t }}</label>
+                <label class="label">{{ 'settings_general' | t }}</label>
                 <div class="field-body">
                   <div class="control has-checkradio" title="Desactiva notificaciones sonoras">
                     <input v-model="data.sound" class="is-checkradio has-background-color is-white" id="sound" type="checkbox" @click="previewSound">
@@ -117,7 +117,7 @@
 
             <div class="field has-text-centered">
               <div class="column">
-                <button type="submit" class="button is-rounded is-success" :class="{ 'is-loading' : $root.saving }">{{ 'preferences_update' | t }}</button>
+                <button type="submit" class="button is-rounded is-success" :class="{ 'is-loading' : $root.saving }">{{ 'settings_update' | t }}</button>
               </div>
             </div>
           </form>
@@ -136,7 +136,7 @@ import Chessboard from '.././assets/js/chessboard'
 import snackbar from '../components/Snackbar'
 import playSound from '../components/playSound'
 export default {
-  name: 'preferences',
+  name: 'settings',
   watch: {
     'data.pieces'  (val) {
       this.pieceColor = val
@@ -267,8 +267,8 @@ export default {
           checkLang(data).then(() => {
             this.anchor.code = data.code
             this.$root.saving = false
-            this.$socket.emit('preferences', data)
-            snackbar('success', this.$root.t('preferences_saved'))
+            this.$socket.emit('settings', data)
+            snackbar('success', this.$root.t('settings_saved'))
           })
         }).catch(err => {
           console.log(`Algo malo sucedió ` + err)

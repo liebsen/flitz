@@ -161,7 +161,7 @@
                     </li>
                     <li :class="{ 'is-active' : tab === 'chat' }">
                       <a @click="tab = 'chat'" title="Chat">
-                        <span class="icon"><i class="mdi mdi-chat" aria-hidden="true"></i></span>
+                        <span class="icon"><i class="mdi mdi-comment-text-outline" aria-hidden="true"></i></span>
                       </a>
                     </li>
                   </ul>

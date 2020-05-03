@@ -14,7 +14,7 @@
           <div v-if="Object.keys(player).length">
             <div class="is-hidden-mobile">
               <div class="buttons levels has-addons is-pulled-right">
-                <router-link to="/preferences" class="button is-rounded is-grey" :title="'set_your_preferences' | t">
+                <router-link to="/settings" class="button is-rounded is-grey" :title="'set_your_settings' | t">
                   <span class="icon">
                     <span v-html="player.flag"></span>
                   </span>
@@ -29,7 +29,7 @@
             </div>
             <div class="is-hidden-tablet">
               <div class="buttons levels has-addons is-pulled-right">
-                <router-link to="/preferences" class="button is-small is-rounded" :title="'set_your_preferences' | t">
+                <router-link to="/settings" class="button is-small is-rounded" :title="'set_your_settings' | t">
                   <span class="icon">
                    <span v-html="player.flag"></span>
                   </span>
@@ -59,11 +59,11 @@
             <img src="/img/logo.png">
           </router-link>
           <div class="menu-links has-text-left">
-            <router-link v-for="(item, index) in menu" :key="index" :to="item.to">
+            <router-link v-for="(item, index) in menu" :key="index" :to="`/${item.to}`">
               <span class="icon">
                 <span class="mdi" :class="item.mdi"></span>
               </span>
-              <span>{{ item.tag | t }}</span>
+              <span>{{ item.to | t }}</span>
             </router-link>
           </div>
           <div class="column">
@@ -119,32 +119,25 @@ export default {
     return {
       latency: 0,
       menu: [{
-        tag: 'groups',
-        to: '/groups',
+        to: 'groups',
         mdi: 'mdi-layers'
       }, {
-        tag: 'openings',
-        to: '/eco',
-        mdi: 'mdi-book'
-      }, {
-        tag: 'live',
-        to: '/live',
+        to: 'live',
         mdi: 'mdi-fire'
       }, {
-        tag: 'results',
-        to: '/results',
+        to: 'results',
         mdi: 'mdi-view-list'
       }, {
-        tag: 'about',
-        to: '/about',
+        to: 'openings',
+        mdi: 'mdi-book'
+      }, {
+        to: 'about',
         mdi: 'mdi-information'
       }, {
-        tag: 'donate',
-        to: '/donate',
+        to: 'donate',
         mdi: 'mdi-human-handsup'
       }, {
-        tag: 'contact',
-        to: '/contact',
+        to: 'contact',
         mdi: 'mdi-email'
       }]
     }
