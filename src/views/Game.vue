@@ -164,7 +164,6 @@ export default {
         const moved = this.game.move(move)
 
         this.board.position(this.game.fen())
-
         this.uciCmd('position startpos moves' + this.moveList(), this.evaler)
         this.uciCmd('eval', this.evaler)
 
@@ -192,9 +191,7 @@ export default {
         }
 
         this.index++
-
         this.findEco(this.game.pgn())
-
         setTimeout(this.gameMove, this.speed)
       }
     },
