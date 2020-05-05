@@ -861,7 +861,7 @@ export default {
           if (match) {
             let score = parseFloat(match[1])
             t.score = score
-            t.vscore = 50 - (score / 48 * 100)
+            t.vscore = 50 - (score / 64 * 100)
           }
 
           /// Ignore some output.

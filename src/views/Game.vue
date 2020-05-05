@@ -59,7 +59,7 @@
                 </div>
               </div>
               <div class="columns is-vcentered has-text-centered">
-                <div class="column is-2">
+                <div class="column is-paddingless is-2">
                   <router-link :to="`/game/${data.prev}`">
                     <span class="icon">
                       <span class="mdi mdi-arrow-left-circle is-size-3 has-text-grey"></span>
@@ -73,8 +73,11 @@
                     <strong v-show="data.eco" class="has-text-grey is-size-5">{{ data.eco }}</strong>
                     <strong v-show="!data.eco" class="has-text-grey is-size-5">{{ ecode }}</strong>
                   </div>
+                  <div class="field">
+                    <span v-html="status" class="has-text-black"></span>
+                  </div>
                 </div>
-                <div class="column is-2">
+                <div class="column is-paddingless is-2">
                   <router-link :to="`/game/${data.next}`">
                     <span class="icon is-large">
                       <span class="mdi mdi-arrow-right-circle is-size-3 has-text-grey"></span>
@@ -98,23 +101,29 @@
                         <span v-html="(index+1)"></span>
                       </div>
                       <div class="moveCell moveSAN movew" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
-                        <a :class="'moveindex m' + (move.i-2)" @click="gamePos(move.i-2)">
+                        <a v-if="move.white" :class="'moveindex m' + (move.i - 2)" @click="gamePos(move.i - 2)">
                           <span v-html="move.white"></span>
                           <span v-if="data.annotations[index * 2]" class="icon">
-                            <span class="mdi" :class="{ 'mdi-check' : data.annotations[index * 2] === '$1', 'mdi-check-all' : data.annotations[index * 2] === '$3', 'mdi-alert' : data.annotations[index * 2] === '$2', 'mdi-close' : data.annotations[index * 2] === '$4', 'mdi-book-open': data.annotations[index * 2] === '$12' }"></span>
+                            <span class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2] === '$1', 'mdi-sticker-check' : data.annotations[index * 2] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2] === '$4', 'mdi-book-open': data.annotations[index * 2] === '$12' }"></span>
                           </span>
-                          <span v-if="data.performance">
+                          <span v-else class="icon">
+                            <span class="mdi mdi-bullseye"/>
+                          </span>
+                          <span v-if="data.performance[index * 2]">
                             <small v-if="data.performance[index * 2]" v-html="data.performance[index * 2]"></small>
                           </span>
                         </a>
                       </div>
                       <div class="moveCell moveSAN moveb" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
-                        <a :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
+                        <a v-if="move.black" :class="'moveindex m' + (move.i - 1)" @click="gamePos(move.i - 1)">
                           <span v-html="move.black"></span>
                           <span v-if="data.annotations[index * 2 + 1]" class="icon">
-                            <span class="mdi" :class="{ 'mdi-check' : data.annotations[index * 2 + 1] === '$1', 'mdi-check-all' : data.annotations[index * 2 + 1] === '$3', 'mdi-alert' : data.annotations[index * 2 + 1] === '$2', 'mdi-close' : data.annotations[index * 2 + 1] === '$4', 'mdi-book-open': data.annotations[index * 2 + 1] === '$12' }"></span>
+                            <span class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : data.annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2 + 1] === '$4', 'mdi-book-open': data.annotations[index * 2 + 1] === '$12' }"></span>
                           </span>
-                          <span v-if="data.performance">
+                          <span v-else class="icon">
+                            <span class="mdi mdi-bullseye"/>
+                          </span>
+                          <span v-if="data.performance[index * 2 + 1]">
                             <small v-if="data.performance[index * 2 + 1]" v-html="data.performance[index * 2 + 1]"></small>
                           </span>
                         </a>
@@ -379,6 +388,7 @@ export default {
             t.vscore = 50 - (t.score / 48 * 100)
             if (!t.data.score) {
               setTimeout(() => {
+                t.displayStatus()
                 t.drawChart()
               }, t.stockfishEvalTime)
             }
@@ -613,6 +623,27 @@ export default {
         this.speed -= s
       }
     },
+    displayStatus () {
+      var t = this
+      var status = ''
+      /* var status = 'Motor: '
+      if (!t.engineStatus.engineLoaded) {
+        status += 'Cargando...'
+      } else if (!t.engineStatus.engineReady) {
+        status += 'Cargado'
+      } else {
+        status += 'Listo'
+      } */
+
+      if (t.engineStatus.search) {
+        status += '<br>' + t.engineStatus.search
+        if (t.engineStatus.score && t.displayScore) {
+          status += (t.engineStatus.score.substr(0, 4) === 'Mate' ? ' ' : ' Score: ') + t.engineStatus.score
+        }
+      }
+
+      t.status = status
+    },
     setClock () {
       this.gamePause()
       swal('Ingresa el intervalo en milisegundos entre 1000/60000', {
@@ -666,6 +697,7 @@ export default {
       data: {},
       eco: {},
       duration: 0,
+      status: '',
       score: 0.10,
       vscore: 49,
       ecode: null,

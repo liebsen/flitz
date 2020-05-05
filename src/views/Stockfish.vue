@@ -122,7 +122,7 @@
                     </div>
 
                     <div class="moveCell moveSAN movew" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
-                      <a :class="'moveindex m' + (move.i-2)" @click="gamePos(move.i-2)">
+                      <a v-if="move.white" :class="'moveindex m' + (move.i-2)" @click="gamePos(move.i-2)">
                         <span v-html="move.white"></span>
                         <span v-if="annotations[index * 2]" class="icon">
                           <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2] === '$1', 'mdi-sticker-check' : annotations[index * 2] === '$3', 'mdi-sticker-minus' : annotations[index * 2] === '$2', 'mdi-sticker-remove' : annotations[index * 2] === '$4', 'mdi-book-open': annotations[index * 2] === '$12'}"></span>
@@ -140,10 +140,10 @@
                     </div>
 
                     <div class="moveCell moveSAN moveb" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
-                      <a :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
+                      <a v-if="move.black" :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
                         <span v-html="move.black"></span>
                         <span v-if="annotations[index * 2 + 1]" class="icon">
-                          <span class="mdi" :class="{ 'mdi-sticker-check' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-bullseye': !annotations[index * 2] }"></span>
+                          <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-bullseye': !annotations[index * 2] }"></span>
                         </span>
                         <span v-else class="icon">
                           <span class="mdi mdi-bullseye"/>
@@ -417,7 +417,7 @@ export default {
               // t.engineStatus.score = ((reBound[1] === 'upper') === (t.game.turn() === 'w') ? '<= ' : '>= ') + t.engineStatus.score
             }
             t.score = t.engineStatus.score.split(' ').reverse()[0]
-            t.vscore = 50 - (t.score / 48 * 100)
+            t.vscore = 50 - (t.score / 64 * 100)
           }
         }
         // stockfish starts with white
@@ -895,14 +895,15 @@ export default {
     },
     displayStatus () {
       var t = this
-      var status = 'Motor: '
+      var status = ''
+      /* var status = 'Motor: '
       if (!t.engineStatus.engineLoaded) {
         status += 'Cargando...'
       } else if (!t.engineStatus.engineReady) {
         status += 'Cargado'
       } else {
         status += 'Listo'
-      }
+      } */
 
       if (t.engineStatus.search) {
         status += '<br>' + t.engineStatus.search
