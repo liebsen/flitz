@@ -688,9 +688,9 @@ export default {
       if (t.game.game_over()) {
         if (t.game.in_draw() || t.game.in_stalemate() || t.game.in_threefold_repetition()) {
           swal({
-            title: 'Esta partida finalizó en tablas',
-            text: '¿Querés la revancha?',
-            buttons: ['No', 'Sí']
+            title: t.$root.t('game_draw'),
+            text: t.$root.t('stockfish_ask_play_again'),
+            buttons: [t.$root.t('no'), t.$root.t('yes')]
           }).then(accept => {
             if (accept) {
               t.gameRestart()
@@ -702,9 +702,9 @@ export default {
           setTimeout(() => {
             if (t.game.turn() === t.playerColor[0]) {
               swal({
-                title: 'Stockfish ganó esta partida',
-                text: '¿Querés la revancha?',
-                buttons: ['No', 'Sí']
+                title: t.$root.t('stockfish_won'),
+                text: t.$root.t('stockfish_ask_play_again'),
+                buttons: [t.$root.t('no'), t.$root.t('yes')]
               })
                 .then(accept => {
                   if (accept) {
@@ -714,14 +714,14 @@ export default {
                   }
                 })
             } else {
-              swal('¡Felicitaciones! Venciste a Stockfish', {
+              swal(t.$root.t('you_defeat_stockfish'), {
                 buttons: {
-                  cancel: 'Cancelar',
+                  cancel: t.$root.t('cancel'),
                   catch: {
-                    text: 'Jugar de nuevo',
+                    text: t.$root.t('play_again'),
                     value: 'catch'
                   },
-                  defeat: 'Guardar partida'
+                  defeat: t.$root.t('save_game')
                 }
               }).then((value) => {
                 switch (value) {
