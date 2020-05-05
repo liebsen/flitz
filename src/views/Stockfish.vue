@@ -740,13 +740,13 @@ export default {
                       whiteflag: whiteflag,
                       blackflag: blackflag,
                       result: result,
-                      score: this.chart.values,
-                      performance: this.performance,
-                      annotations: this.annotations,
                       eco: this.eco,
                       opening: this.opening,
                       orientation: this.board.orientation(),
-                      pgn: this.game.pgn()
+                      pgn: this.game.pgn(),
+                      chart: this.chart.values,
+                      score: this.performance,
+                      annotations: this.annotations
                     }
 
                     axios.post('/game/save', game).then((res) => {

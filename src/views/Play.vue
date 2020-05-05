@@ -8,7 +8,7 @@
         </span>
       </span>
     </div>
-    <div class="game-container" v-show="!$root.loading">
+    <div class="game-container" v-show="!$root.loading" :class="{ 'is-semitransparent': !gameStarted }">
       <div class="container is-widescreen">
         <div class="content fadeIn">
           <div class="columns is-marginless-top">
@@ -185,10 +185,35 @@
                           <div class="moveCell moveSAN movew" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                             <a :class="'moveindex m' + (move.i-2)" @click="gamePos(move.i-2)">
                               <span v-html="move.white"></span>
-                            </a>                          </div>
+                              <span v-if="annotations[index * 2]" class="icon">
+                                <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2] === '$1', 'mdi-sticker-check' : annotations[index * 2] === '$3', 'mdi-sticker-minus' : annotations[index * 2] === '$2', 'mdi-sticker-remove' : annotations[index * 2] === '$4', 'mdi-book-open': annotations[index * 2] === '$12'}"></span>
+                              </span>
+                              <span v-else class="icon">
+                                <span class="mdi mdi-bullseye"/>
+                              </span>
+                              <span v-if="performance[index * 2]">
+                                <small v-if="performance[index * 2]" v-html="performance[index * 2]"></small>
+                              </span>
+                              <span v-else class="icon">
+                                <span class="mdi mdi-bullseye"/>
+                              </span>
+                            </a>
+                          </div>
                           <div class="moveCell moveSAN moveb" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                             <a :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
                               <span v-html="move.black"></span>
+                              <span v-if="annotations[index * 2 + 1]" class="icon">
+                                <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-bullseye': !annotations[index * 2] }"></span>
+                              </span>
+                              <span v-else class="icon">
+                                <span class="mdi mdi-bullseye"/>
+                              </span>
+                              <span v-if="performance[index * 2 + 1]">
+                                <small v-if="performance[index * 2 + 1]" v-html="performance[index * 2 + 1]"></small>
+                              </span>
+                              <span v-else class="icon">
+                                <span class="mdi mdi-dots-horizontal"/>
+                              </span>
                             </a>
                           </div>
                         </div>
@@ -481,9 +506,9 @@ export default {
         result: result,
         match: match.match,
         group: match.group,
-        annotations: this.annotations,
         chart: this.chart.values,
-        score: this.performance
+        score: this.performance,
+        annotations: this.annotations
       })
     },
     showResultGame () {
@@ -1114,7 +1139,8 @@ export default {
         this.drawChartPosition(false)
         this.chart.values = this.chart.values.slice(0, index)
         this.chart.values[index] = score
-        this.performance[index] = this.vscore.toFixed(2)
+        this.performance = this.performance.slice(0, index)
+        this.performance[index] = this.score
         this.makeAnnotation(index)
         this.updateChart()
       }
@@ -1149,6 +1175,9 @@ export default {
       this.calcPoints()
 
       var element = document.getElementsByClassName('chart')[0]
+      if (!element) {
+        return
+      }
       element.innerHTML = ''
 
       var width = document.querySelector('.movesTableContainer').clientWidth + 'px'

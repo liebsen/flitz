@@ -74,7 +74,7 @@
                     <strong v-show="!data.eco" class="has-text-grey is-size-5">{{ ecode }}</strong>
                   </div>
                   <div class="field">
-                    <span v-html="status" class="has-text-black"></span>
+                    <span v-html="score" class="has-text-black"></span>
                   </div>
                 </div>
                 <div class="column is-paddingless is-2">
@@ -109,8 +109,8 @@
                           <span v-else class="icon">
                             <span class="mdi mdi-bullseye"/>
                           </span>
-                          <span v-if="data.performance[index * 2]">
-                            <small v-if="data.performance[index * 2]" v-html="data.performance[index * 2]"></small>
+                          <span v-if="data.score">
+                            <small v-if="data.score[index * 2]" v-html="data.score[index * 2]"></small>
                           </span>
                         </a>
                       </div>
@@ -123,8 +123,8 @@
                           <span v-else class="icon">
                             <span class="mdi mdi-bullseye"/>
                           </span>
-                          <span v-if="data.performance[index * 2 + 1]">
-                            <small v-if="data.performance[index * 2 + 1]" v-html="data.performance[index * 2 + 1]"></small>
+                          <span v-if="data.score">
+                            <small v-if="data.score[index * 2 + 1]" v-html="data.score[index * 2 + 1]"></small>
                           </span>
                         </a>
                       </div>
@@ -360,7 +360,7 @@ export default {
               document.querySelector('.movesTableContainer').style.height = ($('.board').height() - offset) + 'px'
             }
 
-            if (this.data.score) {
+            if (this.data.chart) {
               this.drawChartFromScore()
             }
             setTimeout(() => {
@@ -386,9 +386,8 @@ export default {
           if (match) {
             t.score = parseFloat(match[1])
             t.vscore = 50 - (t.score / 48 * 100)
-            if (!t.data.score) {
+            if (!t.data.chart) {
               setTimeout(() => {
-                t.displayStatus()
                 t.drawChart()
               }, t.stockfishEvalTime)
             }
@@ -441,7 +440,7 @@ export default {
       document.querySelector('.chart-indicator').style.backgroundColor = 'rgb(0,0,0,0.15)'
     },
     drawChartFromScore () {
-      this.data.score.map((score, i) => {
+      this.data.chart.map((score, i) => {
         score = parseInt(score)
         if (this.orientation === 'black') {
           score = 100 - score
@@ -641,7 +640,7 @@ export default {
           status += (t.engineStatus.score.substr(0, 4) === 'Mate' ? ' ' : ' Score: ') + t.engineStatus.score
         }
       }
-
+      console.log(status)
       t.status = status
     },
     setClock () {
