@@ -148,7 +148,7 @@
                   <div class="column">
                     <div class="field">
                       <span class="has-text-black is-size-5">{{ opening }}</span>
-                      <strong class="has-text-grey is-size-5">{{ ecode }}</strong>
+                      <strong class="has-text-grey is-size-5">{{ eco }}</strong>
                     </div>
                   </div>
                 </div>
@@ -1001,7 +1001,7 @@ export default {
     },
     emitMove (move) {
       move.id = this.$route.params.game
-      move.eco = this.ecode
+      move.eco = this.eco
       move.opening = this.opening
       move.vscore = this.vscore
       move.fen = this.game.fen()
@@ -1058,11 +1058,14 @@ export default {
     },
     findEco (pgn) {
       let t = this
+      let ecoFound = false
       axios.post('/eco/pgn', { pgn: pgn }).then((res) => {
         if (res.data.eco) {
+          ecoFound = true
           t.opening = t.$root.t(res.data.eco)
-          t.ecode = res.data.eco
+          t.eco = res.data.eco
         }
+        t.ecoFound = ecoFound
       })
     },
     updateMoveList () {
@@ -1113,28 +1116,33 @@ export default {
         this.chart.values[index] = score
         this.performance[index] = this.vscore.toFixed(2)
         this.makeAnnotation(index)
-
         this.updateChart()
       }
     },
     makeAnnotation (index) {
-      if (this.performance[index - 1]) {
-        var delta = 0
-        var annotation = false
-        const abs = this.performance[index] - this.performance[index - 1]
-        delta = Math.abs(abs)
+      /*
+        $1 good !
+        $2 poor ?
+        $3 very good !!
+        $4 very poor ??
+        $5 speculative !?
+        $6 questionable ?!
+        $12 book
+      */
+      var annotation = false
+      if (this.ecoFound) {
+        annotation = 12
+      } else if (this.performance[index - 1]) {
+        const abs = parseFloat(this.performance[index]) - parseFloat(this.performance[index - 1])
+        const delta = Math.abs(abs)
         if (delta > 2) {
-          annotation = abs > 0 ? '!!' : '??'
+          annotation = abs > 0 && this.game.turn() === 'b' ? 3 : 4
         } else if (delta > 1) {
-          annotation = abs > 0 ? '!' : '?'
+          annotation = abs > 0 && this.game.turn() === 'b' ? 1 : 2
         }
-        /* console.log('current:' + this.performance[index])
-        console.log('previous:' + this.performance[index - 1])
-        console.log('delta:' + delta)
-        console.log('annotation:' + annotation) */
-        if (annotation) {
-          this.annotations[index] = annotation
-        }
+      }
+      if (annotation) {
+        this.annotations[index] = `$` + annotation
       }
     },
     updateChart () {
@@ -1298,7 +1306,6 @@ export default {
       },
       secondsToProceed: 10,
       data: {},
-      eco: {},
       tab: 'pgn',
       chat: '',
       index: -1,
@@ -1313,7 +1320,7 @@ export default {
       vscore: 49,
       orientation: null,
       announced_game_over: false,
-      ecode: null,
+      eco: null,
       board: null,
       boardEl: null,
       boardColor: 'classic',
@@ -1322,6 +1329,7 @@ export default {
       usersJoined: [],
       pgnIndex: [],
       annotations: [],
+      ecoFound: false,
       moveFrom: null,
       playerColor: null,
       opponent: {}

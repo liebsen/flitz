@@ -68,9 +68,7 @@
           </div>
         </div>
         <div class="column">
-          <!--pre v-html="chart.values"/>
-          <pre v-html="annotations"/-->
-          <pre v-html="performance"/>
+          <!--pre v-html="chart.values"/-->
           <div class="board-assistant">
             <div class="columns has-text-centered" v-show="pgnIndex.length">
               <div class="column preservefilter">
@@ -100,7 +98,7 @@
               <div class="column">
                 <div class="field">
                   <span class="has-text-black is-size-5">{{ opening }}</span>
-                  <strong class="has-text-grey is-size-5">{{ ecode }}</strong>
+                  <strong class="has-text-grey is-size-5">{{ eco }}</strong>
                 </div>
                 <div class="field">
                   <span v-html="status" class="has-text-black"></span>
@@ -126,12 +124,36 @@
                     <div class="moveCell moveSAN movew" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                       <a :class="'moveindex m' + (move.i-2)" @click="gamePos(move.i-2)">
                         <span v-html="move.white"></span>
+                        <span v-if="annotations[index * 2]" class="icon">
+                          <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2] === '$1', 'mdi-sticker-check' : annotations[index * 2] === '$3', 'mdi-sticker-minus' : annotations[index * 2] === '$2', 'mdi-sticker-remove' : annotations[index * 2] === '$4', 'mdi-book-open': annotations[index * 2] === '$12'}"></span>
+                        </span>
+                        <span v-else class="icon">
+                          <span class="mdi mdi-bullseye"/>
+                        </span>
+                        <span v-if="performance[index * 2]">
+                          <small v-if="performance[index * 2]" v-html="performance[index * 2]"></small>
+                        </span>
+                        <span v-else class="icon">
+                          <span class="mdi mdi-bullseye"/>
+                        </span>
                       </a>
                     </div>
 
                     <div class="moveCell moveSAN moveb" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                       <a :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
                         <span v-html="move.black"></span>
+                        <span v-if="annotations[index * 2 + 1]" class="icon">
+                          <span class="mdi" :class="{ 'mdi-sticker-check' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-bullseye': !annotations[index * 2] }"></span>
+                        </span>
+                        <span v-else class="icon">
+                          <span class="mdi mdi-bullseye"/>
+                        </span>
+                        <span v-if="performance[index * 2 + 1]">
+                          <small v-if="performance[index * 2 + 1]" v-html="performance[index * 2 + 1]"></small>
+                        </span>
+                        <span v-else class="icon">
+                          <span class="mdi mdi-dots-horizontal"/>
+                        </span>
                       </a>
                     </div>
                   </div>
@@ -192,7 +214,7 @@ export default {
       t.announced_game_over = false
       t.pgnIndex = []
       t.time.level = -1
-      t.ecode = ''
+      t.eco = ''
       t.opening = ''
       t.index = -1
       t.score = 0.10
@@ -277,31 +299,26 @@ export default {
       }, 250)
     },
     makeAnnotation (index) {
+      /*
+        $1 good !
+        $2 poor ?
+        $3 very good !!
+        $4 very poor ??
+        $5 speculative !?
+        $6 questionable ?!
+        $12 book
+      */
       var annotation = false
       if (this.ecoFound) {
         annotation = 12
       } else if (this.performance[index - 1]) {
-        var delta = 0
-        const abs = this.performance[index] - this.performance[index - 1]
-        delta = Math.abs(abs)
+        const abs = parseFloat(this.performance[index]) - parseFloat(this.performance[index - 1])
+        const delta = Math.abs(abs)
         if (delta > 2) {
-          /*
-            $1 good !
-            $2 poor ?
-            $3 very good !!
-            $4 very poor ??
-            $5 speculative !?
-            $6 questionable ?!
-            $12 book
-          */
-          annotation = abs > 0 ? 3 : 4
+          annotation = abs > 0 && this.game.turn() === 'b' ? 3 : 4
         } else if (delta > 1) {
-          annotation = abs > 0 ? 1 : 2
+          annotation = abs > 0 && this.game.turn() === 'b' ? 1 : 2
         }
-        /* console.log('current:' + this.performance[index])
-        console.log('previous:' + this.performance[index - 1])
-        console.log('delta:' + delta)
-        console.log('annotation:' + annotation) */
       }
       if (annotation) {
         this.annotations[index] = `$` + annotation
@@ -726,7 +743,7 @@ export default {
                       score: this.chart.values,
                       performance: this.performance,
                       annotations: this.annotations,
-                      eco: this.ecode,
+                      eco: this.eco,
                       opening: this.opening,
                       orientation: this.board.orientation(),
                       pgn: this.game.pgn()
@@ -740,10 +757,12 @@ export default {
                         snackbar('danger', 'La partida no pudo ser guardada')
                       }
                     })
+
                     break
 
                   case 'catch':
                     this.gameRestart()
+
                     break
 
                   default:
@@ -782,12 +801,12 @@ export default {
     },
     findEco (pgn) {
       let t = this
+      let ecoFound = false
       axios.post('/eco/pgn', { pgn: pgn }).then((res) => {
-        let ecoFound = false
         if (res.data.eco) {
           ecoFound = true
           t.opening = t.$root.t(res.data.eco)
-          t.ecode = res.data.eco
+          t.eco = res.data.eco
         }
         t.ecoFound = ecoFound
       })
@@ -967,8 +986,7 @@ export default {
       announced_game_over: false,
       playerColor: 'white',
       selectedColor: 'white',
-      eco: {},
-      ecode: null,
+      eco: null,
       opening: null,
       board: null,
       ecoFound: false,

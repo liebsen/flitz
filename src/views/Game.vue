@@ -58,12 +58,28 @@
                   </div>
                 </div>
               </div>
-              <div class="columns has-text-centered">
+              <div class="columns is-vcentered has-text-centered">
+                <div class="column is-2">
+                  <router-link :to="`/game/${data.prev}`">
+                    <span class="icon">
+                      <span class="mdi mdi-arrow-left-circle is-size-3 has-text-grey"></span>
+                    </span>
+                  </router-link>
+                </div>
                 <div class="column">
                   <div class="field">
-                    <span class="has-text-black is-size-5">{{ opening }}</span>
-                    <strong class="has-text-grey is-size-5">{{ ecode }}</strong>
+                    <span v-show="data.opening" class="has-text-black is-size-5">{{ data.opening }}</span>
+                    <span v-show="!data.opening" class="has-text-black is-size-5">{{ opening }}</span>
+                    <strong v-show="data.eco" class="has-text-grey is-size-5">{{ data.eco }}</strong>
+                    <strong v-show="!data.eco" class="has-text-grey is-size-5">{{ ecode }}</strong>
                   </div>
+                </div>
+                <div class="column is-2">
+                  <router-link :to="`/game/${data.next}`">
+                    <span class="icon is-large">
+                      <span class="mdi mdi-arrow-right-circle is-size-3 has-text-grey"></span>
+                    </span>
+                  </router-link>
                 </div>
               </div>
               <div class="columns is-hidden-mobile">
@@ -166,7 +182,6 @@ export default {
         /* global $ */
         var move = this.gameMoves[this.index]
         this.selectedIndex = parseInt(location.hash.replace('#', ''))
-
         // exit if the game is over
         if (!move || this.game.game_over() === true ||
             this.game.in_draw() === true ||
@@ -190,23 +205,28 @@ export default {
           this.gamePause()
         }
 
-        document.querySelectorAll('.moveindex').forEach((item) => {
-          item.parentNode.classList.remove('active')
-        })
-
-        document.querySelector('.moveindex.m' + this.index).parentNode.classList.add('active')
-
-        var n = document.querySelector('.moveindex.m' + this.index).parentNode.offsetTop
-        var x = document.querySelector('.moveindex.m' + this.index).parentNode.clientHeight
-        var y = n + x
-        var h = parseInt(document.querySelector('.movesTableContainer').style.height)
-        if (y > h) {
-          document.querySelector('.movesTableContainer').scrollTop = n
-        }
+        this.setMovesTable()
         this.drawChartPosition()
         this.index++
-        this.findEco(this.game.pgn())
+        if (!this.data.eco) {
+          this.findEco(this.game.pgn())
+        }
         setTimeout(this.gameMove, this.speed)
+      }
+    },
+    setMovesTable () {
+      document.querySelectorAll('.moveindex').forEach((item) => {
+        item.parentNode.classList.remove('active')
+      })
+
+      document.querySelector('.moveindex.m' + this.index).parentNode.classList.add('active')
+
+      var n = document.querySelector('.moveindex.m' + this.index).parentNode.offsetTop
+      var x = document.querySelector('.moveindex.m' + this.index).parentNode.clientHeight
+      var y = n + x
+      var h = parseInt(document.querySelector('.movesTableContainer').style.height)
+      if (y > h) {
+        document.querySelector('.movesTableContainer').scrollTop = n
       }
     },
     findEco (pgn) {
@@ -314,10 +334,11 @@ export default {
           this.board = Chessboard('board', this.boardCfg)
           this.orientation = this.board.orientation()
           window.onresize = function (event) {
-            if (this.board) {
-              this.board.resize()
-              this.$root.fullscreenBoard()
-              this.highlightLastMove()
+            var t = window.app
+            if (t.board) {
+              t.board.resize()
+              t.$root.fullscreenBoard()
+              t.highlightLastMove()
             }
           }
 
@@ -328,14 +349,14 @@ export default {
           setTimeout(() => {
             if (document.querySelector('.movesTableContainer')) {
               document.querySelector('.movesTableContainer').style.height = ($('.board').height() - offset) + 'px'
-
-              if (this.data.score) {
-                this.drawChartFromScore()
-              }
-              setTimeout(() => {
-                this.gameMove()
-              }, 1000)
             }
+
+            if (this.data.score) {
+              this.drawChartFromScore()
+            }
+            setTimeout(() => {
+              this.gameMove()
+            }, 1000)
           }, 500)
         }, 2000)
 
@@ -406,7 +427,7 @@ export default {
       }
     },
     drawChartPosition () {
-      document.querySelector('.chart-indicator').style.left = (this.index / this.gameMoves.length * 100) + '%'
+      document.querySelector('.chart-indicator').style.left = ((this.index + 1) / this.gameMoves.length * 100) + '%'
       document.querySelector('.chart-indicator').style.backgroundColor = 'rgb(0,0,0,0.15)'
     },
     drawChartFromScore () {
@@ -432,8 +453,6 @@ export default {
     },
     updateChart () {
       this.calcPoints()
-      console.log('values')
-      console.log(this.chart.values)
       var element = document.getElementsByClassName('chart')[0]
       element.innerHTML = ''
 
@@ -564,6 +583,7 @@ export default {
 
       if (moved) {
         this.board.position(this.game.fen())
+        this.setMovesTable()
         this.drawChartPosition()
 
         setTimeout(() => {
