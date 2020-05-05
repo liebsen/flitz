@@ -8,6 +8,7 @@ Vue.use(Vuex)
 let games = JSON.parse(localStorage.getItem('games')) || []
 export default new Vuex.Store({
   state: {
+    stockfishEvalTime: 250,
     menuState: false,
     player: {},
     players: null,

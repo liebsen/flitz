@@ -247,7 +247,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'player'
+      'player',
+      'stockfishEvalTime'
     ])
   },
   beforeDestroy () {
@@ -480,7 +481,7 @@ export default {
         result: result,
         match: match.match,
         group: match.group,
-        annotation: this.annotations,
+        annotations: this.annotations,
         chart: this.chart.values,
         score: this.performance
       })
@@ -1049,7 +1050,7 @@ export default {
           t.updateMoveList()
           setTimeout(() => {
             t.drawChart(index)
-          }, 1000)
+          }, t.stockfishEvalTime)
         }, 250)
       }, 100)
 
@@ -1111,25 +1112,29 @@ export default {
         this.chart.values = this.chart.values.slice(0, index)
         this.chart.values[index] = score
         this.performance[index] = this.vscore.toFixed(2)
-        if (this.performance[index - 1]) {
-          var delta = 0
-          var annotation = false
-          const abs = this.performance[index] - this.performance[index - 1]
-          delta = Math.abs(abs)
-          if (delta > 2) {
-            annotation = abs > 0 ? '!!' : '??'
-          } else if (delta > 1) {
-            annotation = abs > 0 ? '!' : '?'
-          }
-          /* console.log('current:' + this.performance[index])
-          console.log('previous:' + this.performance[index - 1])
-          console.log('delta:' + delta)
-          console.log('annotation:' + annotation) */
-          if (annotation) {
-            this.annotations[index] = annotation
-          }
-        }
+        this.makeAnnotation(index)
+
         this.updateChart()
+      }
+    },
+    makeAnnotation (index) {
+      if (this.performance[index - 1]) {
+        var delta = 0
+        var annotation = false
+        const abs = this.performance[index] - this.performance[index - 1]
+        delta = Math.abs(abs)
+        if (delta > 2) {
+          annotation = abs > 0 ? '!!' : '??'
+        } else if (delta > 1) {
+          annotation = abs > 0 ? '!' : '?'
+        }
+        /* console.log('current:' + this.performance[index])
+        console.log('previous:' + this.performance[index - 1])
+        console.log('delta:' + delta)
+        console.log('annotation:' + annotation) */
+        if (annotation) {
+          this.annotations[index] = annotation
+        }
       }
     },
     updateChart () {

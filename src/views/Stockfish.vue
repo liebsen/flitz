@@ -68,6 +68,9 @@
           </div>
         </div>
         <div class="column">
+          <!--pre v-html="chart.values"/>
+          <pre v-html="annotations"/-->
+          <pre v-html="performance"/>
           <div class="board-assistant">
             <div class="columns has-text-centered" v-show="pgnIndex.length">
               <div class="column preservefilter">
@@ -178,7 +181,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'player'
+      'player',
+      'stockfishEvalTime'
     ])
   },
   methods: {
@@ -272,6 +276,37 @@ export default {
         }
       }, 250)
     },
+    makeAnnotation (index) {
+      var annotation = false
+      if (this.ecoFound) {
+        annotation = 12
+      } else if (this.performance[index - 1]) {
+        var delta = 0
+        const abs = this.performance[index] - this.performance[index - 1]
+        delta = Math.abs(abs)
+        if (delta > 2) {
+          /*
+            $1 good !
+            $2 poor ?
+            $3 very good !!
+            $4 very poor ??
+            $5 speculative !?
+            $6 questionable ?!
+            $12 book
+          */
+          annotation = abs > 0 ? 3 : 4
+        } else if (delta > 1) {
+          annotation = abs > 0 ? 1 : 2
+        }
+        /* console.log('current:' + this.performance[index])
+        console.log('previous:' + this.performance[index - 1])
+        console.log('delta:' + delta)
+        console.log('annotation:' + annotation) */
+      }
+      if (annotation) {
+        this.annotations[index] = `$` + annotation
+      }
+    },
     drawChartPosition (draw) {
       if (draw === undefined) draw = true
       if (!draw) {
@@ -310,7 +345,6 @@ export default {
       t.engine.onmessage = function (event) {
         var line
         var t = window.app
-
         if (event && typeof event === 'object') {
           line = event.data
         } else {
@@ -334,6 +368,8 @@ export default {
               if (!t.hintMode) {
                 t.board.position(t.game.fen())
                 t.updateMoves(move)
+                t.uciCmd('position startpos moves' + t.moveList())
+                t.uciCmd('go ' + (t.time.depth ? 'depth ' + t.time.depth : ''))
               } else {
                 document.querySelector('.square-' + move.from).classList.add('highlight-move')
                 document.querySelector('.square-' + move.to).classList.add('highlight-move')
@@ -361,18 +397,17 @@ export default {
 
             /// Is the score bounded?
             if (reBound) {
-              t.engineStatus.score = ((reBound[1] === 'upper') === (t.game.turn() === 'w') ? '<= ' : '>= ') + t.engineStatus.score
+              // t.engineStatus.score = ((reBound[1] === 'upper') === (t.game.turn() === 'w') ? '<= ' : '>= ') + t.engineStatus.score
             }
-            if (!t.hintMode) {
-              t.displayStatus()
-            }
+            t.score = t.engineStatus.score.split(' ').reverse()[0]
+            t.vscore = 50 - (t.score / 48 * 100)
           }
         }
-
-        if (t.engineStatus.engineLoaded && t.playerColor === 'black' && !t.hintMode && !t.stockfishMoved) {
+        // stockfish starts with white
+        if (t.engineStatus.engineLoaded && t.playerColor[0] === 'b' && !t.hintMode && !t.stockfishMoved) {
           setTimeout(() => {
-            t.stockfishMoved = true
             t.prepareMove()
+            t.stockfishMoved = true
           }, t.ucitime * 3)
         }
       }
@@ -538,8 +573,10 @@ export default {
       if (!isNaN(score)) {
         this.drawChartPosition(false)
         this.chart.values = this.chart.values.slice(0, index)
-        this.chart.values[index] = score
-        this.performance[index] = this.vscore.toFixed(2)
+        this.chart.values[index] = score.toFixed(2)
+        this.performance = this.performance.slice(0, index)
+        this.performance[index] = this.score
+        this.makeAnnotation(index)
         this.updateChart()
       }
     },
@@ -686,8 +723,9 @@ export default {
                       whiteflag: whiteflag,
                       blackflag: blackflag,
                       result: result,
-                      chart: this.chart.values,
-                      score: this.performance,
+                      score: this.chart.values,
+                      performance: this.performance,
+                      annotations: this.annotations,
                       eco: this.ecode,
                       opening: this.opening,
                       orientation: this.board.orientation(),
@@ -697,7 +735,7 @@ export default {
                     axios.post('/game/save', game).then((res) => {
                       if (res.data.status === 'success') {
                         this.$store.dispatch('games', res.data)
-                        swal('Guardado', 'La partida se guardó correctamente')
+                        swal(this.$root.t('saved'), this.$root.t('stockfish_saved'))
                       } else {
                         snackbar('danger', 'La partida no pudo ser guardada')
                       }
@@ -732,8 +770,11 @@ export default {
         t.moveSound(move)
         t.updateMoveList()
         setTimeout(() => {
+          if (!t.hintMode) {
+            t.displayStatus()
+          }
           t.drawChart(index)
-        }, 250)
+        }, t.stockfishEvalTime)
       }, 250)
 
       t.thinking = false
@@ -742,10 +783,13 @@ export default {
     findEco (pgn) {
       let t = this
       axios.post('/eco/pgn', { pgn: pgn }).then((res) => {
+        let ecoFound = false
         if (res.data.eco) {
+          ecoFound = true
           t.opening = t.$root.t(res.data.eco)
           t.ecode = res.data.eco
         }
+        t.ecoFound = ecoFound
       })
     },
     updateMoveList () {
@@ -849,8 +893,6 @@ export default {
       }
 
       t.status = status
-      t.score = t.engineStatus.score.split(' ').reverse()[0]
-      t.vscore = 50 - (t.score / 48 * 100)
     },
     onDragStart (source, piece, position, orientation) {
       var re = this.playerColor === 'white' ? /^b/ : /^w/
@@ -908,6 +950,7 @@ export default {
       time: {
         level: -1
       },
+      annotations: {},
       opponentName: 'Stockfish',
       index: -1,
       gameMoves: [],
@@ -928,6 +971,7 @@ export default {
       ecode: null,
       opening: null,
       board: null,
+      ecoFound: false,
       boardColor: '',
       game: null,
       pgnIndex: [],

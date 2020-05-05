@@ -69,6 +69,7 @@
               <div class="columns is-hidden-mobile">
                 <div class="chart-container preservefilter">
                   <div :class="orientation">
+                    <div class="chart-indicator"></div>
                     <div class="chart" v-show="pgnIndex.length"></div>
                   </div>
                 </div>
@@ -83,18 +84,30 @@
                       <div class="moveCell moveSAN movew" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                         <a :class="'moveindex m' + (move.i-2)" @click="gamePos(move.i-2)">
                           <span v-html="move.white"></span>
+                          <span v-if="data.annotations[index * 2]" class="icon">
+                            <span class="mdi" :class="{ 'mdi-check' : data.annotations[index * 2] === '$1', 'mdi-check-all' : data.annotations[index * 2] === '$3', 'mdi-alert' : data.annotations[index * 2] === '$2', 'mdi-close' : data.annotations[index * 2] === '$4', 'mdi-book-open': data.annotations[index * 2] === '$12' }"></span>
+                          </span>
+                          <span v-if="data.performance">
+                            <small v-if="data.performance[index * 2]" v-html="data.performance[index * 2]"></small>
+                          </span>
                         </a>
                       </div>
                       <div class="moveCell moveSAN moveb" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                         <a :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
                           <span v-html="move.black"></span>
+                          <span v-if="data.annotations[index * 2 + 1]" class="icon">
+                            <span class="mdi" :class="{ 'mdi-check' : data.annotations[index * 2 + 1] === '$1', 'mdi-check-all' : data.annotations[index * 2 + 1] === '$3', 'mdi-alert' : data.annotations[index * 2 + 1] === '$2', 'mdi-close' : data.annotations[index * 2 + 1] === '$4', 'mdi-book-open': data.annotations[index * 2 + 1] === '$12' }"></span>
+                          </span>
+                          <span v-if="data.performance">
+                            <small v-if="data.performance[index * 2 + 1]" v-html="data.performance[index * 2 + 1]"></small>
+                          </span>
                         </a>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="columns is-hidden-mobile">
+              <!--div class="columns is-hidden-mobile">
                 <div class="column" v-show="data.date && data.date !='?'">
                   <span class=""  v-html="data.date"></span>
                 </div>
@@ -107,7 +120,7 @@
                 <div class="column" v-show="data.site && data.site !='?'">
                   <span class=""  v-html="data.site"></span>
                 </div>
-              </div>
+              </div-->
             </div>
           </div>
         </div>
@@ -143,7 +156,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'player'
+      'player',
+      'stockfishEvalTime'
     ])
   },
   methods: {
@@ -189,7 +203,7 @@ export default {
         if (y > h) {
           document.querySelector('.movesTableContainer').scrollTop = n
         }
-
+        this.drawChartPosition()
         this.index++
         this.findEco(this.game.pgn())
         setTimeout(this.gameMove, this.speed)
@@ -279,17 +293,17 @@ export default {
       axios.post('/game', { id: this.$route.params.game }).then((res) => {
         var game = res.data
         const totalms = this.$root.countMoves(game.pgn) * this.speed
+        this.data = game
 
         if (game.pgn) {
           this.gameMoves = this.gamePGN(game.pgn)
           this.pgnIndex = this.gamePGNIndex(game.pgn)
         }
-        this.data = game
         this.duration = totalms / 1000
+        this.game = new Chess()
         this.$root.loading = false
-        setTimeout(() => {
-          this.game = new Chess()
 
+        setTimeout(() => {
           if (pref.pieces) {
             this.boardCfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
             this.boardColor = pref.board
@@ -299,7 +313,6 @@ export default {
           this.$root.fullscreenBoard()
           this.board = Chessboard('board', this.boardCfg)
           this.orientation = this.board.orientation()
-
           window.onresize = function (event) {
             if (this.board) {
               this.board.resize()
@@ -315,6 +328,10 @@ export default {
           setTimeout(() => {
             if (document.querySelector('.movesTableContainer')) {
               document.querySelector('.movesTableContainer').style.height = ($('.board').height() - offset) + 'px'
+
+              if (this.data.score) {
+                this.drawChartFromScore()
+              }
               setTimeout(() => {
                 this.gameMove()
               }, 1000)
@@ -339,9 +356,11 @@ export default {
           if (match) {
             t.score = parseFloat(match[1])
             t.vscore = 50 - (t.score / 48 * 100)
-            setTimeout(() => {
-              t.drawChart()
-            }, 1000)
+            if (!t.data.score) {
+              setTimeout(() => {
+                t.drawChart()
+              }, t.stockfishEvalTime)
+            }
           }
 
           /// Ignore some output.
@@ -380,14 +399,41 @@ export default {
       }
 
       if (!isNaN(score)) {
+        this.drawChartPosition()
         this.chart.values = this.chart.values.slice(0, this.index)
         this.chart.values.push(score)
         this.updateChart()
       }
     },
+    drawChartPosition () {
+      document.querySelector('.chart-indicator').style.left = (this.index / this.gameMoves.length * 100) + '%'
+      document.querySelector('.chart-indicator').style.backgroundColor = 'rgb(0,0,0,0.15)'
+    },
+    drawChartFromScore () {
+      this.data.score.map((score, i) => {
+        score = parseInt(score)
+        if (this.orientation === 'black') {
+          score = 100 - score
+        }
+
+        if (score < 0) {
+          score = 0
+        }
+
+        if (score > 100) {
+          score = 100
+        }
+        if (!isNaN(score)) {
+          // this.drawChartPosition(false)
+          this.chart.values.push(score)
+        }
+      })
+      this.updateChart()
+    },
     updateChart () {
       this.calcPoints()
-
+      console.log('values')
+      console.log(this.chart.values)
       var element = document.getElementsByClassName('chart')[0]
       element.innerHTML = ''
 
@@ -518,6 +564,7 @@ export default {
 
       if (moved) {
         this.board.position(this.game.fen())
+        this.drawChartPosition()
 
         setTimeout(() => {
           this.moveSound(moved)
