@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import defaultSettings from '@/components/defaultSettings'
+import DefaultSettings from '@/components/DefaultSettings'
 
 Vue.use(Vuex)
 
@@ -191,7 +191,7 @@ export default new Vuex.Store({
           commit('player_success', stored)
           resolve(stored)
         } else {
-          var settings = defaultSettings
+          var settings = DefaultSettings
           axios.post('https://ipapi.co/json').then(json => {
             axios.get('/json/flags.json').then(flags => {
               if (flags.data[json.data.country_code]) {

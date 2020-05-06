@@ -161,7 +161,7 @@ import { mapState } from 'vuex'
 import Chess from 'chess.js'
 import Chessboard from '.././assets/js/chessboard'
 import swal from 'sweetalert'
-import playSound from '../components/playSound'
+import PlaySound from '../components/PlaySound'
 
 export default {
   name: 'game',
@@ -351,7 +351,7 @@ export default {
             }
           }
 
-          playSound('start.ogg')
+          PlaySound('start.ogg')
           $('.bar-progress').css({ width: '0%' })
 
           const offset = 150
@@ -504,7 +504,7 @@ export default {
         }
       }
 
-      playSound(sound)
+      PlaySound(sound)
     },
     removeHighlight () {
       this.boardEl.querySelectorAll('.square-55d63').forEach((item) => {

@@ -134,7 +134,7 @@ import Chess from 'chess.js'
 import { mapState } from 'vuex'
 import Chessboard from '.././assets/js/chessboard'
 import snackbar from '../components/Snackbar'
-import playSound from '../components/playSound'
+import PlaySound from '../components/PlaySound'
 export default {
   name: 'settings',
   watch: {
@@ -200,7 +200,7 @@ export default {
     previewSound () {
       setTimeout(() => {
         if (this.data.sound) {
-          playSound('check.ogg')
+          PlaySound('check.ogg')
         }
       }, 100)
     },

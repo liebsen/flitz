@@ -1,6 +1,6 @@
 <template>
   <section class="hero fadeIn">
-    <div class="hero-body">
+    <div class="hero-body content">
       <div class="container is-flex-column is-vertical">
         <div v-show="section.content">
           <h1 class="title">

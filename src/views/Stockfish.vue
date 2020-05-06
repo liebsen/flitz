@@ -173,7 +173,7 @@ import { mapState } from 'vuex'
 import Chess from 'chess.js'
 import Chessboard from '.././assets/js/chessboard'
 import snackbar from '../components/Snackbar'
-import playSound from '../components/playSound'
+import PlaySound from '../components/PlaySound'
 import swal from 'sweetalert'
 
 export default {
@@ -470,7 +470,7 @@ export default {
         }
 
         t.$root.loading = false
-        playSound('start.ogg')
+        PlaySound('start.ogg')
         t.boardTaps()
       }, 100)
     },
@@ -648,7 +648,7 @@ export default {
         }
       }
 
-      playSound(sound)
+      PlaySound(sound)
     },
     removeHighlight () {
       if (document.getElementById('board')) {

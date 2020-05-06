@@ -154,14 +154,14 @@
                 </div>
                 <div class="tabs is-boxed is-hidden-mobile">
                   <ul>
-                    <li :class="{ 'is-active' : tab === 'pgn' }">
-                      <a @click="tab = 'pgn'" title="Plys">
-                        <span class="icon"><i class="mdi mdi-view-list" aria-hidden="true"></i></span>
-                      </a>
-                    </li>
                     <li :class="{ 'is-active' : tab === 'chat' }">
                       <a @click="tab = 'chat'" title="Chat">
                         <span class="icon"><i class="mdi mdi-comment-text-outline" aria-hidden="true"></i></span>
+                      </a>
+                    </li>
+                    <li :class="{ 'is-active' : tab === 'pgn' }">
+                      <a @click="tab = 'pgn'" title="Plys">
+                        <span class="icon"><i class="mdi mdi-view-list" aria-hidden="true"></i></span>
                       </a>
                     </li>
                   </ul>
@@ -258,7 +258,7 @@ import { mapState } from 'vuex'
 import Chess from 'chess.js'
 import Chessboard from '.././assets/js/chessboard'
 import snackbar from '../components/Snackbar'
-import playSound from '../components/playSound'
+import PlaySound from '../components/PlaySound'
 import swal from 'sweetalert'
 
 export default {
@@ -312,7 +312,7 @@ export default {
           t.gameStarted = true
           t.boardTaps()
           t.startClock()
-          playSound('start.ogg')
+          PlaySound('start.ogg')
         }
       }, 100)
     },
@@ -418,11 +418,11 @@ export default {
       var result = null
       if (data.asker === t.player.code) {
         result = (t.playerColor === 'black' ? '1-0' : '0-1')
-        playSound('defeat.mp3')
+        PlaySound('defeat.mp3')
       } else {
         result = (t.playerColor === 'white' ? '1-0' : '0-1')
         t.sendResults(result)
-        playSound('victory.mp3')
+        PlaySound('victory.mp3')
       }
       t.announced_game_over = true
     },
@@ -442,7 +442,7 @@ export default {
               t.sendResults(result)
               t.$socket.emit('acceptdraw', data)
               t.announced_game_over = true
-              playSound('game-end.mp3')
+              PlaySound('game-end.mp3')
             } else {
               t.$socket.emit('rejectdraw', data)
               console.log('Clicked on cancel')
@@ -459,7 +459,7 @@ export default {
       chatbox.innerHTML += `<div class="box ${cls}">${data.line}</div>`
       chatbox.scrollTop = chatbox.scrollHeight
       if (data.sender !== this.player.code) {
-        playSound('pop.mp3')
+        PlaySound('pop.mp3')
       }
     }
   },
@@ -917,10 +917,10 @@ export default {
             t.timer[turn] = 0
             if (turn === t.playerColor[0]) {
               result = (t.playerColor === 'black' ? '1-0' : '0-1')
-              playSound('defeat.mp3')
+              PlaySound('defeat.mp3')
             } else {
               result = (t.playerColor === 'white' ? '1-0' : '0-1')
-              playSound('victory.mp3')
+              PlaySound('victory.mp3')
             }
             if (turn === 'w') {
               t.sendResults(result)
@@ -1224,7 +1224,7 @@ export default {
           sound = 'check.ogg'
         }
       }
-      playSound(sound)
+      PlaySound(sound)
     },
     removeHighlight  () {
       if (document.getElementById('board')) {

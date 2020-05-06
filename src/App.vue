@@ -103,9 +103,11 @@
     <div class="footprint">
       <div v-show="latency" class="latency">
         <span>
-          {{ 'latency' | t }} <span :class="{ 'has-text-danger': latency > 500, 'has-text-success': latency < 100 }">{{ latency }}ms
+          {{ 'playing_now' | t }} <span class="has-text-success">{{ playing }}</span>
         </span>
-      </span>
+        <span>
+          {{ 'latency' | t }} <span :class="{ 'has-text-danger': latency > 500, 'has-text-success': latency < 100 }">{{ latency }}ms</span>
+        </span>
       </div>
     </div>
   </div>
@@ -117,6 +119,7 @@ export default {
   name: 'app',
   data () {
     return {
+      playing: 0,
       latency: 0,
       menu: [{
         to: 'groups',
@@ -149,9 +152,15 @@ export default {
       'games'
     ])
   },
+  mounted () {
+    this.$socket.emit('playing')
+  },
   sockets: {
     pong (ms) {
       this.latency = ms
+    },
+    playing (count) {
+      this.playing = count
     }
   },
   methods: {

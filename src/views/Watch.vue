@@ -127,7 +127,7 @@ import axios from 'axios'
 import Chess from 'chess.js'
 import Chessboard from '.././assets/js/chessboard'
 import swal from 'sweetalert'
-import playSound from '../components/playSound'
+import PlaySound from '../components/PlaySound'
 export default {
   name: 'watch',
   mounted () {
@@ -298,7 +298,7 @@ export default {
           t.pgnIndex = this.gamePGNIndex(pgn)
         }
 
-        playSound(sound)
+        PlaySound(sound)
 
         setTimeout(() => {
           const movesTable = document.querySelector('.movesTableContainer')
@@ -481,7 +481,7 @@ export default {
             this.$root.fullscreenBoard()
           }
 
-          playSound('start.ogg')
+          PlaySound('start.ogg')
           this.highlightLastMove()
           this.gameStarted = true
         }, 100)

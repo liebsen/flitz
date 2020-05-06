@@ -82,7 +82,7 @@ import axios from 'axios'
 import Chess from 'chess.js'
 import Chessboard from '.././assets/js/chessboard'
 import swal from 'sweetalert'
-import playSound from '../components/playSound'
+import PlaySound from '../components/PlaySound'
 
 export default {
   name: 'playopening',
@@ -214,7 +214,7 @@ export default {
         sound = 'check.ogg'
       }
 
-      playSound(sound)
+      PlaySound(sound)
     },
     get_moves () {
       var moves = ''
@@ -322,7 +322,7 @@ export default {
             this.$root.fullscreenBoard()
           }
 
-          playSound('start.ogg')
+          PlaySound('start.ogg')
 
           const offset = 200
           setTimeout(() => {

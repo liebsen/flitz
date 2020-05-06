@@ -214,7 +214,7 @@ import moment from 'moment'
 import { mapState } from 'vuex'
 import snackbar from '@/components/Snackbar'
 import swal from 'sweetalert'
-import playSound from '@/components/playSound'
+import PlaySound from '@/components/PlaySound'
 import Chess from 'chess.js'
 import Chessboard from '../assets/js/chessboard'
 export default {
@@ -327,7 +327,7 @@ export default {
       if (data.asker.code === this.player.code) {
         swal.close()
         swal('Partida declinada', data.player.code + ' declinó tu invitación')
-        playSound('defeat.mp3')
+        PlaySound('defeat.mp3')
       }
     },
     invite (data) {
@@ -357,7 +357,7 @@ export default {
             }
           })
         } else {
-          playSound('victory.mp3')
+          PlaySound('victory.mp3')
           const template = (`
     <div class="content">
     <h4>
@@ -726,7 +726,7 @@ export default {
         owned: owned
       })
       if (!owned) {
-        playSound('chat.ogg')
+        PlaySound('chat.ogg')
       }
       this.scrollToBottom()
     },
@@ -818,7 +818,7 @@ export default {
 
         this.removeHighlight(id)
         this.addHightlight(id, move)
-        playSound(sound)
+        PlaySound(sound)
       }
     },
     removeHighlight (id) {
