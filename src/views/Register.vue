@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { mapState } from 'vuex'
 import snackbar from '@/components/Snackbar'
 export default {
@@ -95,12 +96,15 @@ export default {
         return snackbar('error', 'Tenés que aceptar nuestros términos y condiciones para crear una cuenta')
       }
       this.$root.processing = true
-      this.$store
-        .dispatch('player', this.data)
-        .then(res => {
-          this.$router.push('/register-success')
-        })
-        .catch(err => console.log(err))
+      axios.post('/register', this.data).then(res => {
+        this.$store
+          .dispatch('player', res.data)
+          .then(res => {
+            this.$root.processing = false
+            this.$router.push('/register-success')
+          })
+          .catch(err => console.log(err))
+      })
     }
   }
 }

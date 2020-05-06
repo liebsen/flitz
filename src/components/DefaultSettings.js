@@ -10,6 +10,7 @@ moment.locale(lang)
 
 export default {
   _id: ObjectId(),
+  email: null,
   code: code,
   flag: '🇷🇪',
   country: '🇷🇪',

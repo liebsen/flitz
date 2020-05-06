@@ -8,9 +8,10 @@
               <span class="icon is-margin-right">
                 <span class="mdi mdi-robot"></span>
               </span>
-              <span>Este grupo no existe</span>
+              <span>{{ 'group_not_found' | t }}</span>
             </h1>
-            <p>Si creés que debería estar <a @click="$root.createGroup">crealo</a></p>
+            <p v-if="player.email">{{ 'create_group_invitation' | t }} <a @click="$root.createGroup">{{ 'create_it' | t }}</a></p>
+            <p v-else>{{ 'group_not_found_text' | t }}</p>
           </div>
         </div>
       </section>
