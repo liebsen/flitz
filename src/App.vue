@@ -3,9 +3,9 @@
     <svg v-show="$root.loading" class="spinner-container" viewBox="0 0 44 44">
       <circle class="path" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
     </svg>
-    <div class="menu preservefilter" :class="{ 'fs': menuState }">
+    <div class="menu" :class="{ 'fs': menuState }">
       <div class="menu-container is-flex columns is-vcentered">
-        <div class="column menu-logo has-text-left">
+        <div class="column menu-logo has-text-left preservefilter">
           <router-link to="/">
             <img src="/img/logo.png" alt="Flitz">
           </router-link>
@@ -102,7 +102,7 @@
     </div>
     <div class="footprint">
       <div v-show="latency" class="latency">
-        <span>
+        <span v-show="playing > 1">
           {{ 'playing_now' | t }} <span class="has-text-success">{{ playing }}</span>
         </span>
         <span>
