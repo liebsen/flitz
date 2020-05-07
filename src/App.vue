@@ -102,6 +102,9 @@
     </div>
     <div class="footprint">
       <div v-show="latency" class="latency">
+        <span v-show="idle">
+          {{ 'idle_now' | t }} <span class="has-text-success">{{ idle }}</span>
+        </span>
         <span v-show="playing > 1">
           {{ 'playing_now' | t }} <span class="has-text-success">{{ playing }}</span>
         </span>
@@ -119,6 +122,7 @@ export default {
   name: 'app',
   data () {
     return {
+      idle: 0,
       playing: 0,
       latency: 0,
       menu: [{
@@ -159,8 +163,9 @@ export default {
     pong (ms) {
       this.latency = ms
     },
-    playing (count) {
-      this.playing = count
+    playing (data) {
+      this.idle = data.idle
+      this.playing = data.playing
     }
   },
   methods: {
