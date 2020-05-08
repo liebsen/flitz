@@ -73,9 +73,9 @@
                     <strong v-show="data.eco" class="has-text-grey is-size-5">{{ data.eco }}</strong>
                     <strong v-show="!data.eco" class="has-text-grey is-size-5">{{ ecode }}</strong>
                   </div>
-                  <div class="field">
+                  <!--div class="field">
                     <span v-html="score" class="has-text-black"></span>
-                  </div>
+                  </div-->
                 </div>
                 <div class="column is-paddingless is-2">
                   <router-link :to="`/game/${data.next}`">
@@ -354,7 +354,7 @@ export default {
           PlaySound('start.ogg')
           $('.bar-progress').css({ width: '0%' })
 
-          const offset = 150
+          const offset = 140
           setTimeout(() => {
             if (document.querySelector('.movesTableContainer')) {
               document.querySelector('.movesTableContainer').style.height = ($('.board').height() - offset) + 'px'
