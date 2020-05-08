@@ -10,7 +10,7 @@
       <form @submit.prevent="submit">
         <div class="field has-addons">
           <div class="control">
-            <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" placeholder="Evento, lugar, fecha, jugador o PGN" autofocus>
+            <input ref="input" @keyup="inputTrigger" v-model="query" class="input is-rounded is-success" type="text" :placeholder="'name' | t" autofocus>
           </div>
           <div class="control">
             <button v-show="query.length" type="button" @click="clear" class="button is-rounded is-danger">
@@ -20,7 +20,7 @@
             </button>
             <button v-show="!query.length" type="submit" id="searchbtn" class="button is-rounded is-success">
               <span class="icon">
-                <span class="mdi mdi-search"></span>
+                <span class="mdi mdi-magnify"></span>
               </span>
             </button>
           </div>

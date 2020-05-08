@@ -21,7 +21,7 @@
             </button>
             <button v-show="!pager.query.length" type="submit" id="searchbtn" class="button is-rounded is-success">
               <span class="icon">
-                <span class="mdi mdi-search"></span>
+                <span class="mdi mdi-magnify"></span>
               </span>
             </button>
           </div>

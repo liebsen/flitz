@@ -114,8 +114,7 @@
                 </div>
               </div>
             </div>
-
-            <div class="field has-text-centered">
+            <div class="field has-text-centered preservefilter">
               <div class="column">
                 <button type="submit" class="button is-rounded is-success" :class="{ 'is-loading' : $root.saving }">{{ 'settings_update' | t }}</button>
               </div>

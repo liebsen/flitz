@@ -5,7 +5,7 @@
         <div class="column is-hidden-mobile"></div>
         <div class="column is-8 has-text-centered">
           <div class="has-text-centered">
-            <form id="search" class="has-text-centered" @submit.prevent="submit">
+            <form id="search" class="has-text-centered preservefilter" @submit.prevent="submit">
               <div class="field has-addons is-hidden-mobile is-flex-centered">
                 <div class="control">
                   <input v-model="query" class="input is-medium is-white is-rounded" name="query" type="text" :placeholder="'search_in_groups' | t" autofocus>
@@ -34,7 +34,7 @@
             <div class="content columns is-multiline has-text-centered">
               <div v-for="(item, index) in groups" :key="index" class="column is-4">
                 <router-link :to="`/group/${item._id}`">
-                  <article class="box">
+                  <article class="box preservefilter">
                     <h2>
                       <span class="icon">
                         <span class="mdi mdi-layers"></span>

@@ -10,7 +10,7 @@
             <img src="/img/logo.png" alt="Flitz">
           </router-link>
         </div>
-        <div class="column menu-primary has-text-right">
+        <div class="column menu-primary has-text-right preservefilter">
           <div v-if="Object.keys(player).length">
             <div class="is-hidden-mobile">
               <div class="buttons levels has-addons is-pulled-right">
@@ -22,7 +22,7 @@
                 </router-link>
                 <a @click="$root.play" class="button is-rounded is-success" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
                   <span class="icon has-text-white">
-                    <span class="mdi mdi-handshake"></span>
+                    <span class="mdi mdi-handshake is-size-4"></span>
                   </span>
                 </a>
               </div>
@@ -37,7 +37,7 @@
                 </router-link>
                 <a @click="$root.play" class="button is-small is-success is-rounded" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
                   <span class="icon has-text-white">
-                    <span class="mdi mdi-handshake"></span>
+                    <span class="mdi mdi-handshake is-size-5"></span>
                   </span>
                 </a>
               </div>
@@ -55,10 +55,10 @@
       <div class="menu-bg"></div>
       <div class="menu-items">
         <div>
-          <router-link class="has-text-centered" to="/">
+          <router-link class="has-text-centered preservefilter" to="/">
             <img src="/img/logo.png">
           </router-link>
-          <div class="menu-links has-text-left">
+          <div class="menu-links has-text-left preservefilter">
             <router-link v-for="(item, index) in menu" :key="index" :to="`/${item.to}`">
               <span class="icon">
                 <span class="mdi" :class="item.mdi"></span>
@@ -67,7 +67,7 @@
             </router-link>
           </div>
           <div class="column">
-            <div class="has-text-centered">
+            <div class="has-text-centered preservefilter">
               <a v-show="player.email" @click="$root.createGroup" class="button is-rounded is-white is-outlined" :class="{ 'is-loading': $root.isCreatingGroup }">
                 <span class="icon">
                   <span class="mdi mdi-layers-plus"></span>
@@ -75,18 +75,24 @@
                 <span>{{ 'create_group' | t }}</span>
               </a>
               <div v-show="!player.email">
-                <router-link to="/login" class="button is-rounded is-white is-outlined">
-                  <span class="icon">
-                    <span class="mdi mdi-account"></span>
-                  </span>
-                  <span>{{ 'login' | t }}</span>
-                </router-link>
-                <router-link to="/register" class="button is-rounded is-white is-outlined">
-                  <span class="icon">
-                    <span class="mdi mdi-account-plus"></span>
-                  </span>
-                  <span>{{ 'register' | t }}</span>
-                </router-link>
+                <div class="columns">
+                  <div class="column">
+                    <router-link to="/login" class="button is-rounded is-white is-outlined">
+                      <span class="icon">
+                        <span class="mdi mdi-account"></span>
+                      </span>
+                      <span>{{ 'login' | t }}</span>
+                    </router-link>
+                  </div>
+                  <div class="column">
+                    <router-link to="/register" class="button is-rounded is-white is-outlined">
+                      <span class="icon">
+                        <span class="mdi mdi-account-plus"></span>
+                      </span>
+                      <span>{{ 'register' | t }}</span>
+                    </router-link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

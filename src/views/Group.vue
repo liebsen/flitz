@@ -39,7 +39,7 @@
             <div v-for="(plyer, index) in players" :key="index">
               <router-link :to="`/results?q=${plyer.code}&strict=1`" :title="'Invitar a ' + plyer.code">
                 <span class="mini-button has-background-light">
-                  <span class="icon">
+                  <span class="icon preservefilter">
                     <span v-html="plyer.flag"></span>
                   </span>
                   <span class="has-text-grey" v-html="plyer.code"></span>
@@ -146,7 +146,7 @@
                     <td>
                       <span v-show="item.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                       <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
-                      <span v-if="item.white.flag" class="icon">
+                      <span v-if="item.white.flag" class="icon preservefilter">
                         <span v-html="item.white.flag"></span>
                       </span>
                       <span v-html="item.white.code"></span>
@@ -155,7 +155,7 @@
                     <td>
                       <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                       <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
-                      <span v-if="item.black.flag" class="icon">
+                      <span v-if="item.black.flag" class="icon preservefilter">
                         <span v-html="item.black.flag"></span>
                       </span>
                       <span v-html="item.black.code"></span>
@@ -267,7 +267,7 @@ export default {
     group_join (data) {
       setTimeout(() => {
         this.chatLines.push({
-          text: `<span class="mdi mdi-arrow-right"></span> ${data.flag} ${data.code}`,
+          text: `<span class="mdi mdi-arrow-right"></span> <span class="preservefilter">${data.flag}</span> ${data.code}`,
           ts: moment().fromNow(true),
           sender: 'bot',
           owned: false
@@ -277,7 +277,7 @@ export default {
     },
     group_leave (data) {
       this.chatLines.push({
-        text: `<span class="mdi mdi-arrow-left"></span> ${data.flag} ${data.code}`,
+        text: `<span class="mdi mdi-arrow-left"></span> <span class="preservefilter">${data.flag}</span> ${data.code}`,
         ts: moment().fromNow(true),
         sender: 'bot',
         owned: false
