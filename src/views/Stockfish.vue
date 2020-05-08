@@ -100,9 +100,9 @@
                   <span class="has-text-black is-size-5">{{ opening }}</span>
                   <strong class="has-text-grey is-size-5">{{ eco }}</strong>
                 </div>
-                <div class="field">
+                <!--div class="field">
                   <span v-html="status" class="has-text-black"></span>
-                </div>
+                </div-->
               </div>
             </div>
             <div class="columns is-hidden-mobile">
@@ -386,6 +386,7 @@ export default {
                 t.board.position(t.game.fen())
                 t.updateMoves(move)
                 t.uciCmd('position startpos moves' + t.moveList())
+                t.uciCmd('eval', this.engine)
                 t.uciCmd('go ' + (t.time.depth ? 'depth ' + t.time.depth : ''))
               } else {
                 document.querySelector('.square-' + move.from).classList.add('highlight-move')
@@ -416,10 +417,17 @@ export default {
             if (reBound) {
               // t.engineStatus.score = ((reBound[1] === 'upper') === (t.game.turn() === 'w') ? '<= ' : '>= ') + t.engineStatus.score
             }
-            t.score = t.engineStatus.score.split(' ').reverse()[0]
-            t.vscore = 50 - (t.score / 64 * 100)
+            // t.score = t.engineStatus.score.split(' ').reverse()[0]
+            // t.vscore = 50 - (t.score / 64 * 100)
           }
         }
+
+        var reTotalEvaluation = line.match(/^Total evaluation: (-?\d+\.\d+)/)
+        if (reTotalEvaluation) {
+          t.score = parseFloat(reTotalEvaluation[1])
+          t.vscore = 50 - (t.score / 64 * 100)
+        }
+
         // stockfish starts with white
         if (t.engineStatus.engineLoaded && t.playerColor[0] === 'b' && !t.hintMode && !t.stockfishMoved) {
           setTimeout(() => {
@@ -550,6 +558,7 @@ export default {
         t.thinking = true
         t.isEngineRunning = true
         t.uciCmd('position startpos moves' + t.moveList())
+        t.uciCmd('eval', this.engine)
         t.uciCmd('go ' + (t.time.depth ? 'depth ' + t.time.depth : ''))
       }
     },
@@ -557,6 +566,7 @@ export default {
       this.hintMode = true
       this.isEngineRunning = false
       this.uciCmd('position startpos moves' + this.moveList())
+      this.uciCmd('eval', this.engine)
       this.uciCmd('go ' + (this.time.depth ? 'depth ' + this.time.depth : ''))
     },
     calcPoints () {
@@ -591,9 +601,6 @@ export default {
         this.drawChartPosition(false)
         this.chart.values = this.chart.values.slice(0, index)
         this.chart.values[index] = score.toFixed(2)
-        this.performance = this.performance.slice(0, index)
-        this.performance[index] = this.score
-        this.makeAnnotation(index)
         this.updateChart()
       }
     },
@@ -912,6 +919,9 @@ export default {
         }
       }
 
+      this.performance = this.performance.slice(0, this.index)
+      this.performance[this.index] = this.score
+      this.makeAnnotation(this.index)
       t.status = status
     },
     onDragStart (source, piece, position, orientation) {
@@ -932,6 +942,7 @@ export default {
 
       this.isEngineRunning = false
       this.uciCmd('position startpos moves' + this.moveList())
+      this.uciCmd('eval', this.engine)
       this.uciCmd('go ' + (this.time.depth ? 'depth ' + this.time.depth : ''))
       this.moveFrom = null
       this.updateMoves(move)

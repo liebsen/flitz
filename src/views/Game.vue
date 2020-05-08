@@ -382,9 +382,9 @@ export default {
           }
 
           // console.log("evaler: " + line);
-          var match = line.match(/^Total evaluation: (-?\d+\.\d+)/)
-          if (match) {
-            t.score = parseFloat(match[1])
+          var reTotalEvaluation = line.match(/^Total evaluation: (-?\d+\.\d+)/)
+          if (reTotalEvaluation) {
+            t.score = parseFloat(reTotalEvaluation[1])
             t.vscore = 50 - (t.score / 48 * 100)
             if (!t.data.chart) {
               setTimeout(() => {
