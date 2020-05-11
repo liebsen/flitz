@@ -162,7 +162,7 @@
                       <span class="has-text-grey" v-html="item.black.elo"></span>
                     </td>
                     <td>
-                      <span v-html="item.date"></span>
+                      <span>{{ item.date | humanReadableTime }}</span>
                     </td>
                     <td>
                       <span v-html="item.plys"></span>

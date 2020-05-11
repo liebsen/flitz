@@ -33,6 +33,12 @@ Vue.filter('fn', function (value) {
   return moment(value).fromNow(false)
 })
 
+Vue.filter('humanReadableTime', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return moment(value).format(router.app.translations.timeFormat)
+})
+
 Vue.filter('t', function (value) {
   if (!value) return ''
   return router.app.translations[value] || value.charAt(0).toUpperCase() + value.slice(1)

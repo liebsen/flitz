@@ -176,7 +176,7 @@
                     </div>
                   </div>
                   <div class="columns">
-                    <div class="movesTableContainer preservefilter">
+                    <div v-show="pgnIndex.length" class="movesTableContainer preservefilter">
                       <div class="movesTable">
                         <div class="moveRow" v-for="(move,index) in pgnIndex" :key="index">
                           <div class="moveNumCell" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
@@ -188,14 +188,8 @@
                               <span v-if="annotations[index * 2]" class="icon">
                                 <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2] === '$1', 'mdi-sticker-check' : annotations[index * 2] === '$3', 'mdi-sticker-minus' : annotations[index * 2] === '$2', 'mdi-sticker-remove' : annotations[index * 2] === '$4', 'mdi-book-open': annotations[index * 2] === '$12'}"></span>
                               </span>
-                              <span v-else class="icon">
-                                <span class="mdi mdi-bullseye"/>
-                              </span>
                               <span v-if="performance[index * 2]">
-                                <small v-if="performance[index * 2]" v-html="performance[index * 2]"></small>
-                              </span>
-                              <span v-else class="icon">
-                                <span class="mdi mdi-bullseye"/>
+                                <small> {{ performance[index * 2] }}</small>
                               </span>
                             </a>
                           </div>
@@ -203,16 +197,10 @@
                             <a :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
                               <span v-html="move.black"></span>
                               <span v-if="annotations[index * 2 + 1]" class="icon">
-                                <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-bullseye': !annotations[index * 2] }"></span>
-                              </span>
-                              <span v-else class="icon">
-                                <span class="mdi mdi-bullseye"/>
+                                <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-dots-horizontal': !annotations[index * 2] }"></span>
                               </span>
                               <span v-if="performance[index * 2 + 1]">
-                                <small v-if="performance[index * 2 + 1]" v-html="performance[index * 2 + 1]"></small>
-                              </span>
-                              <span v-else class="icon">
-                                <span class="mdi mdi-dots-horizontal"/>
+                                <small> {{ performance[index * 2 + 1] }}</small>
                               </span>
                             </a>
                           </div>
@@ -264,11 +252,10 @@ import swal from 'sweetalert'
 export default {
   name: 'play',
   mounted () {
-    var t = this
-    t.$root.loading = true
-    t.usersJoined = []
     window.app = this
-    t.gameLoad()
+    this.$root.loading = true
+    this.usersJoined = []
+    this.gameLoad()
   },
   computed: {
     ...mapState([
@@ -824,6 +811,7 @@ export default {
         var secs = game.minutes * 60
         // var pgn = game.pgn || ''
 
+        t.match = match
         t.data = game
 
         if (game.white === t.player.code) {
@@ -1340,6 +1328,7 @@ export default {
       index: -1,
       currentGame: 0,
       gameMoves: [],
+      match: {},
       clock: null,
       timer: { w: null, b: null },
       tdisplay: { w: null, b: null },

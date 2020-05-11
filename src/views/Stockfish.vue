@@ -114,13 +114,12 @@
               </div>
             </div>
             <div class="columns is-hidden-mobile">
-              <div class="movesTableContainer preservefilter">
+              <div v-show="pgnIndex.length" class="movesTableContainer preservefilter">
                 <div class="movesTable">
                   <div class="moveRow" v-for="(move, index) in pgnIndex" :key="index">
                     <div class="moveNumCell" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                       <span v-html="(index+1)"></span>
                     </div>
-
                     <div class="moveCell moveSAN movew" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                       <a v-if="move.white" :class="'moveindex m' + (move.i-2)" @click="gamePos(move.i-2)">
                         <span v-html="move.white"></span>
@@ -128,13 +127,13 @@
                           <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2] === '$1', 'mdi-sticker-check' : annotations[index * 2] === '$3', 'mdi-sticker-minus' : annotations[index * 2] === '$2', 'mdi-sticker-remove' : annotations[index * 2] === '$4', 'mdi-book-open': annotations[index * 2] === '$12'}"></span>
                         </span>
                         <span v-else class="icon">
-                          <span class="mdi mdi-bullseye"/>
+                          <span class="mdi mdi-dots-horizontal"/>
                         </span>
                         <span v-if="performance[index * 2]">
                           <small v-if="performance[index * 2]" v-html="performance[index * 2]"></small>
                         </span>
                         <span v-else class="icon">
-                          <span class="mdi mdi-bullseye"/>
+                          <span class="mdi mdi-dots-horizontal"/>
                         </span>
                       </a>
                     </div>
@@ -143,10 +142,10 @@
                       <a v-if="move.black" :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
                         <span v-html="move.black"></span>
                         <span v-if="annotations[index * 2 + 1]" class="icon">
-                          <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-bullseye': !annotations[index * 2] }"></span>
+                          <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-dots-horizontal': !annotations[index * 2] }"></span>
                         </span>
                         <span v-else class="icon">
-                          <span class="mdi mdi-bullseye"/>
+                          <span class="mdi mdi-dots-horizontal"/>
                         </span>
                         <span v-if="performance[index * 2 + 1]">
                           <small v-if="performance[index * 2 + 1]" v-html="performance[index * 2 + 1]"></small>

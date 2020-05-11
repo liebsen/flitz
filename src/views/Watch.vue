@@ -92,7 +92,7 @@
                   </div>
                 </div>
                 <div class="columns is-hidden-mobile">
-                  <div class="movesTableContainer preservefilter">
+                  <div v-show="pgnIndex.length" class="movesTableContainer preservefilter">
                     <div class="movesTable">
                       <div class="moveRow" v-for="(move, index) in pgnIndex" :key="index">
                         <div class="moveNumCell" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">

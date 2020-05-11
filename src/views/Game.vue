@@ -94,7 +94,7 @@
                 </div>
               </div>
               <div class="columns is-hidden-mobile">
-                <div class="movesTableContainer preservefilter">
+                <div v-show="pgnIndex.length" class="movesTableContainer preservefilter">
                   <div class="movesTable">
                     <div class="moveRow" v-for="(move, index) in pgnIndex" :key="index">
                       <div class="moveNumCell" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
@@ -103,28 +103,22 @@
                       <div class="moveCell moveSAN movew" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                         <a v-if="move.white" :class="'moveindex m' + (move.i - 2)" @click="gamePos(move.i - 2)">
                           <span v-html="move.white"></span>
-                          <span v-if="data.annotations[index * 2]" class="icon">
-                            <span class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2] === '$1', 'mdi-sticker-check' : data.annotations[index * 2] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2] === '$4', 'mdi-book-open': data.annotations[index * 2] === '$12' }"></span>
-                          </span>
-                          <span v-else class="icon">
-                            <span class="mdi mdi-bullseye"/>
+                          <span v-if="data.annotations" class="icon">
+                            <span v-if="data.annotations[index * 2]" class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2] === '$1', 'mdi-sticker-check' : data.annotations[index * 2] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2] === '$4', 'mdi-book-open': data.annotations[index * 2] === '$12' }"></span>
                           </span>
                           <span v-if="data.score">
-                            <small v-if="data.score[index * 2]" v-html="data.score[index * 2]"></small>
+                            <small v-if="data.score[index * 2]"> {{ data.score[index * 2] }}</small>
                           </span>
                         </a>
                       </div>
                       <div class="moveCell moveSAN moveb" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                         <a v-if="move.black" :class="'moveindex m' + (move.i - 1)" @click="gamePos(move.i - 1)">
                           <span v-html="move.black"></span>
-                          <span v-if="data.annotations[index * 2 + 1]" class="icon">
-                            <span class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : data.annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2 + 1] === '$4', 'mdi-book-open': data.annotations[index * 2 + 1] === '$12' }"></span>
-                          </span>
-                          <span v-else class="icon">
-                            <span class="mdi mdi-bullseye"/>
+                          <span v-if="data.annotations" class="icon">
+                            <span v-if="data.annotations[index * 2 + 1]" class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : data.annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2 + 1] === '$4', 'mdi-book-open': data.annotations[index * 2 + 1] === '$12' }"></span>
                           </span>
                           <span v-if="data.score">
-                            <small v-if="data.score[index * 2 + 1]" v-html="data.score[index * 2 + 1]"></small>
+                            <small v-if="data.score[index * 2 + 1]"> {{ data.score[index * 2 + 1] }}</small>
                           </span>
                         </a>
                       </div>
@@ -217,7 +211,7 @@ export default {
         this.setMovesTable()
         this.drawChartPosition()
         this.index++
-        if (!this.data.eco) {
+        if (!this.data.opening) {
           this.findEco(this.game.pgn())
         }
         setTimeout(this.gameMove, this.speed)
@@ -324,6 +318,10 @@ export default {
         const totalms = this.$root.countMoves(game.pgn) * this.speed
         this.data = game
 
+        if (game.score) {
+          this.hasScore = true
+        }
+
         if (game.pgn) {
           this.gameMoves = this.gamePGN(game.pgn)
           this.pgnIndex = this.gamePGNIndex(game.pgn)
@@ -342,6 +340,7 @@ export default {
           this.$root.fullscreenBoard()
           this.board = Chessboard('board', this.boardCfg)
           this.orientation = this.board.orientation()
+
           window.onresize = function (event) {
             var t = window.app
             if (t.board) {
@@ -367,7 +366,7 @@ export default {
               this.gameMove()
             }, 1000)
           }, 500)
-        }, 2000)
+        }, 3000)
 
         this.evaler = typeof STOCKFISH === 'function' ? STOCKFISH() : new Worker('/js/stockfish.js')
 
@@ -386,6 +385,12 @@ export default {
           if (reTotalEvaluation) {
             t.score = parseFloat(reTotalEvaluation[1])
             t.vscore = 50 - (t.score / 48 * 100)
+            if (!t.data.score) {
+              t.data.score = []
+            }
+            if (!t.hasScore) {
+              t.data.score[t.index - 1] = t.score
+            }
             if (!t.data.chart) {
               setTimeout(() => {
                 t.drawChart()
@@ -436,8 +441,10 @@ export default {
       }
     },
     drawChartPosition () {
-      document.querySelector('.chart-indicator').style.left = ((this.index + 1) / this.gameMoves.length * 100) + '%'
-      document.querySelector('.chart-indicator').style.backgroundColor = 'rgb(0,0,0,0.15)'
+      if (this.data.chart) {
+        document.querySelector('.chart-indicator').style.left = ((this.index + 1) / this.gameMoves.length * 100) + '%'
+        document.querySelector('.chart-indicator').style.backgroundColor = 'rgb(0,0,0,0.15)'
+      }
     },
     drawChartFromScore () {
       this.data.chart.map((score, i) => {
@@ -706,6 +713,7 @@ export default {
       orientation: null,
       gameMoves: [],
       pgnIndex: [],
+      hasScore: false,
       boardEl: null,
       index: 0,
       paused: false,

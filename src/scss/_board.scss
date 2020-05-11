@@ -70,6 +70,11 @@ $blue: #4183d7;
 .chart-container {
     min-height: 50px;
     position: relative;
+    margin-bottom: 0.75rem;
+    > div {
+        box-shadow: 0px 10px 20px #00000015;
+        border-radius: 5px;
+    }
     .chart-indicator {
         position: absolute;
         top: 0;
@@ -79,8 +84,12 @@ $blue: #4183d7;
         background-color: transparent;
     }
     .chart {
+        border-radius: 10px;
         width:100%;
         height:50px;
+        svg {
+            border-radius: 5px;
+        }
     }   
 }
 
@@ -106,6 +115,7 @@ $blue: #4183d7;
 
 #board {
     min-width: 100%;
+    box-shadow: 0px 10px 20px #00000015;
 }
 
 .board-container {
@@ -128,7 +138,7 @@ $blue: #4183d7;
         .score-container {
             position: absolute;
             top: 0;
-            left: -9px;
+            right: -9px;
             width: 6px;
             height: 100%;
             border-radius: 5px;
@@ -190,6 +200,13 @@ $blue: #4183d7;
     min-height: 200px;
     overflow-y: auto;
     text-align: left;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0px 10px 20px #00000015;
 }
 .movesTable {
     display: table;
