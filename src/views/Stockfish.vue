@@ -134,12 +134,11 @@
                         </span>
                       </a>
                     </div>
-
                     <div class="moveCell moveSAN moveb" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                       <a v-if="move.black" :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
                         <span v-html="move.black"></span>
                         <span v-if="annotations[index * 2 + 1]" class="icon">
-                          <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-sticker-alert': annotations[index * 2] === '$14', 'mdi-sticker-emoji': annotations[index * 2] === '$15' }"></span>
+                          <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-sticker-alert': annotations[index * 2 + 1] === '$14', 'mdi-sticker-emoji': annotations[index * 2 + 1] === '$15' }"></span>
                         </span>
                         <span v-if="performance[index * 2 + 1]">
                           <small v-if="performance[index * 2 + 1]" v-html="performance[index * 2 + 1]"></small>

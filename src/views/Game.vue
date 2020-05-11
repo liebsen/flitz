@@ -1,7 +1,7 @@
   <template>
   <div class="game-container" :class="boardColor" v-show="!$root.loading">
     <div class="status">
-      <div class="bar is-clickable" @click="setClock">
+      <div class="bar is-clickable preservefilter" @click="setClock">
         <div class="bar-progress"></div>
       </div>
     </div>
@@ -15,7 +15,7 @@
                   <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 </span>
                 <span class="is-size-6">
-                  <span v-show="data.blackflag" class="icon">
+                  <span v-show="data.blackflag" class="icon preservefilter">
                     <span v-html="data.blackflag"></span>
                   </span>
                   <span v-html="data.black"></span>
@@ -33,7 +33,7 @@
                   <span class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 </span>
                 <span class="is-size-6">
-                  <span v-show="data.whiteflag" class="icon">
+                  <span v-show="data.whiteflag" class="icon preservefilter">
                     <span v-html="data.whiteflag"></span>
                   </span>
                   <span v-html="data.white"></span>
@@ -46,7 +46,7 @@
             <div class="board-assistant" v-if="Object.keys(data).length">
               <div class="columns has-text-centered">
                 <div class="column">
-                  <div class="buttons levels has-addons" :title="'game_settings' | t">
+                  <div class="buttons levels has-addons preservefilter" :title="'game_settings' | t">
                     <button @click="gameFlip()" class="button is-rounded is-info" title="Girar tablero">
                       <span class="icon">
                         <span class="mdi mdi-flip-vertical"></span>
@@ -62,7 +62,7 @@
                 <div class="column is-paddingless is-2">
                   <router-link :to="`/game/${data.prev}`">
                     <span class="icon">
-                      <span class="mdi mdi-arrow-left-circle is-size-3 has-text-grey"></span>
+                      <span class="mdi mdi-chevron-left is-size-3 has-text-grey"></span>
                     </span>
                   </router-link>
                 </div>
@@ -80,7 +80,7 @@
                 <div class="column is-paddingless is-2">
                   <router-link :to="`/game/${data.next}`">
                     <span class="icon is-large">
-                      <span class="mdi mdi-arrow-right-circle is-size-3 has-text-grey"></span>
+                      <span class="mdi mdi-chevron-right is-size-3 has-text-grey"></span>
                     </span>
                   </router-link>
                 </div>
@@ -103,8 +103,10 @@
                       <div class="moveCell moveSAN movew" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                         <a v-if="move.white" :class="'moveindex m' + (move.i - 2)" @click="gamePos(move.i - 2)">
                           <span v-html="move.white"></span>
-                          <span v-if="data.annotations" class="icon">
-                            <span v-if="data.annotations[index * 2]" class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2] === '$1', 'mdi-sticker-check' : data.annotations[index * 2] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2] === '$4', 'mdi-book-open': data.annotations[index * 2] === '$12', 'mdi-sticker-alert': data.annotations[index * 2] === '$14', 'mdi-sticker-emoji': data.annotations[index * 2] === '$15' }"></span>
+                          <span v-if="data.annotations">
+                            <span v-if="data.annotations[index * 2]" class="icon">
+                              <span class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2] === '$1', 'mdi-sticker-check' : data.annotations[index * 2] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2] === '$4', 'mdi-book-open': data.annotations[index * 2] === '$12', 'mdi-sticker-alert': data.annotations[index * 2] === '$14', 'mdi-sticker-emoji': data.annotations[index * 2] === '$15' }"></span>
+                            </span>
                           </span>
                           <span v-if="data.score">
                             <small v-if="data.score[index * 2]"> {{ data.score[index * 2] }}</small>
@@ -114,8 +116,10 @@
                       <div class="moveCell moveSAN moveb" :class="{ 'moveRowOdd': move.odd, 'moveRowEven': !move.odd }">
                         <a v-if="move.black" :class="'moveindex m' + (move.i - 1)" @click="gamePos(move.i - 1)">
                           <span v-html="move.black"></span>
-                          <span v-if="data.annotations" class="icon">
-                            <span v-if="data.annotations[index * 2 + 1]" class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : data.annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2 + 1] === '$4', 'mdi-book-open': data.annotations[index * 2 + 1] === '$12', 'mdi-sticker-alert': data.annotations[index * 2] === '$14', 'mdi-sticker-emoji': data.annotations[index * 2] === '$15' }"></span>
+                          <span v-if="data.annotations">
+                            <span v-if="data.annotations[index * 2 + 1]" class="icon">
+                              <span class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : data.annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2 + 1] === '$4', 'mdi-book-open': data.annotations[index * 2 + 1] === '$12', 'mdi-sticker-alert': data.annotations[index * 2 + 1] === '$14', 'mdi-sticker-emoji': data.annotations[index * 2 + 1] === '$15' }"></span>
+                            </span>
                           </span>
                           <span v-if="data.score">
                             <small v-if="data.score[index * 2 + 1]"> {{ data.score[index * 2 + 1] }}</small>
@@ -353,7 +357,7 @@ export default {
           PlaySound('start.ogg')
           $('.bar-progress').css({ width: '0%' })
 
-          const offset = 140
+          const offset = 150
           setTimeout(() => {
             if (document.querySelector('.movesTableContainer')) {
               document.querySelector('.movesTableContainer').style.height = ($('.board').height() - offset) + 'px'
