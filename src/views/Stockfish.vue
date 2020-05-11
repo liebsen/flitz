@@ -60,7 +60,7 @@
             </div>
             <h6 class="has-text-right white is-hidden-mobile">
               <span v-show="data.result==='1-0'">🏆</span>
-              <span class="icon has-margin">
+              <span class="icon has-margin preservefilter">
                 <span v-html="player.flag"/>
               </span>
               <span v-html="player.code"></span>
@@ -124,10 +124,7 @@
                       <a v-if="move.white" :class="'moveindex m' + (move.i-2)" @click="gamePos(move.i-2)">
                         <span v-html="move.white"></span>
                         <span v-if="annotations[index * 2]" class="icon">
-                          <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2] === '$1', 'mdi-sticker-check' : annotations[index * 2] === '$3', 'mdi-sticker-minus' : annotations[index * 2] === '$2', 'mdi-sticker-remove' : annotations[index * 2] === '$4', 'mdi-book-open': annotations[index * 2] === '$12'}"></span>
-                        </span>
-                        <span v-else class="icon">
-                          <span class="mdi mdi-dots-horizontal"/>
+                          <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2] === '$1', 'mdi-sticker-check' : annotations[index * 2] === '$3', 'mdi-sticker-minus' : annotations[index * 2] === '$2', 'mdi-sticker-remove' : annotations[index * 2] === '$4', 'mdi-book-open': annotations[index * 2] === '$12', 'mdi-sticker-alert': annotations[index * 2] === '$14', 'mdi-sticker-emoji': annotations[index * 2] === '$15'}"></span>
                         </span>
                         <span v-if="performance[index * 2]">
                           <small v-if="performance[index * 2]" v-html="performance[index * 2]"></small>
@@ -142,10 +139,7 @@
                       <a v-if="move.black" :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
                         <span v-html="move.black"></span>
                         <span v-if="annotations[index * 2 + 1]" class="icon">
-                          <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-dots-horizontal': !annotations[index * 2] }"></span>
-                        </span>
-                        <span v-else class="icon">
-                          <span class="mdi mdi-dots-horizontal"/>
+                          <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-sticker-alert': annotations[index * 2] === '$14', 'mdi-sticker-emoji': annotations[index * 2] === '$15' }"></span>
                         </span>
                         <span v-if="performance[index * 2 + 1]">
                           <small v-if="performance[index * 2 + 1]" v-html="performance[index * 2 + 1]"></small>
@@ -305,6 +299,8 @@ export default {
         $4 very poor ??
         $5 speculative !?
         $6 questionable ?!
+        $14 White has a slight advantage
+        $15 Black has a slight advantage
         $12 book
       */
       var annotation = false
@@ -317,6 +313,8 @@ export default {
           annotation = abs > 0 && this.game.turn() === 'b' ? 3 : 4
         } else if (delta > 1) {
           annotation = abs > 0 && this.game.turn() === 'b' ? 1 : 2
+        } else if (delta > 0.25) {
+          annotation = abs > 0 && this.game.turn() === 'b' ? 15 : 14
         }
       }
       if (annotation) {

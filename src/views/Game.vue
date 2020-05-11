@@ -104,7 +104,7 @@
                         <a v-if="move.white" :class="'moveindex m' + (move.i - 2)" @click="gamePos(move.i - 2)">
                           <span v-html="move.white"></span>
                           <span v-if="data.annotations" class="icon">
-                            <span v-if="data.annotations[index * 2]" class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2] === '$1', 'mdi-sticker-check' : data.annotations[index * 2] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2] === '$4', 'mdi-book-open': data.annotations[index * 2] === '$12' }"></span>
+                            <span v-if="data.annotations[index * 2]" class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2] === '$1', 'mdi-sticker-check' : data.annotations[index * 2] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2] === '$4', 'mdi-book-open': data.annotations[index * 2] === '$12', 'mdi-sticker-alert': data.annotations[index * 2] === '$14', 'mdi-sticker-emoji': data.annotations[index * 2] === '$15' }"></span>
                           </span>
                           <span v-if="data.score">
                             <small v-if="data.score[index * 2]"> {{ data.score[index * 2] }}</small>
@@ -115,7 +115,7 @@
                         <a v-if="move.black" :class="'moveindex m' + (move.i - 1)" @click="gamePos(move.i - 1)">
                           <span v-html="move.black"></span>
                           <span v-if="data.annotations" class="icon">
-                            <span v-if="data.annotations[index * 2 + 1]" class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : data.annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2 + 1] === '$4', 'mdi-book-open': data.annotations[index * 2 + 1] === '$12' }"></span>
+                            <span v-if="data.annotations[index * 2 + 1]" class="mdi" :class="{ 'mdi-sticker-plus' : data.annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : data.annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : data.annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : data.annotations[index * 2 + 1] === '$4', 'mdi-book-open': data.annotations[index * 2 + 1] === '$12', 'mdi-sticker-alert': data.annotations[index * 2] === '$14', 'mdi-sticker-emoji': data.annotations[index * 2] === '$15' }"></span>
                           </span>
                           <span v-if="data.score">
                             <small v-if="data.score[index * 2 + 1]"> {{ data.score[index * 2 + 1] }}</small>

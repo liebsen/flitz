@@ -56,7 +56,7 @@
             </div>
             <div class="columns is-vcentered has-text-centered is-hidden-mobile">
               <div class="column has-text-right">
-                <a @click="$root.play" class="button is-rounded is-medium is-success">
+                <a @click="$root.play" class="button is-rounded is-success">
                   <span class="icon">
                     <span class="mdi mdi-handshake"></span>
                   </span>
@@ -64,7 +64,7 @@
                 </a>
               </div>
               <div class="column has-text-left">
-                <router-link class="button is-rounded is-medium is-info" to="/stockfish">
+                <router-link class="button is-rounded is-info" to="/stockfish">
                   <span class="icon">
                     <span class="mdi mdi-robot"></span>
                   </span>
@@ -94,6 +94,20 @@
         </div>
         <div class="column is-hidden-mobile"></div>
       </div>
+      <ul class="pieces is-hidden-mobile">
+        <li class="black"></li>
+        <li class="black"></li>
+        <li class="black"></li>
+        <li class="black"></li>
+        <li class="black"></li>
+        <li class="black"></li>
+        <li class="white"></li>
+        <li class="white"></li>
+        <li class="white"></li>
+        <li class="white"></li>
+        <li class="white"></li>
+        <li class="white"></li>
+      </ul>
     </div>
   </div>
 </template>
@@ -104,11 +118,18 @@ import { mapState } from 'vuex'
 export default {
   name: 'landing',
   mounted () {
+    const saved = JSON.parse(localStorage.getItem('player')) || {}
     axios.post('/group/random').then((res) => {
       if (res.data.status === 'success') {
         this.groups = res.data.data
       }
     })
+    if (saved.pieces) {
+      document.querySelectorAll('.pieces li').forEach(e => {
+        let li = window.getComputedStyle(e)
+        e.style.backgroundImage = li.getPropertyValue('background-image').replace('classic', saved.pieces)
+      })
+    }
   },
   computed: {
     ...mapState([

@@ -166,6 +166,7 @@
                     </li>
                   </ul>
                 </div>
+                <div v-html="match"/>
                 <div v-show="tab === 'pgn'" class="is-hidden-mobile">
                   <div class="columns">
                     <div class="chart-container preservefilter">
@@ -1141,6 +1142,8 @@ export default {
         $4 very poor ??
         $5 speculative !?
         $6 questionable ?!
+        $14 White has a slight advantage
+        $15 Black has a slight advantage
         $12 book
       */
       var annotation = false

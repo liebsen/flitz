@@ -34,6 +34,7 @@
 
 
   .pieces {
+    opacity: 0.25;
     position: absolute;
     top: 0;
     left: 0;
@@ -53,12 +54,12 @@
 
       &.white {
         top: -16rem;
-        animation: sink 25s linear infinite;
+        animation: sink 60s linear infinite;
       }
 
       &.black {
         bottom: -16rem;
-        animation: emerge 25s linear infinite;
+        animation: emerge 60s linear infinite;
       }
 
       &:nth-child(1) {
@@ -71,7 +72,7 @@
         left: 10%;
         background-image: url('/img/chesspieces/classic/wQ.png');
         animation-delay: 1s;
-        animation-duration: 12s;
+        animation-duration: 30s;
       }
 
       &:nth-child(3) {
@@ -84,60 +85,60 @@
         left: 40%;
         background-image: url('/img/chesspieces/classic/wB.png');
         animation-delay: 15s;
-        animation-duration: 18s;
+        animation-duration: 40s;
       }
 
       &:nth-child(5) {
         left: 65%;
         background-image: url('/img/chesspieces/classic/wN.png');
-        animation-delay: 11s;
+        animation-delay: 45s;
       }
 
       &:nth-child(6) {
         left: 75%;
         background-image: url('/img/chesspieces/classic/wP.png');
-        animation-delay: 12s;
+        animation-delay: 35s;
       }
 
       &:nth-child(7) {
         left: 35%;
         background-image: url('/img/chesspieces/classic/bK.png');
-        animation-delay: 2s;
+        animation-delay: 25s;
       }
 
       &:nth-child(8) {
         left: 50%;
         background-image: url('/img/chesspieces/classic/bQ.png');
         animation-delay: 10s;
-        animation-duration: 45s;
+        animation-duration: 55s;
       }
 
       &:nth-child(9) {
         left: 20%;
         background-image: url('/img/chesspieces/classic/bR.png');
         animation-delay: 6s;
-        animation-duration: 35s;
+        animation-duration: 65s;
       }
 
       &:nth-child(10) {
         left: 85%;
         background-image: url('/img/chesspieces/classic/bB.png');
         animation-delay: 3s;
-        animation-duration: 11s;
+        animation-duration: 55s;
       }
 
       &:nth-child(11) {
         left: 15%;
         background-image: url('/img/chesspieces/classic/bN.png');
         animation-delay: 8s;
-        animation-duration: 11s;
+        animation-duration: 45s;
       }
 
       &:nth-child(12) {
         left: 50%;
         background-image: url('/img/chesspieces/classic/bP.png');
         animation-delay: 4s;
-        animation-duration: 11s;
+        animation-duration: 35s;
       }
     }
   }
@@ -165,6 +166,9 @@
 
 @include desktop {
   .landing {
+    .box {
+      box-shadow: 0px 10px 20px #00000015;
+    }
     .area {
       display: inline-flex;
       position: fixed;
