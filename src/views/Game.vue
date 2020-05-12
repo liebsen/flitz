@@ -1,10 +1,5 @@
-  <template>
-  <div class="game-container" :class="boardColor" v-show="!$root.loading">
-    <div v-show="!loaded" class="game-loading">
-      <svg class="spinner-container" viewBox="0 0 44 44">
-        <circle class="path" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
-      </svg>
-    </div>
+<template>
+  <div class="game-container" :class="boardColor">
     <div class="status">
       <div class="bar is-clickable preservefilter" @click="setClock">
         <div class="bar-progress"></div>
@@ -169,8 +164,6 @@ import PlaySound from '../components/PlaySound'
 export default {
   name: 'game',
   mounted () {
-    this.$root.loading = true
-
     window.app = this
     document.getElementById('board').addEventListener('wheel', event => {
       this.gamePos(Math.sign(event.deltaY) < 0 ? this.index + 1 : this.index - 1)
@@ -338,7 +331,6 @@ export default {
 
         this.duration = totalms / 1000
         this.game = new Chess()
-        this.$root.loading = false
 
         setTimeout(() => {
           if (pref.pieces) {
@@ -374,7 +366,7 @@ export default {
 
             setTimeout(() => {
               PlaySound('start.ogg')
-              this.loaded = true
+              this.$root.loading = false
               setTimeout(() => {
                 this.gameMove()
               }, 1000)
@@ -713,7 +705,6 @@ export default {
         values: [],
         measurements: []
       },
-      loaded: false,
       boardColor: 'classic',
       data: {},
       eco: {},

@@ -46,6 +46,7 @@ export default {
         content: this.$root.t(i + '_content')
       }
     }
+    this.$root.loading = false
   }
 }
 </script>

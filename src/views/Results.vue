@@ -117,7 +117,6 @@ export default {
       this.search()
     },
     search: function () {
-      this.$root.loading = true
       this.searching = this.$route.query.length || false
       let req = this.pager
       req.strict = this.$route.query.strict

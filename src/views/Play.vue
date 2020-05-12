@@ -8,7 +8,7 @@
         </span>
       </span>
     </div>
-    <div class="game-container" v-show="!$root.loading" :class="{ 'is-semitransparent': !gameStarted }">
+    <div class="game-container" :class="{ 'is-semitransparent': !gameStarted }">
       <div class="container is-widescreen">
         <div class="content fadeIn">
           <div class="columns is-marginless-top">
@@ -254,7 +254,6 @@ export default {
   name: 'play',
   mounted () {
     window.app = this
-    this.$root.loading = true
     this.usersJoined = []
     this.gameLoad()
   },
@@ -800,13 +799,10 @@ export default {
     },
     gameLoad () {
       /* global STOCKFISH */
-      this.$root.loading = true
       var t = this
       axios.post('/game', {
         id: this.$route.params.game
       }).then((res) => {
-        t.$root.loading = false
-
         var match = JSON.parse(localStorage.getItem('match'))
         var game = res.data
         var secs = game.minutes * 60
@@ -857,6 +853,7 @@ export default {
           player: t.player
         })
 
+        t.$root.loading = false
         t.evaler = typeof STOCKFISH === 'function' ? STOCKFISH() : new Worker('/js/stockfish.js')
 
         t.evaler.onmessage = function (event) {

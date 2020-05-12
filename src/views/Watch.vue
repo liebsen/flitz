@@ -390,7 +390,6 @@ export default {
     },
     gameStart () {
       /* global STOCKFISH */
-      this.$root.loading = true
       const pref = JSON.parse(localStorage.getItem('player')) || {}
       axios.post('/game', { id: this.$route.params.game }).then((res) => {
         var game = res.data

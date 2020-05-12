@@ -120,6 +120,7 @@ export default {
   mounted () {
     const saved = JSON.parse(localStorage.getItem('player')) || {}
     axios.post('/group/random').then((res) => {
+      this.$root.loading = false
       if (res.data.status === 'success') {
         this.groups = res.data.data
       }

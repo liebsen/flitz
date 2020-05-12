@@ -152,7 +152,6 @@ export default {
     ])
   },
   mounted () {
-    this.$root.loading = true
     this.data = this.player
     this.anchor.code = this.player.code
     this.anchor.lang = this.player.lang

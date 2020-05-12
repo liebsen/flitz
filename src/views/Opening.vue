@@ -1,5 +1,5 @@
 <template>
-  <div class="game-container" :class="boardColor" v-show="!$root.loading">
+  <div class="game-container" :class="boardColor">
     <div class="status" >
       <div class="bar is-clickable" @click="setClock">
         <div class="bar-progress"></div>
@@ -10,6 +10,9 @@
         <div class="columns is-marginless-top fadeIn">
           <div class="column">
             <div class="board-container">
+              <h6 class="black has-text-left" v-show="game">
+                <span class="is-size-6"> </span>
+              </h6>
               <div class="board preservefilter">
                 <div class="score-container">
                   <div class="score" :style="'max-height:' + vscore + '%'"></div>
@@ -22,20 +25,24 @@
             <div class="board-assistant" v-if="Object.keys(data).length">
               <div class="columns has-text-centered">
                 <div class="column preservefilter">
-                  <button @click="gameFlip()" class="button is-small is-rounded is-info" title="Girar tablero">
-                    <span class="icon">
-                      <span class="Play Chess online"></span>
-                    </span>
-                  </button>
-                  <button @click="showPGN()" class="button is-small is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">
-                    <strong>PGN</strong>
-                  </button>
+                  <div class="buttons levels has-addons preservefilter">
+                    <button @click="gameFlip()" class="button is-rounded is-info" title="Girar tablero">
+                      <span class="icon">
+                        <span class="mdi mdi-flip-vertical"></span>
+                      </span>
+                    </button>
+                    <button @click="showPGN()" class="button is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">
+                      <strong>PGN</strong>
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="columns has-text-centered">
                 <div class="column">
-                  <strong v-html="data.eco" class=""></strong>
-                  <span v-html="data.name" class="has-text-black"></span>
+                  <div class="field">
+                    <span v-html="data.name" class="has-text-black is-size-5"></span>
+                    <span v-html="data.eco" class="has-text-grey is-size-5"></span>
+                  </div>
                 </div>
               </div>
               <div class="columns is-hidden-mobile">
@@ -85,7 +92,7 @@ import swal from 'sweetalert'
 import PlaySound from '../components/PlaySound'
 
 export default {
-  name: 'playopening',
+  name: 'opening',
   mounted () {
     window.app = this
     if (localStorage.getItem('speed')) {
@@ -287,7 +294,6 @@ export default {
     gameStart () {
       /* global $ */
       /* global STOCKFISH */
-      this.$root.loading = true
       axios.post('/eco/search', {
         query: this.$route.params.name,
         limit: 1,
@@ -300,7 +306,6 @@ export default {
         this.pgnIndex = this.gamePGNIndex(game.pgn)
         this.data = game
         this.duration = totalms / 1000
-        this.$root.loading = false
 
         setTimeout(() => {
           this.boardEl = document.getElementById('board')
@@ -330,6 +335,7 @@ export default {
 
             setTimeout(() => {
               /* autoplay kickstart */
+              this.$root.loading = false
               this.gameMove()
             }, 1000)
           }, 500)

@@ -636,7 +636,6 @@ export default {
       }, 50)
     },
     loadGroup () {
-      this.$root.loading = true
       axios.post('/group', {
         id: this.$route.params.group
       }).then((res) => {

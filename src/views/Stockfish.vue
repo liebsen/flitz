@@ -192,6 +192,7 @@ export default {
       let li = window.getComputedStyle(e)
       e.style.backgroundImage = li.getPropertyValue('background-image').split('classic').join(this.player.pieces)
     })
+    this.$root.loading = false
   },
   computed: {
     ...mapState([
@@ -473,7 +474,6 @@ export default {
           t.boardTaps()
         }
 
-        t.$root.loading = false
         PlaySound('start.ogg')
         t.boardTaps()
       }, 100)

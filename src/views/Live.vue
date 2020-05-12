@@ -105,7 +105,6 @@ export default {
       this.search()
     },
     search: function () {
-      this.$root.loading = true
       axios.post('/online', this.pager).then((res) => {
         this.data = res.data
         let t = this.$root.t

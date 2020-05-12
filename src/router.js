@@ -10,7 +10,7 @@ import Live from '@/views/Live'
 import Settings from '@/views/Settings'
 import Stockfish from '@/views/Stockfish'
 import Openings from '@/views/Openings'
-import PlayOpening from '@/views/PlayOpening'
+import Opening from '@/views/Opening'
 import Game from '@/views/Game'
 import Group from '@/views/Group'
 import Groups from '@/views/Groups'
@@ -46,9 +46,9 @@ const router = new Router({
       component: Openings
     },
     {
-      path: '/openings/:name',
-      name: 'PlayOpening',
-      component: PlayOpening
+      path: '/opening/:name',
+      name: 'Opening',
+      component: Opening
     },
     {
       path: '/live',
@@ -125,6 +125,7 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   await Vue.nextTick()
+  router.app.loading = true
   if (!Object.keys(store.state.player).length) {
     store
       .dispatch('player')

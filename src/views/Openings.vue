@@ -37,7 +37,7 @@
           <tbody>
             <tr v-for="(item, index) in data.games" :key="index">
               <td>
-                <router-link :to="'/eco/'+item.eco">
+                <router-link :to="'/opening/'+item.eco">
                   <span class="icon">
                     <span class="mdi mdi-play"></span>
                   </span>
@@ -100,7 +100,6 @@ export default {
       this.search()
     },
     search () {
-      this.$root.loading = true
       axios.post('/eco/search', this.pager).then((res) => {
         this.data = res.data
         let t = this.$root.t
