@@ -143,6 +143,16 @@ label {
 }
 /* spinner */
 
+.spinner-background {
+  position: fixed;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  background-color: #edebe9;
+}
+
 .spinner-container {
   position: fixed;
   top: 0;
@@ -157,7 +167,7 @@ label {
   background-image: url(/img/chesspieces/classic/wR.png);
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 35px;
+  background-size: 30px;
   margin: 100px auto;
   display:block;
   height: 70%;

@@ -1,8 +1,10 @@
 <template>
   <div :key="$root.appKey">
-    <svg v-show="$root.loading" class="spinner-container" viewBox="0 0 44 44">
-      <circle class="path" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
-    </svg>
+    <div v-show="$root.loading" class="spinner-background">
+      <svg class="spinner-container" viewBox="0 0 44 44">
+        <circle class="path" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
+      </svg>
+    </div>
     <div class="menu" :class="{ 'fs': menuState }">
       <div class="menu-container is-flex columns is-vcentered">
         <div class="column menu-logo has-text-left preservefilter">
