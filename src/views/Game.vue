@@ -1,5 +1,10 @@
   <template>
   <div class="game-container" :class="boardColor" v-show="!$root.loading">
+    <div v-show="!loaded" class="game-loading">
+      <svg class="spinner-container" viewBox="0 0 44 44">
+        <circle class="path" cx="22" cy="22" r="20" fill="none" stroke-width="4"></circle>
+      </svg>
+    </div>
     <div class="status">
       <div class="bar is-clickable preservefilter" @click="setClock">
         <div class="bar-progress"></div>
@@ -58,11 +63,11 @@
                   </div>
                 </div>
               </div>
-              <div class="columns is-vcentered has-text-centered">
+              <div class="columns is-mobile is-vcentered has-text-centered">
                 <div class="column is-paddingless is-2">
-                  <router-link :to="`/game/${data.prev}`">
+                  <router-link v-show="data.prev" :to="`/game/${data.prev}`">
                     <span class="icon">
-                      <span class="mdi mdi-chevron-left is-size-3 has-text-grey"></span>
+                      <span class="mdi mdi-skip-previous-circle-outline is-size-3 has-text-grey"></span>
                     </span>
                   </router-link>
                 </div>
@@ -78,9 +83,9 @@
                   </div-->
                 </div>
                 <div class="column is-paddingless is-2">
-                  <router-link :to="`/game/${data.next}`">
+                  <router-link v-show="data.next" :to="`/game/${data.next}`">
                     <span class="icon is-large">
-                      <span class="mdi mdi-chevron-right is-size-3 has-text-grey"></span>
+                      <span class="mdi mdi-skip-next-circle-outline is-size-3 has-text-grey"></span>
                     </span>
                   </router-link>
                 </div>
@@ -330,6 +335,7 @@ export default {
           this.gameMoves = this.gamePGN(game.pgn)
           this.pgnIndex = this.gamePGNIndex(game.pgn)
         }
+
         this.duration = totalms / 1000
         this.game = new Chess()
         this.$root.loading = false
@@ -354,7 +360,6 @@ export default {
             }
           }
 
-          PlaySound('start.ogg')
           $('.bar-progress').css({ width: '0%' })
 
           const offset = 150
@@ -366,8 +371,13 @@ export default {
             if (this.data.chart) {
               this.drawChartFromScore()
             }
+
             setTimeout(() => {
-              this.gameMove()
+              PlaySound('start.ogg')
+              this.loaded = true
+              setTimeout(() => {
+                this.gameMove()
+              }, 1000)
             }, 1000)
           }, 500)
         }, 3000)
@@ -703,6 +713,7 @@ export default {
         values: [],
         measurements: []
       },
+      loaded: false,
       boardColor: 'classic',
       data: {},
       eco: {},
