@@ -58,7 +58,7 @@
               <div class="column has-text-right">
                 <a @click="$root.play" class="button is-rounded is-success">
                   <span class="icon">
-                    <span class="mdi mdi-handshake"></span>
+                    <span class="fa fa-handshake is-size-5"></span>
                   </span>
                   <span>{{ 'play_against' | t }} {{ 'human' | t }}</span>
                 </a>
@@ -66,7 +66,7 @@
               <div class="column has-text-left">
                 <router-link class="button is-rounded is-info" to="/stockfish">
                   <span class="icon">
-                    <span class="mdi mdi-robot"></span>
+                    <span class="fa fa-server is-size-5"></span>
                   </span>
                   <span>{{ 'play_against' | t }} Stockfish</span>
                 </router-link>
@@ -76,7 +76,7 @@
               <div class="column">
                 <a @click="$root.play" class="button is-rounded is-success">
                   <span class="icon">
-                    <span class="mdi mdi-handshake"></span>
+                    <span class="fa fa-handshake is-size-5"></span>
                   </span>
                   <span>{{ 'play_against' | t }} {{ 'human' | t }}</span>
                 </a>
@@ -84,7 +84,7 @@
               <div class="column">
                 <router-link class="button is-rounded is-info" to="/stockfish">
                   <span class="icon">
-                    <span class="mdi mdi-robot"></span>
+                    <span class="fa fa-server is-size-5"></span>
                   </span>
                   <span>{{ 'play_against' | t }}Stockfish</span>
                 </router-link>

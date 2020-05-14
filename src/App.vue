@@ -24,7 +24,7 @@
                 </router-link>
                 <a @click="$root.play" class="button is-rounded is-success" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
                   <span class="icon has-text-white">
-                    <span class="mdi mdi-handshake is-size-4"></span>
+                    <span class="fa fa-handshake is-size-5"></span>
                   </span>
                 </a>
               </div>
@@ -39,7 +39,7 @@
                 </router-link>
                 <a @click="$root.play" class="button is-small is-success is-rounded" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
                   <span class="icon has-text-white">
-                    <span class="mdi mdi-handshake is-size-5"></span>
+                    <span class="fa fa-handshake is-size-5"></span>
                   </span>
                 </a>
               </div>
@@ -110,14 +110,17 @@
     </div>
     <div class="footprint">
       <div v-show="latency" class="latency">
-        <span v-show="idle">
+        <span v-show="idle" class="is-size-7 has-text-grey">
           {{ 'idle_now' | t }} <span class="has-text-success">{{ idle }}</span>
         </span>
-        <span v-show="playing > 1">
+        <span v-show="playing > 1" class="is-size-7 has-text-grey">
           {{ 'playing_now' | t }} <span class="has-text-success">{{ playing }}</span>
         </span>
-        <span>
+        <span class="is-size-7 has-text-grey">
           {{ 'latency' | t }} <span :class="{ 'has-text-danger': latency > 500, 'has-text-success': latency < 100 }">{{ latency }}ms</span>
+        </span>
+        <span class="is-size-7 has-text-grey">
+          &copy; {{ year }} Flitz chess
         </span>
       </div>
     </div>
@@ -125,6 +128,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapState } from 'vuex'
 export default {
   name: 'app',
@@ -158,6 +162,9 @@ export default {
     }
   },
   computed: {
+    year () {
+      return moment().format('YYYY')
+    },
     ...mapState([
       'menuState',
       'player',
