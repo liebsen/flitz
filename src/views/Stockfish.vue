@@ -310,11 +310,11 @@ export default {
         const abs = parseFloat(this.performance[index]) - parseFloat(this.performance[index - 1])
         const delta = Math.abs(abs)
         if (delta > 2) {
-          annotation = abs > 0 && this.game.turn() === 'b' ? 3 : 4
+          annotation = abs > 0 ? (this.game.turn() === 'b' ? 3 : 4) : (this.game.turn() === 'b' ? 4 : 3)
         } else if (delta > 1) {
-          annotation = abs > 0 && this.game.turn() === 'b' ? 1 : 2
+          annotation = abs > 0 ? (this.game.turn() === 'b' ? 1 : 2) : (this.game.turn() === 'b' ? 2 : 1)
         } else if (delta > 0.5) {
-          annotation = abs > 0 && this.game.turn() === 'b' ? 15 : 14
+          annotation = abs > 0 ? (this.game.turn() === 'b' ? 15 : 14) : (this.game.turn() === 'b' ? 14 : 15)
         }
       }
       if (annotation) {

@@ -163,8 +163,15 @@ import PlaySound from '../components/PlaySound'
 
 export default {
   name: 'game',
+  created () {
+    document.onkeydown = this.onKeyDown
+  },
+  destroyed () {
+    document.removeEventListener('onkeydown', this.onKeyDown)
+  },
   mounted () {
     window.app = this
+
     document.getElementById('board').addEventListener('wheel', event => {
       this.gamePos(Math.sign(event.deltaY) < 0 ? this.index + 1 : this.index - 1)
     })
@@ -182,6 +189,26 @@ export default {
     ])
   },
   methods: {
+    onKeyDown (e) {
+      switch (e.which) {
+        case 37: // left
+          this.gamePos(this.index - 1)
+          break
+
+        case 38: // up
+          break
+
+        case 39: // right
+          this.gamePos(this.index + 1)
+          break
+
+        case 40: // down
+          break
+
+        default: return
+      }
+      e.preventDefault()
+    },
     gameMove () {
       if (!this.paused) {
         /* global $ */
@@ -201,10 +228,12 @@ export default {
         this.uciCmd('position startpos moves' + this.moveList(), this.evaler)
         this.uciCmd('eval', this.evaler)
 
-        setTimeout(() => {
-          this.moveSound(moved)
-          this.addHightlight(moved)
-        }, 250)
+        if (moved) {
+          setTimeout(() => {
+            this.moveSound(moved)
+            this.addHightlight(moved)
+          }, 250)
+        }
 
         if (this.index === this.gameMoves.length) {
           this.gamePause()

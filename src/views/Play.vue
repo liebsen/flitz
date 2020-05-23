@@ -161,7 +161,7 @@
                           <strong v-else>{{ data.white }}</strong>
                         </div>
                       </div>
-                      <div ref="match" class="column is-1" v-for="(item, index) in match.results" :key="index">
+                      <div id="matchscore" class="column is-1" v-for="(item, index) in match.results" :key="index">
                         <div>
                           <span class="tag" :class="{ 'is-grey': item[0] === '½', 'is-success': item[0] === 1, 'is-danger': item[0] === 0 }">{{ item[0] }}</span>
                         </div>
@@ -517,8 +517,6 @@ export default {
       })
     },
     showResultGame () {
-      swal.close()
-
       let data = this.data
       let winner = null
       let matchResult = ['½', '½']
@@ -543,9 +541,8 @@ export default {
       }
 
       match.results.push(matchResult)
-      console.log(match)
-      this.match = match
       localStorage.setItem('match', JSON.stringify(match))
+      this.match = match
 
       if (game < games) {
         const template = (`
@@ -601,7 +598,6 @@ export default {
           }
         }, seconds * 1000)
       } else {
-        let score = this.$refs.match.innerHTML
         const template = (`
 <div>
   <div class="columns is-mobile">
@@ -614,7 +610,7 @@ export default {
   </div>
   <div class="columns is-mobile">
     <div class="column">
-      ${score}
+      <div id="matchscorefinal"></div>
     </div>
   </div>
 </div>`)
@@ -632,13 +628,15 @@ export default {
           this.$router.push('/group/' + match.group)
         })
       }
-
-      if (data.result !== '1/2-1/2') {
-        setTimeout(() => {
+      setTimeout(() => {
+        if (document.getElementById('matchscorefinal')) {
+          document.getElementById('matchscorefinal').innerHTML = document.getElementById('matchscore').innerHTML
+        }
+        if (data.result !== '1/2-1/2') {
           let sel = data.result === '1-0' ? 'white' : 'black'
           document.querySelector(`.result-${sel}`).classList.add('is-success', 'is-outlined')
-        }, 100)
-      }
+        }
+      }, 100)
     },
     createNewGame (game) {
       let t = this
@@ -1182,9 +1180,11 @@ export default {
         const abs = parseFloat(this.performance[index]) - parseFloat(this.performance[index - 1])
         const delta = Math.abs(abs)
         if (delta > 2) {
-          annotation = abs > 0 && this.game.turn() === 'b' ? 3 : 4
+          annotation = abs > 0 ? (this.game.turn() === 'b' ? 3 : 4) : (this.game.turn() === 'b' ? 4 : 3)
         } else if (delta > 1) {
-          annotation = abs > 0 && this.game.turn() === 'b' ? 1 : 2
+          annotation = abs > 0 ? (this.game.turn() === 'b' ? 1 : 2) : (this.game.turn() === 'b' ? 2 : 1)
+        } else if (delta > 0.5) {
+          annotation = abs > 0 ? (this.game.turn() === 'b' ? 15 : 14) : (this.game.turn() === 'b' ? 14 : 15)
         }
       }
       if (annotation) {
