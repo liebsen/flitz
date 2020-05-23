@@ -150,6 +150,26 @@
                       <span class="has-text-black is-size-5">{{ opening }}</span>
                       <strong class="has-text-grey is-size-5">{{ eco }}</strong>
                     </div>
+                    <div v-show="match.results" class="columns is-mobile is-narrow">
+                      <div class="column is-3">
+                        <div class="">
+                          <strong v-if="data.white > data.black">{{ data.white }}</strong>
+                          <strong v-else>{{ data.black }}</strong>
+                        </div>
+                        <div>
+                          <strong v-if="data.white > data.black">{{ data.black }}</strong>
+                          <strong v-else>{{ data.white }}</strong>
+                        </div>
+                      </div>
+                      <div ref="match" class="column is-1" v-for="(item, index) in match.results" :key="index">
+                        <div>
+                          <span class="tag" :class="{ 'is-grey': item[0] === '½', 'is-success': item[0] === 1, 'is-danger': item[0] === 0 }">{{ item[0] }}</span>
+                        </div>
+                        <div class="">
+                          <span class="tag" :class="{ 'is-grey': item[1] === '½', 'is-success': item[1] === 1, 'is-danger': item[1] === 0 }">{{ item[1] }}</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="tabs is-boxed is-hidden-mobile">
@@ -166,7 +186,6 @@
                     </li>
                   </ul>
                 </div>
-                <div v-html="match"/>
                 <div v-show="tab === 'pgn'" class="is-hidden-mobile">
                   <div class="columns">
                     <div class="chart-container preservefilter">
@@ -304,29 +323,27 @@ export default {
       }, 100)
     },
     joined (data) {
-      var t = this
-
-      if (data.code !== t.player.code && !t.announced_game_over) {
+      if (data.code !== this.player.code && !this.announced_game_over) {
         snackbar('success', '👤 ' + data.code + ' se unió a la partida')
       }
 
       var exists = false
-      for (var i in t.usersJoined) {
-        if (t.usersJoined[i] === data.code) {
+      for (var i in this.usersJoined) {
+        if (this.usersJoined[i] === data.code) {
           exists = true
         }
       }
       if (exists === false) {
-        t.usersJoined.push(data.code)
+        this.usersJoined.push(data.code)
       }
 
       setTimeout(() => {
-        if (t.usersJoined.length === 2 && !t.data.result) {
+        if (this.usersJoined.length === 2 && !this.data.result) {
           let match = JSON.parse(localStorage.getItem('match'))
-          t.$socket.emit('start', {
-            player: t.player,
+          this.$socket.emit('start', {
+            player: this.player,
             group: match.group,
-            id: t.$route.params.game
+            id: this.$route.params.game
           })
         }
       }, 3000)
@@ -390,26 +407,26 @@ export default {
       t.tdisplay.b = t.$root.getTimeDisplay(t.timer.b)
     },
     acceptdraw (data) {
-      swal.close()
-      swal('Tablas', 'Esta partida finalizó con un empate', 'info')
+      // swal.close()
+      // swal('Tablas', 'Esta partida finalizó con un empate', 'info')
       this.announced_game_over = true
     },
     rejectdraw (data) {
       swal.close()
       if (data.asker === this.player.code) {
-        swal('Tablas rechazado', 'El oponente desea continuar jugando', 'info')
+        snackbar('error', 'Solicitud de Tablas rechazada. El oponente desea continuar jugando')
+        // swal('Tablas rechazado', 'El oponente desea continuar jugando', 'info')
       }
     },
     capitulate (data) {
       var t = this
-      var result = null
       if (data.asker === t.player.code) {
-        result = (t.playerColor === 'black' ? '1-0' : '0-1')
         PlaySound('defeat.mp3')
       } else {
-        result = (t.playerColor === 'white' ? '1-0' : '0-1')
-        t.sendResults(result)
         PlaySound('victory.mp3')
+      }
+      if (t.playerColor[0] === 'w') {
+        t.sendResults()
       }
       t.announced_game_over = true
     },
@@ -422,19 +439,18 @@ export default {
           text: 'Tu oponente ' + t.opponent.code + ' solicita tablas',
           buttons: ['No', 'Sí'],
           closeOnClickOutside: false
+        }).then(accept => {
+          if (accept) {
+            result = '1/2-1/2'
+            t.sendResults(result)
+            t.$socket.emit('acceptdraw', data)
+            t.announced_game_over = true
+            PlaySound('game-end.mp3')
+          } else {
+            t.$socket.emit('rejectdraw', data)
+            console.log('Clicked on cancel')
+          }
         })
-          .then(accept => {
-            if (accept) {
-              result = '1/2-1/2'
-              t.sendResults(result)
-              t.$socket.emit('acceptdraw', data)
-              t.announced_game_over = true
-              PlaySound('game-end.mp3')
-            } else {
-              t.$socket.emit('rejectdraw', data)
-              console.log('Clicked on cancel')
-            }
-          })
       } else {
         swal('Esperando respuesta...', 'Has solicitado tablas a ' + t.opponent.code, 'info')
       }
@@ -452,14 +468,19 @@ export default {
   },
   methods: {
     sendResults (result) {
+      console.log('sendResults')
+      if (!result) {
+        result = '1/2-1/2'
+        if (this.game.in_draw() || this.game.in_stalemate() || this.game.in_threefold_repetition()) {
+          result = '1/2-1/2'
+        } else {
+          result = this.playerColor[0] === 'w' ? '1-0' : '0-1'
+        }
+      }
+
       let match = JSON.parse(localStorage.getItem('match'))
       var white = this.player
       var black = this.opponent
-
-      if (!match.results) {
-        match.results = []
-      }
-
       let fullResult = {
         game: this.$route.params.game,
         white: {
@@ -472,9 +493,6 @@ export default {
         date: moment().format('YYYY.MM.DD HH:mm'),
         plys: this.$root.countMoves(this.game.pgn())
       }
-
-      match.results.push(fullResult)
-      localStorage.setItem('match', JSON.stringify(match))
 
       this.$socket.emit('group_result', {
         _id: match.group,
@@ -499,20 +517,35 @@ export default {
       })
     },
     showResultGame () {
+      swal.close()
+
       let data = this.data
       let winner = null
+      let matchResult = ['½', '½']
       switch (data.result) {
         case '1-0':
           winner = data.white
+          matchResult = data.white > data.black ? [1, 0] : [0, 1]
           break
         case '0-1':
           winner = data.black
+          matchResult = data.white > data.black ? [0, 1] : [1, 0]
           break
       }
 
       let resultText = winner ? `Gana ${winner}` : 'Tablas'
       let game = parseInt(data.game)
       let games = parseInt(data.games)
+
+      let match = JSON.parse(localStorage.getItem('match'))
+      if (!match.results) {
+        match.results = []
+      }
+
+      match.results.push(matchResult)
+      console.log(match)
+      this.match = match
+      localStorage.setItem('match', JSON.stringify(match))
 
       if (game < games) {
         const template = (`
@@ -551,7 +584,9 @@ export default {
         let seconds = this.secondsToProceed
         let interval = setInterval(() => {
           let s = seconds > 1 ? 's' : ''
-          document.getElementById('secondstoproceed').innerHTML = `${seconds} segundo${s}`
+          if (document.getElementById('secondstoproceed')) {
+            document.getElementById('secondstoproceed').innerHTML = `${seconds} segundo${s}`
+          }
           seconds--
 
           if (seconds <= -1) {
@@ -565,14 +600,8 @@ export default {
             this.createNewGame(this.data.game + 1)
           }
         }, seconds * 1000)
-
-        if (data.result !== '1/2-1/2') {
-          setTimeout(() => {
-            let sel = data.result === '1-0' ? 'white' : 'black'
-            document.querySelector(`.result-${sel}`).classList.add('is-success', 'is-outlined')
-          }, 100)
-        }
       } else {
+        let score = this.$refs.match.innerHTML
         const template = (`
 <div>
   <div class="columns is-mobile">
@@ -581,6 +610,11 @@ export default {
     </div>
     <div class="column">
       <span class="button result-black">${data.black} ${data.blackflag}</span>
+    </div>
+  </div>
+  <div class="columns is-mobile">
+    <div class="column">
+      ${score}
     </div>
   </div>
 </div>`)
@@ -597,6 +631,13 @@ export default {
           let match = JSON.parse(localStorage.getItem('match'))
           this.$router.push('/group/' + match.group)
         })
+      }
+
+      if (data.result !== '1/2-1/2') {
+        setTimeout(() => {
+          let sel = data.result === '1-0' ? 'white' : 'black'
+          document.querySelector(`.result-${sel}`).classList.add('is-success', 'is-outlined')
+        }, 100)
       }
     },
     createNewGame (game) {
@@ -898,18 +939,15 @@ export default {
           clearInterval(t.clock)
         } else {
           var turn = t.game.turn()
-          var result = null
           if (--t.timer[turn] < 0) {
             t.timer[turn] = 0
+            console.log('1')
             if (turn === t.playerColor[0]) {
-              result = (t.playerColor === 'black' ? '1-0' : '0-1')
               PlaySound('defeat.mp3')
+              console.log('2')
+              t.sendResults()
             } else {
-              result = (t.playerColor === 'white' ? '1-0' : '0-1')
               PlaySound('victory.mp3')
-            }
-            if (turn === 'w') {
-              t.sendResults(result)
             }
             t.announced_game_over = true
           } else {
@@ -1034,14 +1072,8 @@ export default {
         this.uciCmd('position startpos moves' + this.moveList(), this.evaler)
         this.uciCmd('eval', this.evaler)
         if (t.game.game_over()) {
-          let result = '1/2-1/2'
-          if (t.game.in_draw() || t.game.in_stalemate() || t.game.in_threefold_repetition()) {
-            result = '1/2-1/2'
-          } else {
-            result = t.playerColor === 'white' ? '1-0' : '0-1'
-          }
           if (t.playerColor[0] === 'w') {
-            t.sendResults(result)
+            t.sendResults()
           }
           t.announced_game_over = true
         }

@@ -1,15 +1,15 @@
 <template>
   <div class="container">
     <section class="content column fadeIn">
-      <h3 class="title">
-        <span class="icon">
-          <span class="mdi mdi-user-check"></span>
-        </span>
-        <span>{{ 'login' | t }}</span>
-      </h3>
       <div class="columns is-centered">
         <div class="column is-narrow">
           <form class="form has-text-centered slideIn has-margin-top" @submit.prevent="submit">
+            <h3 class="title">
+              <span class="icon">
+                <span class="mdi mdi-account-key"></span>
+              </span>
+              <span>{{ 'login' | t }}</span>
+            </h3>
             <p>{{ 'login_text' | t }}</p>
             <div class="field">
               <div class="control">
@@ -51,6 +51,7 @@ export default {
   },
   created () {
     this.data.email = this.player.email || this.player.code
+    this.$root.loading = false
   },
   computed: {
     ...mapState([

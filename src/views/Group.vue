@@ -19,7 +19,7 @@
     <div v-show="data.owner" class="content column fadeIn">
       <div class="columns">
         <div v-if="players && data && data.owner" class="column is-lobby-list is-3">
-          <div v-show="data.owner._id === player._id">
+          <div v-if="data.owner._id === player._id">
             <h3 class="is-clickable" @click="setGroupRules" title="Configurar Grupo">
               <span class="icon">
                 <span class="mdi mdi-layers"></span>
@@ -27,7 +27,7 @@
               <span>{{data.code}}</span>
             </h3>
           </div>
-          <div v-show="data.owner.code !== player.code">
+          <div v-else>
             <h3>
               <span class="icon">
                 <span class="mdi mdi-layers"></span>
@@ -121,57 +121,6 @@
               </div>
             </div>
           </div>
-          <div v-show="tab === 'results'">
-            <div v-show="!data.results" class="column">
-              <h6>{{ 'group_no_results' | t }}</h6>
-            </div>
-            <div v-show="data.results" class="column">
-              <table class="table is-narrow is-striped is-fullwidth">
-                <thead>
-                  <th></th>
-                  <th>{{ 'white' | t }}</th>
-                  <th>{{ 'black' | t }}</th>
-                  <th>{{ 'date' | t }}</th>
-                  <th>{{ 'plys' | t }}</th>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in data.results" :key="index">
-                    <td>
-                      <router-link :to="'/game/'+item.game">
-                        <span class="icon">
-                          <span class="mdi mdi-chess-king"></span>
-                        </span>
-                      </router-link>
-                    </td>
-                    <td>
-                      <span v-show="item.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
-                      <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
-                      <span v-if="item.white.flag" class="icon preservefilter">
-                        <span v-html="item.white.flag"></span>
-                      </span>
-                      <span v-html="item.white.code"></span>
-                      <span class="has-text-grey" v-html="item.white.elo"></span>
-                    </td>
-                    <td>
-                      <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
-                      <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
-                      <span v-if="item.black.flag" class="icon preservefilter">
-                        <span v-html="item.black.flag"></span>
-                      </span>
-                      <span v-html="item.black.code"></span>
-                      <span class="has-text-grey" v-html="item.black.elo"></span>
-                    </td>
-                    <td>
-                      <span>{{ item.date | humanReadableTime }}</span>
-                    </td>
-                    <td>
-                      <span v-html="item.plys"></span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
           <div v-show="tab === 'chat'">
             <div class="column has-text-centered box is-padded">
               <div class="columns">
@@ -203,6 +152,38 @@
               </form>
             </div>
           </div>
+          <div v-show="tab === 'results'" class="fadeIn">
+            <div v-show="!data.results" class="column">
+              <h6>{{ 'group_no_results' | t }}</h6>
+            </div>
+            <div v-show="data.results" class="column">
+              <div class="columns is-multiline">
+                <div class="column is-4" v-for="(item, index) in data.results" :key="index">
+                  <div v-if="index < maxResults || showResultsAll" class="box">
+                    <router-link :to="'/game/'+item.game">
+                      <h6>
+                        <span class="preservefilter">{{ item.white.flag }}</span>
+                        <span> {{ item.white.code }}</span>
+                        <span class="has-text-grey"> {{ item.white.elo }}</span>
+                        <span v-show="item.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
+                      </h6>
+                      <h6>
+                        <span class="preservefilter">{{ item.black.flag }}</span>
+                        <span> {{ item.black.code }}</span>
+                        <span class="has-text-grey"> {{ item.black.elo }}</span>
+                        <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
+                      </h6>
+                      <span>{{ item.date | humanReadableTime }}</span>
+                      <span>{{ item.plys }}</span>
+                    </router-link>
+                  </div>
+                </div>
+              </div>
+              <div v-if="!showResultsAll" class="field column has-text-centered">
+                <span class="button is-success is-rounded is-outlined">{{ 'show_all' | t }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -222,6 +203,8 @@ export default {
   name: 'group',
   data () {
     return {
+      maxResults: 9,
+      showResultsAll: false,
       groupKey: 0,
       chat: '',
       tab: 'chat',

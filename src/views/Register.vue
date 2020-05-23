@@ -9,15 +9,15 @@
       </h3>
     </section>
     <section v-show="!player.email" class="content column fadeIn">
-      <h3 class="title">
-        <span class="icon">
-          <span class="mdi mdi-account-plus"></span>
-        </span>
-        <span>{{ 'register' | t }}</span>
-      </h3>
       <div class="columns is-centered">
         <div class="column is-narrow">
           <form class="form has-text-centered slideIn has-margin-top" @submit.prevent="submit">
+            <h3 class="title">
+              <span class="icon">
+                <span class="mdi mdi-account-plus"></span>
+              </span>
+              <span>{{ 'register' | t }}</span>
+            </h3>
             <p>{{ 'register_text' | t }}</p>
             <div class="field">
               <div class="control">
@@ -78,6 +78,7 @@ export default {
   },
   created () {
     this.data = this.player
+    this.$root.loading = false
   },
   computed: {
     ...mapState([

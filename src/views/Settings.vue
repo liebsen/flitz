@@ -27,47 +27,6 @@
                 <div class="field"></div>
               </div>
             </div>
-            <div class="field">
-              <div class="field-group">
-                <label class="label">{{ 'settings_general' | t }}</label>
-                <div class="field-body">
-                  <div class="control has-checkradio" title="Desactiva notificaciones sonoras">
-                    <input v-model="data.sound" class="is-checkradio has-background-color is-white" id="sound" type="checkbox" @click="previewSound">
-                    <label class="label" for="sound">{{ 'sound' | t }}</label>
-                  </div>
-                </div>
-                <div class="field-body">
-                  <div class="control has-checkradio" title="Notificaciones hiper-visibles">
-                    <input v-model="data.strongnotification" class="is-checkradio has-background-color is-white" id="strongnotification" type="checkbox" @click="previewStrongNotification">
-                    <label class="label" for="strongnotification">{{ 'huge_notifications' | t }}</label>
-                  </div>
-                </div>
-                <div class="field-body">
-                  <div class="control has-checkradio" title="Activa visión nocturna">
-                    <input v-model="data.darkmode" class="is-checkradio has-background-color is-white" id="darkmode" type="checkbox" @click="previewDarkmode">
-                    <label class="label" for="darkmode">{{ 'dark_mode' | t }}</label>
-                  </div>
-                </div>
-                <div class="field-body">
-                  <div class="control has-checkradio" title="No disponible para jugar en línea">
-                    <input v-model="data.observe" class="is-checkradio has-background-color is-white" id="observe" type="checkbox">
-                    <label class="label" for="observe">{{ 'observer_mode' | t }}</label>
-                    <!--p class="notification is-warning">
-                      <small>No disponible para jugar en línea</small>
-                    </p-->
-                  </div>
-                </div>
-                <div class="field-body">
-                  <div class="control has-checkradio" title="Aceptar invitaciones de otros grupos">
-                    <input v-model="data.autoaccept" class="is-checkradio has-background-color is-white" id="autoaccept" type="checkbox">
-                    <label class="label" for="autoaccept">{{ 'accept_random' | t }}</label>
-                    <!--p class="notification is-warning">
-                      <small>Aceptar automáticamente todas las invitaciones para jugar</small>
-                    </p-->
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="field is-horizontal">
               <div class="field-body">
                 <div class="field">
@@ -110,6 +69,47 @@
                     <select v-model="data.pieces" id="piezas" title="Elegí estilo de piezas">
                       <option v-for="(item, index) in themes.pieces" :key="index" :value="item">{{ item | t }}</option>
                     </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="field-group">
+                <label class="label">{{ 'settings_general' | t }}</label>
+                <div class="field-body">
+                  <div class="control has-checkradio" title="Desactiva notificaciones sonoras">
+                    <input v-model="data.sound" class="is-checkradio has-background-color is-white" id="sound" type="checkbox" @click="previewSound">
+                    <label class="label" for="sound">{{ 'sound' | t }}</label>
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="control has-checkradio" title="Notificaciones hiper-visibles">
+                    <input v-model="data.strongnotification" class="is-checkradio has-background-color is-white" id="strongnotification" type="checkbox" @click="previewStrongNotification">
+                    <label class="label" for="strongnotification">{{ 'huge_notifications' | t }}</label>
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="control has-checkradio" title="Activa visión nocturna">
+                    <input v-model="data.darkmode" class="is-checkradio has-background-color is-white" id="darkmode" type="checkbox" @click="previewDarkmode">
+                    <label class="label" for="darkmode">{{ 'dark_mode' | t }}</label>
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="control has-checkradio" title="No disponible para jugar en línea">
+                    <input v-model="data.observe" class="is-checkradio has-background-color is-white" id="observe" type="checkbox">
+                    <label class="label" for="observe">{{ 'observer_mode' | t }}</label>
+                    <!--p class="notification is-warning">
+                      <small>No disponible para jugar en línea</small>
+                    </p-->
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="control has-checkradio" title="Aceptar invitaciones de otros grupos">
+                    <input v-model="data.autoaccept" class="is-checkradio has-background-color is-white" id="autoaccept" type="checkbox">
+                    <label class="label" for="autoaccept">{{ 'accept_random' | t }}</label>
+                    <!--p class="notification is-warning">
+                      <small>Aceptar automáticamente todas las invitaciones para jugar</small>
+                    </p-->
                   </div>
                 </div>
               </div>

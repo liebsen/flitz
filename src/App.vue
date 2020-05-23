@@ -18,13 +18,13 @@
               <div class="buttons levels has-addons is-pulled-right">
                 <router-link to="/settings" class="button is-rounded is-grey" :title="'set_your_settings' | t">
                   <span class="icon">
-                    <span v-html="player.flag"></span>
+                    <span>{{ player.flag }}</span>
                   </span>
-                  <span v-html="player.code"></span>
+                  <span>{{ player.code }}</span>
                 </router-link>
                 <a @click="$root.play" class="button is-rounded is-success" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
                   <span class="icon has-text-white">
-                    <span class="fa fa-handshake is-size-5"></span>
+                    <span class="fa fa-handshake"></span>
                   </span>
                 </a>
               </div>
@@ -33,13 +33,13 @@
               <div class="buttons levels has-addons is-pulled-right">
                 <router-link to="/settings" class="button is-small is-rounded" :title="'set_your_settings' | t">
                   <span class="icon">
-                   <span v-html="player.flag"></span>
+                    <span>{{ player.flag }}</span>
                   </span>
-                  <span v-html="player.code"></span>
+                  <span>{{ player.code }}</span>
                 </router-link>
                 <a @click="$root.play" class="button is-small is-success is-rounded" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
                   <span class="icon has-text-white">
-                    <span class="fa fa-handshake is-size-5"></span>
+                    <span class="fa fa-handshake"></span>
                   </span>
                 </a>
               </div>
@@ -81,7 +81,7 @@
                   <div class="column">
                     <router-link to="/login" class="button is-rounded is-white is-outlined">
                       <span class="icon">
-                        <span class="mdi mdi-account"></span>
+                        <span class="mdi mdi-account-key"></span>
                       </span>
                       <span>{{ 'login' | t }}</span>
                     </router-link>
@@ -120,7 +120,7 @@
           {{ 'latency' | t }} <span :class="{ 'has-text-danger': latency > 500, 'has-text-success': latency < 100 }">{{ latency }}ms</span>
         </span>
         <span class="is-size-7 has-text-grey">
-          &copy; {{ year }} Flitz chess
+          | {{ 'powered_by' | t }} Stockfish
         </span>
       </div>
     </div>

@@ -279,7 +279,7 @@ new Vue({ // eslint-disable-line no-new
       if (document.querySelector('.board') && document.body.clientHeight < document.body.clientWidth && document.body.clientWidth > 768) {
         var offset = 0
         if (!document.querySelector('.menu-logo').classList.contains('is-hidden')) {
-          offset += 70
+          offset += 75
         }
         document.querySelector('.board').style.width = document.body.clientHeight - document.querySelector('.menu').clientHeight - offset + 'px'
       }

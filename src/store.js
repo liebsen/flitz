@@ -15,7 +15,7 @@ export default new Vuex.Store({
     games: games,
     status: null,
     auth: JSON.parse(localStorage.getItem('auth')) || {},
-    endpoint: (process.env.NODE_ENV === 'production' ? 'https://flitzapi.herokuapp.com' : 'http://localhost:4000') // http://192.168.2.13:4000
+    endpoint: (process.env.NODE_ENV === 'production' ? 'https://flitzapi.herokuapp.com' : 'http://192.168.2.13:4000')
   },
   mutations: {
     /* A fit-them-all commit */

@@ -8,10 +8,10 @@
             <form id="search" class="has-text-centered preservefilter" @submit.prevent="submit">
               <div class="field has-addons is-hidden-mobile is-flex-centered">
                 <div class="control">
-                  <input v-model="query" class="input is-medium is-white is-rounded" name="query" type="text" :placeholder="'search_in_groups' | t" autofocus>
+                  <input v-model="query" class="input is-large is-white is-rounded" name="query" type="text" :placeholder="'search_in_groups' | t" autofocus>
                 </div>
                 <div class="control">
-                  <button type="submit" id="searchbtn" class="button is-medium is-rounded is-white">
+                  <button type="submit" id="searchbtn" class="button is-large is-rounded is-white">
                     <span class="icon has-text-info">
                       <span class="mdi mdi-layers-search"></span>
                     </span>
@@ -42,7 +42,7 @@
                       <span>{{ item.code }}</span>
                       <span class="has-text-grey">{{ item.users }}</span>
                     </h2>
-                    <p class="subtitle">
+                    <p class="subtitle has-text-weight-bold">
                       <span class="icon">
                         <span class="mdi mdi-clock-fast"></span>
                       </span>
@@ -56,7 +56,7 @@
             </div>
             <div class="columns is-vcentered has-text-centered is-hidden-mobile">
               <div class="column has-text-right">
-                <a @click="$root.play" class="button is-rounded is-success">
+                <a @click="$root.play" class="button is-rounded is-large is-success">
                   <span class="icon">
                     <span class="fa fa-handshake is-size-5"></span>
                   </span>
@@ -64,7 +64,7 @@
                 </a>
               </div>
               <div class="column has-text-left">
-                <router-link class="button is-rounded is-info" to="/stockfish">
+                <router-link class="button is-rounded is-info is-large" to="/stockfish">
                   <span class="icon">
                     <span class="fa fa-server is-size-5"></span>
                   </span>

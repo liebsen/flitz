@@ -127,7 +127,7 @@
                           <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2] === '$1', 'mdi-sticker-check' : annotations[index * 2] === '$3', 'mdi-sticker-minus' : annotations[index * 2] === '$2', 'mdi-sticker-remove' : annotations[index * 2] === '$4', 'mdi-book-open': annotations[index * 2] === '$12', 'mdi-sticker-alert': annotations[index * 2] === '$14', 'mdi-sticker-emoji': annotations[index * 2] === '$15'}"></span>
                         </span>
                         <span v-if="performance[index * 2]">
-                          <small v-if="performance[index * 2]" v-html="performance[index * 2]"></small>
+                          <small v-if="performance[index * 2]"> {{ performance[index * 2] }}</small>
                         </span>
                         <span v-else class="icon">
                           <span class="mdi mdi-dots-horizontal"/>
@@ -141,7 +141,7 @@
                           <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-sticker-alert': annotations[index * 2 + 1] === '$14', 'mdi-sticker-emoji': annotations[index * 2 + 1] === '$15' }"></span>
                         </span>
                         <span v-if="performance[index * 2 + 1]">
-                          <small v-if="performance[index * 2 + 1]" v-html="performance[index * 2 + 1]"></small>
+                          <small v-if="performance[index * 2 + 1]"> {{ performance[index * 2 + 1]}}</small>
                         </span>
                         <span v-else class="icon">
                           <span class="mdi mdi-dots-horizontal"/>
@@ -313,7 +313,7 @@ export default {
           annotation = abs > 0 && this.game.turn() === 'b' ? 3 : 4
         } else if (delta > 1) {
           annotation = abs > 0 && this.game.turn() === 'b' ? 1 : 2
-        } else if (delta > 0.25) {
+        } else if (delta > 0.5) {
           annotation = abs > 0 && this.game.turn() === 'b' ? 15 : 14
         }
       }
@@ -474,6 +474,10 @@ export default {
           t.boardTaps()
         }
 
+        const offset = 150
+        if (document.querySelector('.movesTableContainer')) {
+          document.querySelector('.movesTableContainer').style.height = (document.querySelector('.board').clientHeight - offset) + 'px'
+        }
         PlaySound('start.ogg')
         t.boardTaps()
       }, 100)
@@ -611,7 +615,7 @@ export default {
       chart.setAttribute('width', '100%')
       chart.setAttribute('height', '100%')
       chart.setAttribute('preserveAspectRatio', 'none')
-      chart.setAttribute('viewBox', '0 0 ' + this.chart.width + ' ' + this.chart.height)
+      chart.setAttribute('viewBox', `0 0 ${this.chart.width} ${this.chart.height}`)
 
       var polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon')
       polygon.setAttribute('points', this.chart.points)

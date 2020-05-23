@@ -1,15 +1,15 @@
 <template>
   <div class="container">
     <section class="content column fadeIn">
-      <h3 class="title">
-        <span class="icon">
-          <span class="mdi mdi-account-key"></span>
-        </span>
-        <span>{{ 'forgot_password' | t }}</span>
-      </h3>
       <div class="columns is-centered">
         <div class="column is-narrow">
           <form class="form has-text-centered slideIn has-margin-top" @submit.prevent="submit">
+            <h3 class="title">
+              <span class="icon">
+                <span class="mdi mdi-account-lock"></span>
+              </span>
+              <span>{{ 'forgot_password' | t }}</span>
+            </h3>
             <p>{{ 'forgot_text' | t }}</p>
             <div class="field">
               <div class="control">
@@ -47,6 +47,7 @@ export default {
   },
   created () {
     this.data.email_or_username = this.player.code
+    this.$root.loading = false
   },
   computed: {
     ...mapState([
@@ -55,10 +56,9 @@ export default {
   },
   methods: {
     submit: function () {
-      var t = this
-      t.$root.processing = true
+      this.$root.processing = true
       this.$store
-        .dispatch('register', t.data)
+        .dispatch('register', this.data)
         .then(res => {
           this.$router.push('/register-success')
         })
