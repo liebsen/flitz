@@ -163,10 +163,16 @@
                       </div>
                       <div id="matchscore" class="column is-1" v-for="(item, index) in match.results" :key="index">
                         <div>
-                          <span class="tag" :class="{ 'is-grey': item[0] === '½', 'is-success': item[0] === 1, 'is-danger': item[0] === 0 }">{{ item[0] }}</span>
+                          <span class="tag" :class="{ 'is-grey': item[0] === 0.5, 'is-success': item[0] === 1, 'is-danger': item[0] === 0 }">
+                            <span v-if="item[0] === 0.5">½</span>
+                            <span v-else>{{ item[0] }}</span>
+                          </span>
                         </div>
                         <div class="">
-                          <span class="tag" :class="{ 'is-grey': item[1] === '½', 'is-success': item[1] === 1, 'is-danger': item[1] === 0 }">{{ item[1] }}</span>
+                          <span class="tag" :class="{ 'is-grey': item[1] === 0.5, 'is-success': item[1] === 1, 'is-danger': item[1] === 0 }">
+                            <span v-if="item[1] === 0.5">½</span>
+                            <span v-else>{{ item[1] }}</span>
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -519,7 +525,7 @@ export default {
     showResultGame () {
       let data = this.data
       let winner = null
-      let matchResult = ['½', '½']
+      let matchResult = [0.5, 0.5]
       switch (data.result) {
         case '1-0':
           winner = data.white
@@ -534,8 +540,9 @@ export default {
       let resultText = winner ? `Gana ${winner}` : 'Tablas'
       let game = parseInt(data.game)
       let games = parseInt(data.games)
-
       let match = JSON.parse(localStorage.getItem('match'))
+      const finalResult = game === games
+
       if (!match.results) {
         match.results = []
       }
@@ -544,7 +551,7 @@ export default {
       localStorage.setItem('match', JSON.stringify(match))
       this.match = match
 
-      if (game < games) {
+      if (!finalResult) {
         const template = (`
 <div>
   <div class="columns is-mobile">
@@ -552,7 +559,7 @@ export default {
       <span class="button is-large is-rounded result-white">${data.whiteflag} ${data.white}</span>
     </div>
     <div class="column">
-      <span class="button is-large is-rounded result-black">${data.black} ${data.blackflag}</span>
+      <span class="button is-large is-rounded result-black">${data.blackflag} ${data.black}</span>
     </div>
   </div>
   <div class="has-text-centered">
@@ -566,8 +573,8 @@ export default {
   </div>
 </div>`)
         swal({
-          title: `Resultado parcial ${game}/${games}`,
-          text: resultText,
+          title: resultText,
+          text: `Resultado parcial ${game}/${games}`,
           content: {
             element: 'div',
             attributes: {
@@ -602,10 +609,10 @@ export default {
 <div>
   <div class="columns is-mobile">
     <div class="column">
-      <span class="button result-white">${data.whiteflag} ${data.white}</span>
+      <span class="button is-large is-rounded ${data.white}">${data.whiteflag} ${data.white}</span>
     </div>
     <div class="column">
-      <span class="button result-black">${data.black} ${data.blackflag}</span>
+      <span class="button is-large is-rounded ${data.black}">${data.blackflag} ${data.black}</span>
     </div>
   </div>
   <div class="columns is-mobile">
@@ -629,12 +636,35 @@ export default {
         })
       }
       setTimeout(() => {
-        if (document.getElementById('matchscorefinal')) {
-          document.getElementById('matchscorefinal').innerHTML = document.getElementById('matchscore').innerHTML
+        let winColor = data.result === '1-0' ? 'white' : 'black'
+        let winnerDiv = document.querySelector(`.result-${winColor}`)
+        if (finalResult) {
+          let player1 = data.white > data.black ? data.white : data.black
+          let player2 = data.white > data.black ? data.black : data.white
+          let score1 = 0
+          let score2 = 0
+          match.results.map(e => {
+            score1 += e[0]
+            score2 += e[1]
+          })
+          if (score1 > score2) {
+            winnerDiv = document.querySelector(`.${player1}`)
+          } else if (score1 < score2) {
+            winnerDiv = document.querySelector(`.${player2}`)
+          } else {
+            winnerDiv = null
+          }
         }
         if (data.result !== '1/2-1/2') {
-          let sel = data.result === '1-0' ? 'white' : 'black'
-          document.querySelector(`.result-${sel}`).classList.add('is-success', 'is-outlined')
+          if (winnerDiv) {
+            winnerDiv.classList.add('is-success', 'is-outlined')
+            let confettis = ''
+            for (var i = 0; i < 10; i++) {
+              confettis += '<div class="confetti"></div>'
+            }
+            winnerDiv.innerHTML += `<div class="confetti-container">${confettis}</div>`
+            winnerDiv.innerHTML += '<div class="winnercup"><span class="icon"><span class="mdi mdi-trophy is-size-3"></span></span></div>'
+          }
         }
       }, 100)
     },
