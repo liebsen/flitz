@@ -32,7 +32,7 @@
               </div>
             </form>
             <div class="content columns is-multiline has-text-centered">
-              <div v-for="(item, index) in groups" :key="index" class="column is-4">
+              <div v-for="(item, index) in groups" :key="index" class="column is-6-tablet is-4-desktop">
                 <router-link :to="`/group/${item._id}`">
                   <article class="box preservefilter">
                     <h2>
@@ -60,7 +60,8 @@
                   <span class="icon">
                     <span class="fa fa-handshake is-size-5"></span>
                   </span>
-                  <span>{{ 'play_against' | t }} {{ 'human' | t }}</span>
+                  <span class="is-hidden-touch">{{ 'play_against' | t }}</span>
+                  <span>{{ 'human' | t }}</span>
                 </a>
               </div>
               <div class="column has-text-left">
@@ -68,25 +69,26 @@
                   <span class="icon">
                     <span class="fa fa-server is-size-5"></span>
                   </span>
-                  <span>{{ 'play_against' | t }} Stockfish</span>
+                  <span class="is-hidden-touch">{{ 'play_against' | t }}&nbsp;</span>
+                  <span> Stockfish</span>
                 </router-link>
               </div>
             </div>
             <div class="columns is-vcentered has-text-centered is-hidden-tablet">
               <div class="column">
-                <a @click="$root.play" class="button is-rounded is-success">
+                <a @click="$root.play" class="button is-large is-rounded is-success">
                   <span class="icon">
                     <span class="fa fa-handshake is-size-5"></span>
                   </span>
-                  <span>{{ 'play_against' | t }} {{ 'human' | t }}</span>
+                  <span>{{ 'human' | t }}</span>
                 </a>
               </div>
               <div class="column">
-                <router-link class="button is-rounded is-info" to="/stockfish">
+                <router-link class="button is-large is-rounded is-info" to="/stockfish">
                   <span class="icon">
                     <span class="fa fa-server is-size-5"></span>
                   </span>
-                  <span>{{ 'play_against' | t }}Stockfish</span>
+                  <span>Stockfish</span>
                 </router-link>
               </div>
             </div>

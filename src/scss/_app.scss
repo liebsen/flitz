@@ -97,6 +97,12 @@ label {
   justify-content: center!important;
 }
 
+span {
+  &.is-hidden-touch {
+    padding-right: 0.25rem;
+  }
+}
+
 .hero {
   height: 100%;
 }
@@ -146,11 +152,12 @@ label {
 
 .spinner-background {
   position: fixed;
-  top: 60px;
+  top: 0px;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 99;
+  opacity: 0.9;
   background-color: #edebe9;
 }
 

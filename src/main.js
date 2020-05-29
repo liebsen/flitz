@@ -109,6 +109,7 @@ new Vue({ // eslint-disable-line no-new
   },
   sockets: {
     opponent_not_found () {
+      console.log('opponent_not_found')
       this.isFindingOpponent = false
       snackbar('default', this.t('opponent_not_found'))
     },

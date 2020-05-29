@@ -46,15 +46,15 @@
                 </router-link>
               </td>
               <td>
-                <span v-html="item.event"></span>
+                <span>{{item.event}}</span>
               </td>
               <td>
                 <span v-show="item.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
                 <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
                 <span v-if="item.whiteflag" class="icon has-margin preservefilter">
-                  <span v-html="item.whiteflag"></span>
+                  <span>{{item.whiteflag}}</span>
                 </span>
-                <span v-html="item.white"></span>
+                <span>{{item.white}}</span>
               </td>
               <td>
                 <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
@@ -62,10 +62,10 @@
                 <span v-if="item.blackflag" class="icon has-margin preservefilter">
                   <span v-html="item.blackflag"></span>
                 </span>
-                <span v-html="item.black"></span>
+                <span>{{item.black}}</span>
               </td>
               <td>
-                <span v-html="item.date"></span>
+                <span>{{item.date}}</span>
               </td>
               <td>
                 <span v-html="$root.countMoves(item.pgn)"></span>
