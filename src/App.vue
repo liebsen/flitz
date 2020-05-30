@@ -171,8 +171,16 @@ export default {
     ])
   },
   mounted () {
-    console.log('playing')
     this.$socket.emit('playing')
+  },
+  sockets: {
+    pong (ms) {
+      this.latency = ms
+    },
+    playing (data) {
+      this.idle = data.idle
+      this.playing = data.playing
+    }
   },
   methods: {
     toggleMenu () {
