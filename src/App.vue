@@ -109,20 +109,19 @@
       <p class="ui-snackbar__message"></p>
     </div>
     <div class="footprint">
-      <div class="latency">
-        <span v-show="idle" class="is-size-7 has-text-grey">
-          {{ 'idle_now' | t }} <span class="has-text-success">{{ idle }}</span>
-        </span>
-        <span v-show="playing > 1" class="is-size-7 has-text-grey">
-          {{ 'playing_now' | t }} <span class="has-text-success">{{ playing }}</span>
-        </span>
-        <span v-show="latency" class="is-size-7 has-text-grey">
-          {{ 'latency' | t }} <span :class="{ 'has-text-danger': latency > 500, 'has-text-success': latency < 100 }">{{ latency }}ms</span>
-        </span>
-        <span class="is-size-7 has-text-grey">
-          | {{ 'powered_by' | t }} Stockfish
-        </span>
-      </div>
+      <span v-show="idle" class="is-size-7 has-text-grey">
+        {{ 'idle_now' | t }} <span class="has-text-success">{{ idle }}</span>
+      </span>
+      <span v-show="playing > 1" class="is-size-7 has-text-grey">
+        {{ 'playing_now' | t }} <span class="has-text-success">{{ playing }}</span>
+      </span>
+      <span v-show="latency" class="is-size-7 has-text-grey">
+        {{ 'latency' | t }} <span :class="{ 'has-text-danger': latency > 500, 'has-text-success': latency < 100 }">{{ latency }}ms</span>
+      </span>
+      <span v-show="!latency" class="is-size-7 has-text-grey">...</span>
+      <span class="is-size-7 has-text-grey">
+        | {{ 'powered_by' | t }} Stockfish
+      </span>
     </div>
   </div>
 </template>
@@ -176,9 +175,12 @@ export default {
   },
   sockets: {
     pong (ms) {
+      console.log('latency ' + ms)
       this.latency = ms
     },
     playing (data) {
+      console.log('idle ' + data.idle)
+      console.log('playing ' + data.playing)
       this.idle = data.idle
       this.playing = data.playing
     }
