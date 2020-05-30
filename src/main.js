@@ -23,7 +23,7 @@ axios.defaults.baseURL = store.state.endpoint
 
 Vue.use(new VueSocketIO({
   // debug: process.env.NODE_ENV === 'development',
-  debug: false,
+  debug: true,
   connection: store.state.endpoint
 }))
 

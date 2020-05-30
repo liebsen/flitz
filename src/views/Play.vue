@@ -161,7 +161,7 @@
                           <strong v-else>{{ data.white }}</strong>
                         </div>
                       </div>
-                      <div id="matchscore" class="column is-1" v-for="(item, index) in match.results" :key="index">
+                      <div class="column is-1" v-for="(item, index) in match.results" :key="index">
                         <div>
                           <span class="tag" :class="{ 'is-grey': item[0] === 0.5, 'is-success': item[0] === 1, 'is-danger': item[0] === 0 }">
                             <span v-if="item[0] === 0.5">½</span>
@@ -538,10 +538,8 @@ export default {
       }
 
       let resultText = winner ? `Gana ${winner}` : 'Tablas'
-      let game = parseInt(data.game)
-      let games = parseInt(data.games)
       let match = JSON.parse(localStorage.getItem('match'))
-      const finalResult = game === games
+      const finalResult = (parseInt(data.game) === parseInt(data.games))
 
       if (!match.results) {
         match.results = []
@@ -574,7 +572,7 @@ export default {
 </div>`)
         swal({
           title: resultText,
-          text: `Resultado parcial ${game}/${games}`,
+          text: `Resultado parcial ${data.game}/${data.games}`,
           content: {
             element: 'div',
             attributes: {
@@ -635,7 +633,7 @@ export default {
           this.$router.push('/group/' + match.group)
         })
       }
-      setTimeout(() => {
+      /* setTimeout(() => {
         let winColor = data.result === '1-0' ? 'white' : 'black'
         let winnerDiv = document.querySelector(`.result-${winColor}`)
         if (finalResult) {
@@ -666,7 +664,7 @@ export default {
             winnerDiv.innerHTML += '<div class="winnercup"><span class="icon"><span class="mdi mdi-trophy is-size-3"></span></span></div>'
           }
         }
-      }, 100)
+      }, 100) */
     },
     createNewGame (game) {
       let t = this
