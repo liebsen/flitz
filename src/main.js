@@ -108,6 +108,16 @@ new Vue({ // eslint-disable-line no-new
     window.removeEventListener('offline', this.updateOnlineStatus)
   },
   sockets: {
+    pong (ms) {
+      console.log('latency ' + ms)
+      this.latency = ms
+    },
+    playing (data) {
+      console.log('idle ' + data.idle)
+      console.log('playing ' + data.playing)
+      this.idle = data.idle
+      this.playing = data.playing
+    },
     opponent_not_found () {
       console.log('opponent_not_found')
       this.isFindingOpponent = false

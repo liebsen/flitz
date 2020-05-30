@@ -174,18 +174,6 @@ export default {
     console.log('playing')
     this.$socket.emit('playing')
   },
-  sockets: {
-    pong (ms) {
-      console.log('latency ' + ms)
-      this.latency = ms
-    },
-    playing (data) {
-      console.log('idle ' + data.idle)
-      console.log('playing ' + data.playing)
-      this.idle = data.idle
-      this.playing = data.playing
-    }
-  },
   methods: {
     toggleMenu () {
       this.$store.commit('togglemenu')
