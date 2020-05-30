@@ -171,6 +171,7 @@ export default {
     ])
   },
   mounted () {
+    console.log('playing')
     this.$socket.emit('playing')
   },
   sockets: {
