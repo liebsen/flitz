@@ -36,9 +36,6 @@
                 <router-link :to="`/group/${item._id}`">
                   <article class="box preservefilter">
                     <h2>
-                      <span class="icon">
-                        <span class="mdi mdi-layers"></span>
-                      </span>
                       <span>{{ item.code }}</span>
                       <span class="has-text-grey">{{ item.users }}</span>
                     </h2>

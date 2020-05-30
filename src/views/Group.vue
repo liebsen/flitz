@@ -131,7 +131,7 @@
                         <strong v-show="line.sender !== 'bot' && !line.owned">{{ line.sender }} </strong>
                         <span :class="{ 'has-text-grey' : line.sender === 'bot', 'has-text-white': line.owned }" v-html="line.text"></span>
                       </div>
-                      <!--div v-show="line.sender != 'bot'" v-html="line.ts" class="ts is-size-7" :class="{  'is-pulled-right has-text-right' : line.owned, 'is-pulled-left has-text-left' : !line.owned, 'has-text-grey': line.sender !== 'bot', 'has-text-white': line.sender === 'bot' }"></div-->
+                      <div v-show="line.sender != 'bot'" v-html="line.ts" class="ts is-size-7" :class="{  'is-pulled-right has-text-right' : line.owned, 'is-pulled-left has-text-left' : !line.owned, 'has-text-grey': line.sender !== 'bot', 'has-text-white': line.sender === 'bot' }"></div>
                     </div>
                   </div>
                 </div>
