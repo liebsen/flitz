@@ -327,6 +327,7 @@ export default {
         ],
         pieces: [
           'classic',
+          'cburnett',
           'neo',
           'neo_wood',
           'wood',
