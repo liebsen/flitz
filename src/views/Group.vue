@@ -638,7 +638,7 @@ export default {
       let t = this
       return new Promise(function (resolve, reject) {
         var pos = 'start'
-        var pieces = '/img/chesspieces/classic/{piece}.png'
+        var pieces = '/img/chesspieces/cburnett/{piece}.png'
 
         if (data.fen) {
           pos = data.fen
@@ -979,7 +979,7 @@ export default {
         pieces.forEach(tag => {
           let e = document.querySelector(tag)
           let li = window.getComputedStyle(e)
-          e.style.backgroundImage = li.getPropertyValue('background-image').split('classic').join(saved.pieces)
+          e.style.backgroundImage = li.getPropertyValue('background-image').split('cburnett').join(saved.pieces)
         })
       }, 10)
     }

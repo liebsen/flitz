@@ -277,7 +277,7 @@ export default {
     return {
       boardCfg: {
         position: 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R',
-        pieceTheme: '/img/chesspieces/classic/{piece}.png',
+        pieceTheme: '/img/chesspieces/cburnett/{piece}.png',
         draggable: false
       },
       languages: [
@@ -326,14 +326,14 @@ export default {
           'walnut'
         ],
         pieces: [
-          'classic',
           'cburnett',
+          'alpha',
           'neo',
           'neo_wood',
           'wood',
           'bases',
-          'alpha',
           'chess24',
+          'merida',
           'leipzig',
           'fantasy',
           'book',

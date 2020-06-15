@@ -190,7 +190,7 @@ export default {
     pieces.forEach(tag => {
       let e = document.querySelector(tag)
       let li = window.getComputedStyle(e)
-      e.style.backgroundImage = li.getPropertyValue('background-image').split('classic').join(this.player.pieces)
+      e.style.backgroundImage = li.getPropertyValue('background-image').split('cburnett').join(this.player.pieces)
     })
     this.$root.loading = false
   },
@@ -965,7 +965,7 @@ export default {
         onDragStart: this.onDragStart,
         onDrop: this.onDrop,
         onSnapEnd: this.onSnapEnd,
-        pieceTheme: '/img/chesspieces/classic/{piece}.png'
+        pieceTheme: '/img/chesspieces/cburnett/{piece}.png'
       },
       chart: {
         width: 100,
