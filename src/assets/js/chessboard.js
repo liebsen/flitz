@@ -685,8 +685,8 @@ var buildSquare = function(color, size, id) {
     animatedPieceEl.css({
       display: '',
       position: 'absolute',
-      top: srcSquarePosition.top,
-      left: srcSquarePosition.left
+      top: srcSquarePosition ? srcSquarePosition.top : 0,
+      left: srcSquarePosition ? srcSquarePosition.left : 0
     })
 
     // remove original piece from source square

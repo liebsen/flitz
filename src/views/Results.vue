@@ -151,7 +151,7 @@ export default {
       })
     },
     submit: function () {
-      this.$router.push('/results?q=' + this.pager.query.trim())
+      this.$router.push('/results?q=' + this.pager.query.trim()).catch(() => {})
     }
   },
   data () {

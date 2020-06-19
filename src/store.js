@@ -178,6 +178,10 @@ export default new Vuex.Store({
             stored.elo = 1500
           }
 
+          if (!stored.moveSpeed) {
+            stored.moveSpeed = 250
+          }
+
           if (Object.keys(props).length) {
             Object.keys(props).map(i => {
               stored[i] = props[i]

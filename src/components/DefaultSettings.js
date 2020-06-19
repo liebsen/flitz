@@ -17,6 +17,7 @@ export default {
   lang: lang,
   elo: 1500,
   sound: true,
+  moveSpeed: 250,
   pieces: 'cburnett',
   board: 'classic',
   observe: false,

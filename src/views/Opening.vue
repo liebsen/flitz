@@ -314,6 +314,7 @@ export default {
 
           if (pref.pieces) {
             this.boardCfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
+            this.boardCfg.moveSpeed = this.player.moveSpeed
             this.boardColor = pref.board
             this.$root.checkBoardStyle(pref.pieces)
           }

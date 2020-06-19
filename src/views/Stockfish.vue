@@ -964,6 +964,7 @@ export default {
         draggable: true,
         onDragStart: this.onDragStart,
         onDrop: this.onDrop,
+        moveSpeed: this.player.moveSpeed,
         onSnapEnd: this.onSnapEnd,
         pieceTheme: '/img/chesspieces/cburnett/{piece}.png'
       },

@@ -774,6 +774,7 @@ export default {
         var cfg = {
           draggable: true,
           position: pos,
+          moveSpeed: this.player.moveSpeed,
           pieceTheme: '/img/chesspieces/wikipedia/{piece}.png'
         }
 
@@ -785,6 +786,7 @@ export default {
 
         if (pref.pieces) {
           cfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
+          cfg.moveSpeed = this.player.moveSpeed
           t.boardColor = pref.board
           this.$root.checkBoardStyle(pref.pieces)
         }

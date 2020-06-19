@@ -62,7 +62,7 @@
                 <div class="column is-paddingless is-2">
                   <router-link v-show="data.prev" :to="`/game/${data.prev}`">
                     <span class="icon">
-                      <span class="mdi mdi-skip-previous-circle-outline is-size-3 has-text-grey"></span>
+                      <span class="mdi mdi-skip-previous is-size-3 has-text-grey"></span>
                     </span>
                   </router-link>
                 </div>
@@ -80,7 +80,7 @@
                 <div class="column is-paddingless is-2">
                   <router-link v-show="data.next" :to="`/game/${data.next}`">
                     <span class="icon is-large">
-                      <span class="mdi mdi-skip-next-circle-outline is-size-3 has-text-grey"></span>
+                      <span class="mdi mdi-skip-next is-size-3 has-text-grey"></span>
                     </span>
                   </router-link>
                 </div>
@@ -167,6 +167,7 @@ export default {
     document.onkeydown = this.onKeyDown
   },
   destroyed () {
+    this.gameEnd()
     document.removeEventListener('onkeydown', this.onKeyDown)
   },
   mounted () {
@@ -228,11 +229,12 @@ export default {
         this.uciCmd('position startpos moves' + this.moveList(), this.evaler)
         this.uciCmd('eval', this.evaler)
 
+        var speed = this.player.moveSpeed || 250
         if (moved) {
           setTimeout(() => {
             this.moveSound(moved)
             this.addHightlight(moved)
-          }, 250)
+          }, speed)
         }
 
         if (this.index === this.gameMoves.length) {
@@ -340,6 +342,10 @@ export default {
       // console.log("UCI: " + cmd);
       (which || this.evaler).postMessage(cmd)
     },
+    gameEnd () {
+      this.paused = 1
+      this.board.clear()
+    },
     gameStart () {
       /* global STOCKFISH */
       const pref = JSON.parse(localStorage.getItem('player')) || {}
@@ -364,6 +370,7 @@ export default {
         setTimeout(() => {
           if (pref.pieces) {
             this.boardCfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
+            this.boardCfg.moveSpeed = this.player.moveSpeed
             this.boardColor = pref.board
             this.$root.checkBoardStyle(pref.pieces)
           }
@@ -636,11 +643,11 @@ export default {
         this.board.position(this.game.fen())
         this.setMovesTable()
         this.drawChartPosition()
-
+        var speed = this.player.moveSpeed || 250
         setTimeout(() => {
           this.moveSound(moved)
           this.addHightlight(moved)
-        }, 250)
+        }, speed)
       }
 
       if (!this.paused) {
@@ -682,7 +689,6 @@ export default {
           status += (t.engineStatus.score.substr(0, 4) === 'Mate' ? ' ' : ' Score: ') + t.engineStatus.score
         }
       }
-      console.log(status)
       t.status = status
     },
     setClock () {

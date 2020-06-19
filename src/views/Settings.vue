@@ -83,9 +83,15 @@
                   </div>
                 </div>
                 <div class="field-body">
-                  <div class="control has-checkradio" title="Notificaciones hiper-visibles">
+                  <div class="control has-checkradio" :title="'huge_notifications' | t ">
                     <input v-model="data.strongnotification" class="is-checkradio has-background-color is-white" id="strongnotification" type="checkbox" @click="previewStrongNotification">
                     <label class="label" for="strongnotification">{{ 'huge_notifications' | t }}</label>
+                  </div>
+                </div>
+                <div class="field-body">
+                  <div class="control has-checkradio" :title="'slowpieceanim' | t">
+                    <input v-model="data.slowpieceanim" class="is-checkradio has-background-color is-white" id="slowpieceanim" type="checkbox" @click="previewslowpieceanim">
+                    <label class="label" for="slowpieceanim">{{ 'slowpieceanim' | t }}</label>
                   </div>
                 </div>
                 <div class="field-body">
@@ -161,6 +167,9 @@ export default {
       setTimeout(() => {
         this.$root.loading = false
         this.drawBoard()
+        setTimeout(() => {
+          this.previewslowpieceanim()
+        }, 1000)
       }, 250)
     })
   },
@@ -192,13 +201,35 @@ export default {
     },
     addWindowListeners () {
       this.board.resize()
-      document.querySelector('.square-b5').classList.add('highlight-move')
-      document.querySelector('.square-f1').classList.add('highlight-move')
+    },
+    setSpeedMove () {
+      if (!this.player.moveSpeed) {
+        this.boardCfg.moveSpeed = this.player.moveSpeed
+      }
+      if (this.data.slowpieceanim) {
+        this.boardCfg.moveSpeed = 500
+      } else {
+        this.boardCfg.moveSpeed = 250
+      }
+    },
+    previewslowpieceanim () {
+      setTimeout(() => {
+        this.setSpeedMove()
+        this.$store.dispatch('player', { moveSpeed: this.boardCfg.moveSpeed })
+        this.board.start(false)
+        this.game.move('e4')
+        this.board.position(this.game.fen())
+        document.querySelector('.square-e2').classList.add('highlight-move')
+        document.querySelector('.square-e4').classList.add('highlight-move')
+      }, 100)
     },
     previewSound () {
       setTimeout(() => {
         if (this.data.sound) {
           PlaySound('check.ogg')
+          snackbar('success', '🔊')
+        } else {
+          snackbar('default', '🔇')
         }
       }, 100)
     },
@@ -238,13 +269,12 @@ export default {
 
       this.board = Chessboard('board', this.boardCfg)
       this.board.resize()
-      document.querySelector('.square-b5').classList.add('highlight-move')
-      document.querySelector('.square-f1').classList.add('highlight-move')
     },
     submit () {
       this.$root.saving = true
       this.$socket.emit('lobby_leave', { code: this.anchor.code })
       this.data.ref = this.anchor.code || 'desconocido'
+      this.data.moveSpeed = this.boardCfg.moveSpeed
       this.$store
         .dispatch('player', this.data)
         .then(data => {
@@ -276,7 +306,7 @@ export default {
   data () {
     return {
       boardCfg: {
-        position: 'r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R',
+        position: 'start',
         pieceTheme: '/img/chesspieces/cburnett/{piece}.png',
         draggable: false
       },

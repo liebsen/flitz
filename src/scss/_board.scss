@@ -80,6 +80,8 @@ $blue: #4183d7;
     min-height: 50px;
     position: relative;
     margin-bottom: 0.75rem;
+    margin-left: auto;
+    margin-right: auto;
     > div {
         box-shadow: 0px 10px 20px #00000015;
         border-radius: 5px;
@@ -195,7 +197,7 @@ $blue: #4183d7;
 }
 
 .in-check {
-  box-shadow: 0 0 50px red inset;
+  box-shadow: 0 0 50px transparent inset, 0 0 75px red inset;
 }
 
 .movesTableContainer {

@@ -458,6 +458,7 @@ export default {
           var cfg = {
             draggable: false,
             position: pos,
+            moveSpeed: this.player.moveSpeed,
             pieceTheme: '/img/chesspieces/wikipedia/{piece}.png'
           }
 
