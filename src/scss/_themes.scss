@@ -321,6 +321,47 @@
     }
 }
 
+.fantasy {
+    .board-b72b1 {
+        background: url(/img/boards/fantasy.png) no-repeat scroll 0% 0% / 100% 100%
+    }
+    .white-1e1d7 {
+        color: #f0a820;
+    }
+    .black-3c85d {
+        color: #8f3a97;
+    }
+    .bar, .moveRow, .moveRow a, .movew {
+        background-color: #8f3a97;
+        color: #f0a820;
+    }
+    .bar-progress, .moveb, .moveb a {
+        background-color: #f0a820;
+        color: #8f3a97;
+    }
+    .score-container {
+        background-color: #f0a820;
+        .score {
+            background-color: #8f3a97;
+        }
+    }
+    .chart-container {
+        .white {
+            background-color: #8f3a97;
+            polygon {
+                fill: #f0a820;
+            }
+        }
+        .black {
+            background-color: #f0a820;
+            polygon {
+                fill: #8f3a97;
+            }
+        }
+    }
+}
+
+
 .glass {
     .board-b72b1 {
         background: url(/img/boards/glass.webp) no-repeat scroll 0% 0% / 100% 100%

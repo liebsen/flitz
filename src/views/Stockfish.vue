@@ -349,14 +349,14 @@ export default {
     },
     gameStart (level) {
       /* global STOCKFISH */
-      var t = this
+      let t = this
       const pref = JSON.parse(localStorage.getItem('player')) || {}
 
-      t.opponentName = 'Stockfish ' + (level / 2)
-      t.engine = typeof STOCKFISH === 'function' ? STOCKFISH() : new Worker('/js/stockfish.js')
-      t.engineStatus = {}
+      this.opponentName = 'Stockfish ' + this.$root.t('level') + ' ' + (level / 2)
+      this.engine = typeof STOCKFISH === 'function' ? STOCKFISH() : new Worker('/js/stockfish.js')
+      this.engineStatus = {}
 
-      t.engine.onmessage = function (event) {
+      this.engine.onmessage = function (event) {
         var line
         var t = window.app
         if (event && typeof event === 'object') {
