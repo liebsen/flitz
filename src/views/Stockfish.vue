@@ -446,6 +446,7 @@ export default {
           t.boardCfg.draggable = false
         }
 
+        t.boardCfg.moveSpeed = this.player.moveSpeed || 250
         if (pref.pieces) {
           t.boardCfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
           t.boardColor = pref.board
@@ -964,7 +965,6 @@ export default {
         draggable: true,
         onDragStart: this.onDragStart,
         onDrop: this.onDrop,
-        moveSpeed: this.player.moveSpeed,
         onSnapEnd: this.onSnapEnd,
         pieceTheme: '/img/chesspieces/cburnett/{piece}.png'
       },

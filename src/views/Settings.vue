@@ -330,6 +330,7 @@ export default {
           'burled_wood',
           'dark_wood',
           'dash',
+          'fantasy',
           'glass',
           'graffiti',
           'green',
