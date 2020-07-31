@@ -150,7 +150,7 @@
                       <strong class="has-text-grey is-size-5">{{ eco }}</strong>
                       <span class="has-text-black is-size-5">{{ opening }}</span>
                     </div>
-                    <div v-show="match.results" class="columns is-mobile is-narrow">
+                    <div v-show="match.results" id="matchresults" class="columns is-mobile is-narrow">
                       <div class="column is-3">
                         <div class="">
                           <strong v-if="data.white > data.black">{{ data.white }}</strong>
@@ -619,7 +619,7 @@ export default {
   </div>
   <div class="columns is-mobile">
     <div class="column">
-      <div id="matchscorefinal"></div>
+      <div id="matchscorefinal" class="fadeIn"></div>
     </div>
   </div>
 </div>`)
@@ -637,6 +637,10 @@ export default {
           this.$router.push('/group/' + match.group)
         })
       }
+      setTimeout(() => {
+        document.getElementById('matchscorefinal').innerHTML = document.getElementById('matchresults').innerHTML
+      }, 1000)
+
       /* setTimeout(() => {
         let winColor = data.result === '1-0' ? 'white' : 'black'
         let winnerDiv = document.querySelector(`.result-${winColor}`)

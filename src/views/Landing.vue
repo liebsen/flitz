@@ -57,17 +57,17 @@
                   <span class="icon">
                     <span class="fa fa-handshake is-size-5"></span>
                   </span>
-                  <span class="is-hidden-touch">{{ 'play_against' | t }}</span>
+                  <!--span class="is-hidden-touch">{{ 'play_against' | t }}</span-->
                   <span>{{ 'human' | t }}</span>
                 </a>
               </div>
               <div class="column has-text-left">
-                <router-link class="button is-rounded is-info is-large" to="/stockfish">
+                <router-link class="button is-rounded is-danger is-large" to="/stockfish">
                   <span class="icon">
                     <span class="fa fa-server is-size-5"></span>
                   </span>
-                  <span class="is-hidden-touch">{{ 'play_against' | t }}&nbsp;</span>
-                  <span> Stockfish</span>
+                  <!--span class="is-hidden-touch">{{ 'play_against' | t }}&nbsp;</span-->
+                  <span>Stockfish</span>
                 </router-link>
               </div>
             </div>
