@@ -97,8 +97,8 @@
             <div class="columns has-text-centered">
               <div class="column">
                 <div class="field">
-                  <span class="has-text-black is-size-5">{{ opening }}</span>
                   <strong class="has-text-grey is-size-5">{{ eco }}</strong>
+                  <span class="has-text-black is-size-5">{{ opening }}</span>
                 </div>
                 <!--div class="field">
                   <span v-html="status" class="has-text-black"></span>

@@ -68,10 +68,10 @@
                 </div>
                 <div class="column">
                   <div class="field">
-                    <span v-show="data.opening" class="has-text-black is-size-5">{{ data.opening }}</span>
-                    <span v-show="!data.opening" class="has-text-black is-size-5">{{ opening }}</span>
                     <strong v-show="data.eco" class="has-text-grey is-size-5">{{ data.eco }}</strong>
                     <strong v-show="!data.eco" class="has-text-grey is-size-5">{{ ecode }}</strong>
+                    <span v-show="data.opening" class="has-text-black is-size-5">{{ data.opening }}</span>
+                    <span v-show="!data.opening" class="has-text-black is-size-5">{{ opening }}</span>
                   </div>
                   <!--div class="field">
                     <span v-html="score" class="has-text-black"></span>

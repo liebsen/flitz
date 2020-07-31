@@ -147,8 +147,8 @@
                 <div class="columns has-text-centered">
                   <div class="column">
                     <div class="field">
-                      <span class="has-text-black is-size-5">{{ opening }}</span>
                       <strong class="has-text-grey is-size-5">{{ eco }}</strong>
+                      <span class="has-text-black is-size-5">{{ opening }}</span>
                     </div>
                     <div v-show="match.results" class="columns is-mobile is-narrow">
                       <div class="column is-3">
@@ -212,7 +212,7 @@
                             <a :class="'moveindex m' + (move.i-2)" @click="gamePos(move.i-2)">
                               <span v-html="move.white"></span>
                               <span v-if="annotations[index * 2]" class="icon">
-                                <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2] === '$1', 'mdi-sticker-check' : annotations[index * 2] === '$3', 'mdi-sticker-minus' : annotations[index * 2] === '$2', 'mdi-sticker-remove' : annotations[index * 2] === '$4', 'mdi-book-open': annotations[index * 2] === '$12'}"></span>
+                                <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2] === '$1', 'mdi-sticker-check' : annotations[index * 2] === '$3', 'mdi-sticker-minus' : annotations[index * 2] === '$2', 'mdi-sticker-remove' : annotations[index * 2] === '$4', 'mdi-book-open': annotations[index * 2] === '$12', 'mdi-sticker-alert': annotations[index * 2] === '$14', 'mdi-sticker-emoji': annotations[index * 2] === '$15'}"></span>
                               </span>
                               <span v-if="performance[index * 2]">
                                 <small> {{ performance[index * 2] }}</small>
@@ -223,7 +223,7 @@
                             <a :class="'moveindex m' + (move.i-1)" @click="gamePos(move.i-1)">
                               <span v-html="move.black"></span>
                               <span v-if="annotations[index * 2 + 1]" class="icon">
-                                <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-dots-horizontal': !annotations[index * 2] }"></span>
+                                <span class="mdi" :class="{ 'mdi-sticker-plus' : annotations[index * 2 + 1] === '$1', 'mdi-sticker-check' : annotations[index * 2 + 1] === '$3', 'mdi-sticker-minus' : annotations[index * 2 + 1] === '$2', 'mdi-sticker-remove' : annotations[index * 2 + 1] === '$4', 'mdi-book-open': annotations[index * 2 + 1] === '$12', 'mdi-sticker-alert': annotations[index * 2 + 1] === '$14', 'mdi-sticker-emoji': annotations[index * 2 + 1] === '$15'}"></span>
                               </span>
                               <span v-if="performance[index * 2 + 1]">
                                 <small> {{ performance[index * 2 + 1] }}</small>
@@ -323,7 +323,6 @@ export default {
         if (!t.gameStarted && !t.data.result) {
           t.gameStarted = true
           t.boardTaps()
-          t.startClock()
           PlaySound('start.ogg')
         }
       }, 100)
@@ -407,10 +406,15 @@ export default {
         t.board.position(t.game.fen())
         t.updateMoves(move)
       }
-      t.timer.w = parseInt(data.wtime)
-      t.timer.b = parseInt(data.btime)
-      t.tdisplay.w = t.$root.getTimeDisplay(t.timer.w)
-      t.tdisplay.b = t.$root.getTimeDisplay(t.timer.b)
+
+      if (!t.clock) {
+        t.startClock()
+      } else {
+        t.timer.w = parseInt(data.wtime)
+        t.timer.b = parseInt(data.btime)
+        t.tdisplay.w = t.$root.getTimeDisplay(t.timer.w)
+        t.tdisplay.b = t.$root.getTimeDisplay(t.timer.b)
+      }
     },
     acceptdraw (data) {
       // swal.close()
@@ -969,10 +973,8 @@ export default {
           var turn = t.game.turn()
           if (--t.timer[turn] < 0) {
             t.timer[turn] = 0
-            console.log('1')
             if (turn === t.playerColor[0]) {
               PlaySound('defeat.mp3')
-              console.log('2')
               t.sendResults()
             } else {
               PlaySound('victory.mp3')
