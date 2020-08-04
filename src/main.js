@@ -22,7 +22,8 @@ import App from './App.vue'
 axios.defaults.baseURL = store.state.endpoint
 
 Vue.use(new VueSocketIO({
-  debug: process.env.NODE_ENV === 'development',
+  // debug: process.env.NODE_ENV === 'development',
+  debug: false,
   connection: store.state.endpoint
 }))
 
@@ -100,6 +101,8 @@ new Vue({ // eslint-disable-line no-new
 
     window.addEventListener('online', this.updateOnlineStatus)
     window.addEventListener('offline', this.updateOnlineStatus)
+
+    this.checkBoardStyle()
     this.loading = false
   },
   beforeDestroy () {
@@ -259,16 +262,20 @@ new Vue({ // eslint-disable-line no-new
         return pgn.split('.').length
       }
     },
-    checkBoardStyle (val) {
-      document.querySelector('body').classList.remove('is3d')
-      document.querySelector('body').classList.remove('magi3d')
-      if (val.indexOf('jade3d') > -1) {
-        document.querySelector('body').classList.add('jade3d')
-      } else if (val.indexOf('magi3d') > -1) {
-        document.querySelector('body').classList.add('magi3d')
-      } else {
-        if (val.indexOf('3d') > -1) {
-          document.querySelector('body').classList.add('is3d')
+    checkBoardStyle () {
+      const pref = JSON.parse(localStorage.getItem('player')) || {}
+      const val = pref.pieces
+      if (val) {
+        document.querySelector('body').classList.remove('is3d')
+        document.querySelector('body').classList.remove('magi3d')
+        if (val.indexOf('jade3d') > -1) {
+          document.querySelector('body').classList.add('jade3d')
+        } else if (val.indexOf('magi3d') > -1) {
+          document.querySelector('body').classList.add('magi3d')
+        } else {
+          if (val.indexOf('3d') > -1) {
+            document.querySelector('body').classList.add('is3d')
+          }
         }
       }
     },

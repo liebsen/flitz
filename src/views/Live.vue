@@ -28,38 +28,11 @@
         </div>
       </form>
       <div v-if="Object.keys(data).length" class="has-text-left">
-        <table class="table">
-          <thead>
-            <th></th>
-            <th>{{ 'event' | t }}</th>
-            <th>{{ 'white' | t }}</th>
-            <th>{{ 'black' | t }}</th>
-            <th>{{ 'plys' | t }}</th>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in data.games" :key="index">
-              <td>
-                <router-link :to="'/watch/'+item._id">
-                  <span class="icon">
-                    <span class="mdi mdi-play"></span>
-                  </span>
-                </router-link>
-              </td>
-              <td>
-                <span v-html="item.event"></span>
-              </td>
-              <td>
-                <span v-html="item.white"></span>
-              </td>
-              <td>
-                <span v-html="item.black"></span>
-              </td>
-              <td>
-                <span v-html="$root.countMoves(item.pgn)"></span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="columns is-multiline">
+          <div class="column is-12-mobile is-6-tablet is-4-desktop is-3-widescreen" v-for="(item, index) in data.games" :key="index">
+            <game-list :data-item="item"/>
+          </div>
+        </div>
       </div>
     </div>
     <table-pager :dataSet="pager"/>
@@ -70,10 +43,12 @@
 import axios from 'axios'
 import snackbar from '../components/Snackbar'
 import TablePager from '@/components/TablePager'
+import GameList from '@/components/GameList'
 export default {
   name: 'live',
   components: {
-    TablePager
+    TablePager,
+    GameList
   },
   watch: {
     '$route': function () {

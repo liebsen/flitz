@@ -450,7 +450,6 @@ export default {
         if (pref.pieces) {
           t.boardCfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
           t.boardColor = pref.board
-          t.$root.checkBoardStyle(pref.pieces)
         }
 
         t.board = Chessboard('board', t.boardCfg)

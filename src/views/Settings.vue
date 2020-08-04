@@ -264,7 +264,6 @@ export default {
         this.boardCfg.pieceTheme = '/img/chesspieces/' + this.data.pieces + '/{piece}.png'
         this.boardColor = this.data.board
         this.pieceColor = this.data.pieces
-        this.$root.checkBoardStyle(this.data.pieces)
       }
 
       this.board = Chessboard('board', this.boardCfg)

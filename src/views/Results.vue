@@ -27,52 +27,11 @@
         </div>
       </form>
       <div v-if="data.count" class="has-text-left">
-        <table class="table is-narrow is-striped is-fullwidth">
-          <thead>
-            <th></th>
-            <th>{{ 'event' | t }}</th>
-            <th>{{ 'white' | t }}</th>
-            <th>{{ 'black' | t }}</th>
-            <th>{{ 'date' | t }}</th>
-            <th>{{ 'plys' | t }}</th>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in data.games" :key="index">
-              <td>
-                <router-link :to="'/game/'+item._id">
-                  <span class="icon">
-                    <span class="mdi mdi-chess-king"></span>
-                  </span>
-                </router-link>
-              </td>
-              <td>
-                <span>{{item.event}}</span>
-              </td>
-              <td>
-                <span v-show="item.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
-                <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
-                <span v-if="item.whiteflag" class="icon has-margin preservefilter">
-                  <span>{{item.whiteflag}}</span>
-                </span>
-                <span>{{item.white}}</span>
-              </td>
-              <td>
-                <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
-                <span v-show="item.result==='1/2-1/2'" class="mdi mdi-handshake has-text-success"></span>
-                <span v-if="item.blackflag" class="icon has-margin preservefilter">
-                  <span v-html="item.blackflag"></span>
-                </span>
-                <span>{{item.black}}</span>
-              </td>
-              <td>
-                <span>{{item.date}}</span>
-              </td>
-              <td>
-                <span v-html="$root.countMoves(item.pgn)"></span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="columns is-multiline">
+          <div class="column is-12-mobile is-6-tablet is-4-desktop is-3-widescreen" v-for="(item, index) in data.games" :key="index">
+            <game-list :data-item="item"/>
+          </div>
+        </div>
       </div>
     </div>
     <table-pager :dataSet="pager"/>
@@ -84,6 +43,7 @@
 import axios from 'axios'
 import snackbar from '../components/Snackbar'
 import TablePager from '@/components/TablePager'
+import GameList from '@/components/GameList'
 export default {
   name: 'results',
   watch: {
@@ -92,7 +52,8 @@ export default {
     }
   },
   components: {
-    TablePager
+    TablePager,
+    GameList
   },
   mounted: function () {
     this.pager.query = this.$route.query.q || ''
@@ -163,7 +124,7 @@ export default {
       pager: {
         pages: {},
         query: '',
-        limit: 25,
+        limit: 12,
         offset: 0
       },
       searching: false,

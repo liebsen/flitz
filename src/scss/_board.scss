@@ -76,6 +76,20 @@ $blue: #4183d7;
     }
 }
 
+.is-listing-board {
+    .media-left,
+    figure {
+        width: 200px;
+        height: 200px;
+        margin: 0;
+    }
+    .notation-322f9 {
+        display: none;
+    }
+    .media-left {
+        margin-right: 0.5rem;
+    }
+}
 .chart-container {
     min-height: 50px;
     position: relative;

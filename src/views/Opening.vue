@@ -316,7 +316,6 @@ export default {
             this.boardCfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
             this.boardCfg.moveSpeed = this.player.moveSpeed
             this.boardColor = pref.board
-            this.$root.checkBoardStyle(pref.pieces)
           }
 
           this.board = Chessboard('board', this.boardCfg)

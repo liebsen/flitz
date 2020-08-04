@@ -465,7 +465,6 @@ export default {
           if (pref.pieces) {
             cfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
             this.boardColor = pref.board
-            this.$root.checkBoardStyle(pref.pieces)
           }
 
           this.board = Chessboard('board', cfg)

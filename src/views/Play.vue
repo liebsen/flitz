@@ -619,7 +619,7 @@ export default {
   </div>
   <div class="columns is-mobile">
     <div class="column">
-      <div id="matchscorefinal" class="fadeIn"></div>
+      <div id="matchscorefinal" class="columns fadeIn"></div>
     </div>
   </div>
 </div>`)
@@ -636,10 +636,10 @@ export default {
           let match = JSON.parse(localStorage.getItem('match'))
           this.$router.push('/group/' + match.group)
         })
+        setTimeout(() => {
+          document.getElementById('matchscorefinal').innerHTML = document.getElementById('matchresults').innerHTML
+        }, 1000)
       }
-      setTimeout(() => {
-        document.getElementById('matchscorefinal').innerHTML = document.getElementById('matchresults').innerHTML
-      }, 1000)
 
       /* setTimeout(() => {
         let winColor = data.result === '1-0' ? 'white' : 'black'
@@ -796,7 +796,6 @@ export default {
           cfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
           cfg.moveSpeed = this.player.moveSpeed
           t.boardColor = pref.board
-          this.$root.checkBoardStyle(pref.pieces)
         }
 
         if (window.innerWidth < 789) {

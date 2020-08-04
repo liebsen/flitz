@@ -58,14 +58,14 @@
         <div class="column">
           <div class="tabs is-boxed is-marginless">
             <ul>
-              <li :class="{ 'is-active' : tab === 'chat' }">
-                <a @click="setTab('chat')" title="Chat">
-                  <span class="icon"><i class="mdi mdi-comment-text-outline" aria-hidden="true"></i></span>
-                </a>
-              </li>
               <li :class="{ 'is-active' : tab === 'results' }">
                 <a @click="setTab('results')" :title="'results' | t">
                   <span class="icon"><i class="mdi mdi-view-list" aria-hidden="true"></i></span>
+                </a>
+              </li>
+              <li :class="{ 'is-active' : tab === 'chat' }">
+                <a @click="setTab('chat')" title="Chat">
+                  <span class="icon"><i class="mdi mdi-comment-text-outline" aria-hidden="true"></i></span>
                 </a>
               </li>
               <li v-show="games.length" :class="{ 'is-active' : tab === 'playing' }">
@@ -158,24 +158,9 @@
             </div>
             <div v-show="data.results" class="column">
               <div class="columns is-multiline">
-                <div class="column is-4" v-for="(item, index) in data.results" :key="index">
-                  <div v-if="index < maxResults || showResultsAll" class="box">
-                    <router-link :to="'/game/'+item.game">
-                      <h6>
-                        <span class="preservefilter">{{ item.white.flag }}</span>
-                        <span> {{ item.white.code }}</span>
-                        <span class="has-text-grey"> {{ item.white.elo }}</span>
-                        <span v-show="item.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
-                      </h6>
-                      <h6>
-                        <span class="preservefilter">{{ item.black.flag }}</span>
-                        <span> {{ item.black.code }}</span>
-                        <span class="has-text-grey"> {{ item.black.elo }}</span>
-                        <span v-show="item.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
-                      </h6>
-                      <span>{{ item.date | humanReadableTime }}</span>
-                      <span>{{ item.plys }}</span>
-                    </router-link>
+                <div class="column is-12-mobile is-6-tablet is-4-desktop" v-for="(item, index) in data.results" :key="index">
+                  <div v-if="index < maxResults || showResultsAll">
+                    <game-list :data-item="item"/>
                   </div>
                 </div>
               </div>
@@ -195,19 +180,23 @@ import axios from 'axios'
 import moment from 'moment'
 import { mapState } from 'vuex'
 import snackbar from '@/components/Snackbar'
+import GameList from '@/components/GameList'
 import swal from 'sweetalert'
 import PlaySound from '@/components/PlaySound'
 import Chess from 'chess.js'
 import Chessboard from '../assets/js/chessboard'
 export default {
   name: 'group',
+  components: {
+    GameList
+  },
   data () {
     return {
       maxResults: 9,
       showResultsAll: false,
       groupKey: 0,
       chat: '',
-      tab: 'chat',
+      tab: 'results',
       tried: false,
       games: [],
       boards: [],
