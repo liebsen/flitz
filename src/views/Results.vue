@@ -28,7 +28,7 @@
       </form>
       <div v-if="data.count" class="has-text-left">
         <div class="columns is-multiline">
-          <div class="column is-12-mobile is-6-tablet is-4-desktop is-3-widescreen" v-for="(item, index) in data.games" :key="index">
+          <div class="column is-12-mobile is-6-tablet is-4-desktop is-3-fullhd" v-for="(item, index) in data.games" :key="index">
             <game-list :data-item="item"/>
           </div>
         </div>

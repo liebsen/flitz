@@ -89,6 +89,11 @@ $blue: #4183d7;
     .media-left {
         margin-right: 0.5rem;
     }
+    .media-content {
+        span {
+            display: blok;
+        }
+    }
 }
 .chart-container {
     min-height: 50px;

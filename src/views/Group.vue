@@ -158,7 +158,7 @@
             </div>
             <div v-show="data.results" class="column">
               <div class="columns is-multiline">
-                <div class="column is-12-mobile is-6-tablet is-4-desktop" v-for="(item, index) in data.results" :key="index">
+                <div class="column is-12-mobile is-6-tablet is-6-desktop is-4-fullhd" v-for="(item, index) in data.results" :key="index">
                   <div v-if="index < maxResults || showResultsAll">
                     <game-list :data-item="item"/>
                   </div>

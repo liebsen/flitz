@@ -1,38 +1,45 @@
 <template>
   <div class="is-listing-board" :class="boardColor">
-    <router-link :to="getLink()">
-      <article class="media">
-        <div class="media-left">
+    <article class="media">
+      <div class="media-left">
+        <router-link :to="getLink()">
           <figure class="board preservefilter">
             <div ref="board"></div>
           </figure>
-        </div>
-        <div class="media-content">
-          <div class="content">
-            <h6>
-              <span v-if="dataItem.white.flag" class="preservefilter">{{ dataItem.white.flag }}</span>
-              <span v-else class="preservefilter">{{ dataItem.whiteflag }}</span>
-              <span v-if="dataItem.white.code"> {{ dataItem.white.code }}</span>
-              <span v-else> {{ dataItem.white }}</span>
-              <span v-if="dataItem.white.elo" class="has-text-grey"> {{ dataItem.white.elo }}</span>
-              <span v-else class="has-text-grey"> {{ dataItem.whiteelo }}</span>
-              <span v-show="dataItem.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
-            </h6>
-            <h6>
-              <span v-if="dataItem.black.flag" class="preservefilter">{{ dataItem.black.flag }}</span>
-              <span v-else class="preservefilter">{{ dataItem.blackflag }}</span>
-              <span v-if="dataItem.black.code"> {{ dataItem.black.code }}</span>
-              <span v-else> {{ dataItem.black }}</span>
-              <span v-if="dataItem.black.elo" class="has-text-grey"> {{ dataItem.black.elo }}</span>
-              <span v-else class="has-text-grey"> {{ dataItem.blackelo }}</span>
-              <span v-show="dataItem.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
-            </h6>
+        </router-link>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <div>
+            <span v-if="dataItem.black.flag" class="preservefilter">{{ dataItem.black.flag }}</span>
+            <span v-else class="preservefilter">{{ dataItem.blackflag }}</span>
+            <span v-if="dataItem.black.code"> {{ dataItem.black.code }}</span>
+            <span v-else> {{ dataItem.black }}</span>
+            <span v-if="dataItem.black.elo" class="has-text-grey"> {{ dataItem.black.elo }}</span>
+            <span v-else class="has-text-grey"> {{ dataItem.blackelo }}</span>
+            <span v-show="dataItem.result==='0-1'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
+          </div>
+          <div>
+            <span v-if="dataItem.white.flag" class="preservefilter">{{ dataItem.white.flag }}</span>
+            <span v-else class="preservefilter">{{ dataItem.whiteflag }}</span>
+            <span v-if="dataItem.white.code"> {{ dataItem.white.code }}</span>
+            <span v-else> {{ dataItem.white }}</span>
+            <span v-if="dataItem.white.elo" class="has-text-grey"> {{ dataItem.white.elo }}</span>
+            <span v-else class="has-text-grey"> {{ dataItem.whiteelo }}</span>
+            <span v-show="dataItem.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
+          </div>
+          <div v-if="pgn">
+            <span>{{ $root.countMoves(dataItem.pgn) }} plys</span>
+          </div>
+          <div>
+            <span>{{ dataItem.eco | t }}</span>
+          </div>
+          <div>
             <span>{{ dataItem.date | humanReadableTime }}</span>
-            <span>{{ dataItem.plys }}</span>
           </div>
         </div>
-      </article>
-    </router-link>
+      </div>
+    </article>
   </div>
 </template>
 <script>
@@ -83,7 +90,7 @@ export default {
     if (this.dataItem.fen) {
       this.boardCfg.position = this.dataItem.fen
     }
-    this.boardCfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
+    this.boardCfg.pieceTheme = `/img/chesspieces/${pref.pieces}/{piece}.png`
     this.boardCfg.moveSpeed = this.player.moveSpeed
     this.boardColor = pref.board
     this.board = Chessboard(this.boardEl, this.boardCfg)
