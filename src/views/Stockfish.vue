@@ -751,6 +751,7 @@ export default {
                       opening: this.opening,
                       orientation: this.board.orientation(),
                       pgn: this.game.pgn(),
+                      fen: this.game.fen(),
                       chart: this.chart.values,
                       score: this.performance,
                       annotations: this.annotations

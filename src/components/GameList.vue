@@ -28,13 +28,16 @@
             <span v-else class="has-text-grey"> {{ dataItem.whiteelo }}</span>
             <span v-show="dataItem.result==='1-0'" class="mdi mdi-trophy is-size-7 has-text-warning"></span>
           </div>
-          <div v-if="pgn">
+          <div v-if="dataItem.pgn">
             <span>{{ $root.countMoves(dataItem.pgn) }} plys</span>
           </div>
           <div>
             <span>{{ dataItem.eco | t }}</span>
           </div>
-          <div>
+          <div v-if="dataItem.date.indexOf('Z') > -1">
+            <span>{{ dataItem.date | humanReadableTime}}</span>
+          </div>
+          <div v-else>
             <span>{{ dataItem.date }}</span>
           </div>
         </div>
