@@ -493,13 +493,14 @@ export default {
       var black = this.opponent
       let fullResult = {
         game: this.$route.params.game,
-        white: {
-          code: white.code,
-          flag: white.flag,
-          elo: white.elo
-        },
+        white: white.code,
+        whiteelo: white.elo,
+        whiteflag: white.flag,
         black: black,
+        blackelo: black.elo,
+        blackflag: black.flag,
         result: result,
+        fen: this.game.fen(),
         date: moment().format('YYYY.MM.DD HH:mm'),
         plys: this.$root.countMoves(this.game.pgn())
       }

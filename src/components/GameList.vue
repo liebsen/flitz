@@ -35,7 +35,7 @@
             <span>{{ dataItem.eco | t }}</span>
           </div>
           <div>
-            <span>{{ dataItem.date | humanReadableTime }}</span>
+            <span>{{ dataItem.date }}</span>
           </div>
         </div>
       </div>
