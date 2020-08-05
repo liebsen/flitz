@@ -40,8 +40,8 @@
               <div class="columns has-text-centered">
                 <div class="column">
                   <div class="field">
+                    <strong v-html="data.eco" class="has-text-grey is-size-5"></strong>
                     <span v-html="data.name" class="has-text-black is-size-5"></span>
-                    <span v-html="data.eco" class="has-text-grey is-size-5"></span>
                   </div>
                 </div>
               </div>
@@ -85,6 +85,7 @@
 
 <script>
 
+import { mapState } from 'vuex'
 import axios from 'axios'
 import Chess from 'chess.js'
 import Chessboard from '.././assets/js/chessboard'
@@ -99,6 +100,12 @@ export default {
       this.speed = parseInt(localStorage.getItem('speed'))
     }
     this.gameStart()
+  },
+  computed: {
+    ...mapState([
+      'player',
+      'stockfishEvalTime'
+    ])
   },
   methods: {
     gameMove () {
@@ -313,7 +320,7 @@ export default {
           this.game = new Chess()
 
           if (pref.pieces) {
-            this.boardCfg.pieceTheme = '/img/chesspieces/' + pref.pieces + '/{piece}.png'
+            this.boardCfg.pieceTheme = `/img/chesspieces/${pref.pieces}/{piece}.png`
             this.boardCfg.moveSpeed = this.player.moveSpeed
             this.boardColor = pref.board
           }
