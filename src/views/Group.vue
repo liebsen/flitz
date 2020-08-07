@@ -141,7 +141,7 @@
                   <div class="control">
                     <input class="input is-rounded" v-model="chat" type="text" placeholder="Ingresa tu mensaje" />
                   </div>
-                  <div class="control">
+                  <div class="control has-text-left">
                     <button type="submit" class="button is-info is-rounded">
                       <span class="icon">
                         <span class="mdi mdi-arrow-up"></span>
@@ -153,18 +153,16 @@
             </div>
           </div>
           <div v-show="tab === 'results'" class="fadeIn">
-            <div v-show="!data.results" class="column">
-              <h6>{{ 'group_no_results' | t }}</h6>
-            </div>
-            <div v-show="data.results" class="column">
+            <div v-show="data.results" class="column box">
+              <div v-show="!data.results.length" class="column">
+                <h6>{{ 'group_no_results' | t }}</h6>
+              </div>
               <div class="columns is-multiline">
                 <div class="column is-12-mobile is-6-tablet is-6-desktop is-4-fullhd" v-for="(item, index) in data.results" :key="index">
-                  <div v-if="index < maxResults || showResultsAll">
-                    <game-list :data-item="item"/>
-                  </div>
+                  <game-list :data-item="item"/>
                 </div>
               </div>
-              <div v-if="!showResultsAll" class="field column has-text-centered">
+              <div v-if="showResultsAll" class="field column has-text-centered">
                 <span class="button is-success is-rounded is-outlined">{{ 'show_all' | t }}</span>
               </div>
             </div>
@@ -390,8 +388,6 @@ export default {
       }
     },
     games (data) {
-      console.log('games')
-      console.log(data)
       this.onlineGames = data
       for (var i in data) {
         if (!this.games[data[i].id]) {
