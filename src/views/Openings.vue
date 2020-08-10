@@ -82,7 +82,7 @@ export default {
     inputTrigger () {
       if (this.interval) clearInterval(this.interval)
       this.interval = setTimeout(() => {
-        this.$router.push({ path: 'eco', query: { q: this.pager.query } })
+        this.$router.push({ path: 'openings', query: { q: this.pager.query } })
       }, 1500)
     },
     clear () {
