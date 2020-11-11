@@ -3,7 +3,7 @@ module.exports = function (audio, vol) {
   if (audio === undefined) audio = 'move.ogg'
 
   const pref = JSON.parse(localStorage.getItem('player')) || {}
-  const sound = new Audio('/audio/' + audio)
+  const sound = new Audio('/sounds/' + audio)
   sound.vol = vol
 
   if (pref.sound) {

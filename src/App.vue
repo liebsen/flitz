@@ -109,17 +109,17 @@
       <p class="ui-snackbar__message"></p>
     </div>
     <div class="footprint">
-      <span v-show="idle" class="is-size-7 has-text-grey">
+      <span v-show="idle" class="is-size-7 has-text-grey has-text-weight-bold">
         {{ 'idle_now' | t }} <span class="has-text-success">{{ idle }}</span>
       </span>
-      <span v-show="playing > 1" class="is-size-7 has-text-grey">
+      <span v-show="playing > 1" class="is-size-7 has-text-grey has-text-weight-bold">
         {{ 'playing_now' | t }} <span class="has-text-success">{{ playing }}</span>
       </span>
-      <span v-show="latency" class="is-size-7 has-text-grey">
+      <span v-show="latency" class="is-size-7 has-text-grey has-text-weight-bold">
         {{ 'latency' | t }} <span :class="{ 'has-text-danger': latency > 500, 'has-text-success': latency < 100 }">{{ latency }}ms</span>
       </span>
       <span v-show="!latency" class="is-size-7 has-text-grey">...</span>
-      <span class="is-size-7 has-text-grey">
+      <span class="is-size-7 has-text-grey has-text-weight-bold">
         | {{ 'powered_by' | t }} Stockfish
       </span>
     </div>

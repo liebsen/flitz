@@ -139,7 +139,7 @@
               <form @submit.prevent="sendChat">
                 <div class="field is-fullwidth has-addons has-addons-fullwidth is-marginless">
                   <div class="control">
-                    <input class="input is-rounded" v-model="chat" type="text" placeholder="Ingresa tu mensaje" />
+                    <input class="input is-rounded" v-model="chat" type="text" :placeholder="'type_your_message' | t" />
                   </div>
                   <div class="control has-text-left">
                     <button type="submit" class="button is-info is-rounded">
@@ -459,7 +459,7 @@ export default {
         <span class="icon">
           <span class="mdi mdi-edit"></span>
         </span>
-        <span>Nombre</span>
+        <span>${this.$root.t('name')}</span>
       </h4>
       <div class="field">
         <div class="control has-text-centered column">
@@ -470,13 +470,13 @@ export default {
         <span class="icon">
           <span class="mdi mdi-eye"></span>
         </span>
-        <span>Privacidad</span>
+        <span>${this.$root.t('privacy')}</span>
       </h4>
       <div class="field">
         <div class="control has-text-centered column">
-          <div class="buttons levels has-addons groupprivacy" title="Establece la Privacidad para este Grupo">
-            <button class="button is-toggle is-rounded" title="Cualquier persona podrá unirse a este Grupo">Público</button>
-            <button class="button is-toggle is-rounded" title="Solo vos y las personas con quien compartas podrán unirse al grupo">Privado</button>
+          <div class="buttons levels has-addons groupprivacy">
+            <button class="button is-toggle is-rounded">${this.$root.t('public')}</button>
+            <button class="button is-toggle is-rounded">${this.$root.t('private')}</button>
           </div>
         </div>
       </div>
@@ -486,16 +486,16 @@ export default {
         <span class="icon">
           <span class="mdi mdi-retweet"></span>
         </span>
-        <span>Rondas</span>
+        <span>${this.$root.t('rounds')}</span>
       </h4>
       <div class="field">
         <div class="control has-text-centered column">
-          <div class="buttons levels has-addons groupgames" title="Nro. partidas de este match">
-            <button class="button is-toggle is-rounded has-background-success" title="Match a 1 partida">1</button>
-            <button class="button is-toggle" title="Match a 3 partidas">3</button>
-            <button class="button is-toggle" title="Match a 5 partidas al match">5</button>
-            <button class="button is-toggle" title="Match a 10 partidas">10</button>
-            <button class="button is-toggle is-rounded" title="Match a 16 partidas">16</button>
+          <div class="buttons levels has-addons groupgames">
+            <button class="button is-toggle is-rounded has-background-success">1</button>
+            <button class="button is-toggle">3</button>
+            <button class="button is-toggle">5</button>
+            <button class="button is-toggle">10</button>
+            <button class="button is-toggle is-rounded">16</button>
           </div>
         </div>
       </div>
@@ -503,15 +503,16 @@ export default {
         <span class="icon">
           <span class="mdi mdi-clock"></span>
         </span>
-        <span>Minutos</span>
+        <span>${this.$root.t('minutes')}</span>
       </h4>
       <div class="field">
         <div class="control has-text-centered column">
-          <div class="buttons levels has-addons gameclock" title="Establece la duración de las partidas en minutos">
-            <button class="button is-toggle is-rounded has-background-success" title="Partidas de 3 minutos">3'</button>
-            <button class="button is-toggle" title="Partidas de 5 minutos">5'</button>
-            <button class="button is-toggle" title="Partidas de 10 minutos">10'</button>
-            <button class="button is-toggle is-rounded" title="Partidas de 30 minutos">30'</button>
+          <div class="buttons levels has-addons gameclock">
+            <button class="button is-toggle is-rounded">1'</button>
+            <button class="button is-toggle has-background-success">3'</button>
+            <button class="button is-toggle">5'</button>
+            <button class="button is-toggle">15'</button>
+            <button class="button is-toggle is-rounded">30'</button>
           </div>
         </div>
       </div>
@@ -519,15 +520,15 @@ export default {
         <span class="icon">
           <span class="mdi mdi-stopwatch"></span>
         </span>
-        <span>Compensación en segundos</span>
+        <span>${this.$root.t('compensation')}</span>
       </h4>
       <div class="field">
         <div class="control has-text-centered column">
-          <div class="buttons levels has-addons gamecompensation" title="Agregar compensación por movimiento">
-            <button class="button is-toggle is-rounded" title="Partidas sin compensación por movimiento">+0</button>
-            <button class="button is-toggle" title="Partidas con 1 segundo de compensación por cada movimiento">+1</button>
-            <button class="button is-toggle has-background-success" title="Partidas con 2 segundos de compensación por cada movimiento">+2</button>
-            <button class="button is-toggle is-rounded" title="Partidas con 3 segundos de compensación por cada movimiento">+3</button>
+          <div class="buttons levels has-addons gamecompensation">
+            <button class="button is-toggle is-rounded">+0</button>
+            <button class="button is-toggle">+1</button>
+            <button class="button is-toggle has-background-success">+2</button>
+            <button class="button is-toggle is-rounded">+3</button>
           </div>
         </div>
       </div>
@@ -536,7 +537,7 @@ export default {
 </div>`)
       swal({
         title: `${this.data.code}`,
-        buttons: ['Cancelar', 'Actualizar'],
+        buttons: [this.$root.t('cancel'), this.$root.t('update')],
         className: 'is-wide',
         closeOnClickOutside: false,
         content: {
@@ -903,7 +904,7 @@ export default {
 </div>`)
       swal({
         title: 'Invitar a ' + player.code,
-        buttons: ['Cancelar', 'Invitar'],
+        buttons: [this.$root.t('cancel'), this.$root.t('invite')],
         closeOnClickOutside: false,
         content: {
           element: 'div',

@@ -200,7 +200,7 @@ new Vue({ // eslint-disable-line no-new
 </div>`)
       swal({
         title: 'Crear un grupo',
-        buttons: ['Cancelar', 'Crear'],
+        buttons: [this.$root.t('cancel'), this.$root.t('create')],
         closeOnClickOutside: false,
         content: {
           element: 'div',
