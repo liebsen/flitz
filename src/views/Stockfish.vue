@@ -4,7 +4,7 @@
       <div class="columns-centered fadeIn">
         <div class="columns columns-bottom is-flex has-text-centered">
           <div class="column">
-            <h3>Jugar contra Stockfish</h3>
+            <h3>{{ 'play_against_stockfish' | t }}</h3>
             <div class="control">
               <div class="buttons levels has-addons preservefilter">
                 <button class="button is-rounded is-large is-white-pieces" @click="setPlayerColor('white')" :class="{'has-background-success' : selectedColor==='white'}"></button>
@@ -16,7 +16,7 @@
         </div>
         <div class="columns is-flex has-text-centered">
           <div class="column">
-            <h4>Nivel</h4>
+            <h4>{{ 'level' | t }}</h4>
             <div class="control has-text-centered column">
               <div class="buttons levels has-addons">
                 <button class="button is-rounded" @click="gameStart(0)">
@@ -219,9 +219,9 @@ export default {
     askForRematch () {
       var t = this
       swal({
-        title: 'Reiniciar partida',
-        text: '¿Querés reiniciar esta partida?',
-        buttons: ['No', 'Sí']
+        title: this.$root.t('restart_match'),
+        text: this.$root.t('restart_match_ask'),
+        buttons: [this.$root.t('no'), this.$root.t('yes')]
       })
         .then(accept => {
           if (accept) {
