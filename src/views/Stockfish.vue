@@ -73,22 +73,27 @@
             <div class="columns has-text-centered" v-show="pgnIndex.length">
               <div class="column preservefilter">
                 <div class="buttons levels has-addons" :title="'stockfish_options' | t">
-                  <button @click="askForRematch()" class="button is-rounded is-danger" v-if="!announced_game_over" title="Abandonar partida">
+                  <button @click="undo()" class="button is-rounded is-warning">
+                    <span class="icon has-text-white">
+                      <span class="mdi mdi-undo-variant"></span>
+                    </span>
+                  </button>
+                  <button @click="askForRematch()" class="button is-rounded is-danger" v-if="!announced_game_over">
                     <span class="icon has-text-white">
                       <span class="mdi mdi-flag"></span>
                     </span>
                   </button>
-                  <button @click="showHint()" class="button is-rounded is-success" v-if="pgnIndex.length && !announced_game_over" title="Mostrar pista">
+                  <button @click="showHint()" class="button is-rounded is-success" v-if="pgnIndex.length && !announced_game_over">
                     <span class="icon has-text-white">
                       <span class="mdi mdi-timeline-help"></span>
                     </span>
                   </button>
-                  <button @click="askForRematch()" class="button is-rounded is-success" v-if="announced_game_over" title="Jugar de nuevo">
+                  <button @click="askForRematch()" class="button is-rounded is-success" v-if="announced_game_over">
                     <span class="icon">
                       <span class="mdi mdi-replay"></span>
                     </span>
                   </button>
-                  <button @click="showPGN()" class="button is-rounded is-info" v-if="pgnIndex.length" title="Mostrar PGN">
+                  <button @click="showPGN()" class="button is-rounded is-info" v-if="pgnIndex.length">
                     <strong>PGN</strong>
                   </button>
                 </div>
@@ -201,6 +206,9 @@ export default {
     ])
   },
   methods: {
+    undo () {
+      this.gamePos(this.index - 2)
+    },
     gameRestart () {
       var t = this
       t.game.reset()

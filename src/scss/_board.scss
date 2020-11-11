@@ -168,7 +168,7 @@ $blue: #4183d7;
         .score-container {
             position: absolute;
             top: 0;
-            right: -16px;
+            right: -20px;
             width: 20px;
             height: 100%;
             .score {
@@ -285,30 +285,5 @@ $blue: #4183d7;
         margin-top: 0.75rem;
         padding-left: 16px;
         max-width: 350px;
-    }
-    .board-b72b1 {
-        border-radius: 5px;
-        .row-5277c {
-            &:first-child {
-                .square-55d63 {
-                    &:first-child {
-                        border-top-left-radius: 5px;
-                    }
-                    &:nth-last-child(2) {
-                        border-top-right-radius: 5px;
-                    }
-                }
-            }
-            &:last-child {
-                .square-55d63 {
-                    &:first-child {
-                        border-bottom-left-radius: 5px;
-                    }
-                    &:nth-last-child(2) {
-                        border-bottom-right-radius: 5px;
-                    }
-                }
-            }
-        }
     }
 }

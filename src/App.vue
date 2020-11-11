@@ -120,7 +120,10 @@
       </span>
       <span v-show="!latency" class="is-size-7 has-text-grey">...</span>
       <span class="is-size-7 has-text-grey has-text-weight-bold">
-        | {{ 'powered_by' | t }} Stockfish
+        <span class="icon">
+          <span class="fa fa-star"></span>
+        </span>
+        {{ 'powered_by' | t }} Stockfish
       </span>
     </div>
   </div>
