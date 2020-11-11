@@ -721,7 +721,8 @@ export default {
                   }
                 })
             } else {
-              swal(t.$root.t('you_defeat_stockfish'), {
+              swal({
+                title: t.$root.t('you_defeat_stockfish'),
                 buttons: {
                   cancel: t.$root.t('cancel'),
                   catch: {

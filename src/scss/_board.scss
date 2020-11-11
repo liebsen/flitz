@@ -168,13 +168,13 @@ $blue: #4183d7;
         .score-container {
             position: absolute;
             top: 0;
-            right: -10px;
-            width: 6px;
+            right: -24px;
+            width: 20px;
             height: 100%;
             border-radius: 5px;
             .score {
                 border-radius: 5px;
-                width: 6px;
+                width: 20px;
                 max-height: 49%;
                 height: 100%;
                 transition: max-height ease-in 0.25s;
@@ -285,7 +285,7 @@ $blue: #4183d7;
 @media screen and (min-width: 769px) {
     .board-assistant {
         margin-top: 0.75rem;
-        padding-left: 0.25rem;
+        padding-left: 16px;
         max-width: 350px;
     }
     .board-b72b1 {
