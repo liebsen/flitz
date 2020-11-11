@@ -49,7 +49,7 @@
           <div class="board-container">
             <h6 class="has-text-left black is-hidden-mobile">
               <span v-show="data.result==='0-1'">🏆</span>
-              <span>{{ opponentName }}</span>
+              <span class="has-text-weight-bold">{{ opponentName }}</span>
               <span class="button is-small thinking" :class="{'is-loading' : thinking}"></span>
             </h6>
             <div class="board preservefilter" :class="{ 'black' : playerColor==='black' }">
@@ -63,7 +63,7 @@
               <span class="icon has-margin preservefilter">
                 <span v-html="player.flag"/>
               </span>
-              <span v-html="player.code"></span>
+              <span class="has-text-weight-bold" v-html="player.code"></span>
             </h6>
           </div>
         </div>
@@ -98,7 +98,7 @@
               <div class="column">
                 <div class="field">
                   <strong class="has-text-grey is-size-5">{{ eco }}</strong>
-                  <span class="has-text-black is-size-5">{{ opening }}</span>
+                  <span class="has-text-weight-bold has-text-black is-size-5">{{ opening }}</span>
                 </div>
                 <!--div class="field">
                   <span v-html="status" class="has-text-black"></span>

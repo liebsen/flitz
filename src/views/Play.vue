@@ -148,7 +148,7 @@
                   <div class="column">
                     <div class="field">
                       <strong class="has-text-grey is-size-5">{{ eco }}</strong>
-                      <span class="has-text-black is-size-5">{{ opening }}</span>
+                      <span class="has-text-weight-bold has-text-black is-size-5">{{ opening }}</span>
                     </div>
                     <div v-show="match.results" id="matchresults" class="columns is-mobile is-narrow">
                       <div class="column is-3">

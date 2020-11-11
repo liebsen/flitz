@@ -2,7 +2,7 @@
 
 // Import a Google Font
 // @import url('https://fonts.googleapis.com/css?family=Nunito:700,800,800i,900&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Cabin&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Rubik&display=swap');
 
 // Set your brand colors
 $purple: #8A4D76;
@@ -12,30 +12,9 @@ $beige-light: #D0D1CD;
 $beige-lighter: #EFF0EB;
 
 // Update Bulma's global variables
-$family-sans-serif: "Cabin", sans-serif;
-//$grey-dark: $brown;
-//$grey-light: $beige-light;
-//$primary: $purple;
-//$link: $pink;
-// $widescreen-enabled: false;
-// $fullhd-enabled: false;
+$family-sans-serif: "Rubik", sans-serif;
 $box-shadow: none;
-//$table-color:white;
-//$table-background-color:$brown;
-//$table-cell-heading-color:white!important;
-//$table-head-cell-color:white;
-//$table-foot-cell-color:white;
-//$table-head-background-color:$brown;
-//$table-body-background-color:$brown;
-//$table-striped-row-even-background-color:$brown;
-//$table-striped-row-even-hover-background-color:$brown;
-
-// Update some of Bulma's component variables
-//$body-background-color: $brown;
-//$body-color: $beige-lighter;
-//$navbar-background-color:$beige-lighter;
 $control-border-width: 2px;
-//$input-border-color: transparent;
 $tabs-toggle-link-radius: 10px;
 $tabs-boxed-link-radius: 10px;
 $input-shadow: none;

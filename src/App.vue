@@ -20,7 +20,7 @@
                   <span class="icon">
                     <span>{{ player.flag }}</span>
                   </span>
-                  <span>{{ player.code }}</span>
+                  <span class="has-text-weight-bold">{{ player.code }}</span>
                 </router-link>
                 <a @click="$root.play" class="button is-rounded is-success" :class="{ 'is-loading': $root.isFindingOpponent }" :title="'search_opponent' | t">
                   <span class="icon has-text-white">
@@ -65,7 +65,7 @@
               <span class="icon">
                 <span class="mdi" :class="item.mdi"></span>
               </span>
-              <span>{{ item.to | t }}</span>
+              <span class="has-text-weight-bold">{{ item.to | t }}</span>
             </router-link>
           </div>
           <div class="column">
@@ -74,7 +74,7 @@
                 <span class="icon">
                   <span class="mdi mdi-layers-plus"></span>
                 </span>
-                <span>{{ 'create_group' | t }}</span>
+                <span class="has-text-weight-bold">{{ 'create_group' | t }}</span>
               </a>
               <div v-show="!player.email">
                 <div class="columns">
@@ -83,7 +83,7 @@
                       <span class="icon">
                         <span class="mdi mdi-account-key"></span>
                       </span>
-                      <span>{{ 'login' | t }}</span>
+                      <span class="has-text-weight-bold">{{ 'login' | t }}</span>
                     </router-link>
                   </div>
                   <div class="column">
@@ -91,7 +91,7 @@
                       <span class="icon">
                         <span class="mdi mdi-account-plus"></span>
                       </span>
-                      <span>{{ 'register' | t }}</span>
+                      <span class="has-text-weight-bold">{{ 'register' | t }}</span>
                     </router-link>
                   </div>
                 </div>

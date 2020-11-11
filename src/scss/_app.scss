@@ -151,33 +151,25 @@ span {
 /* spinner */
 
 .spinner-background {
+  display: flex;
+  align-content: center;
+  align-items: center;
   position: fixed;
   top: 0px;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 99;
   opacity: 0.9;
+  z-index: 99;
   background-color: #edebe9;
 }
 
 .spinner-container {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   -webkit-animation: rotate 2s linear infinite;
   animation: rotate 2s linear infinite;
   z-index: 2;
-  opacity: 0.75;
-  background-image: url(/img/spinner.png);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 30px;
-  margin: 100px auto;
-  display:block;
-
+  width:36px; height:36px;
+  margin: 36px auto;
   .path {
     stroke-dasharray: 1,150; /* 1%, 101% circumference */
     stroke-dashoffset: 0;
@@ -380,8 +372,6 @@ span {
   }
 
   .menu-links .icon {
-    position: relative;
-    top: 3px;
     margin-right: 0.5rem;
   }
 
@@ -522,30 +512,6 @@ table {
   text-decoration: none;
 }
  
-.spinner-container {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  -webkit-animation: rotate 2s linear infinite;
-  animation: rotate 2s linear infinite;
-  z-index: 2;
-  width:45px; height:45px;
-  margin: 100px auto;
-  display:block;
-  height: 70%;
-}
-
-.spinner-container .path {
-  stroke-dasharray: 1,150; /* 1%, 101% circumference */
-  stroke-dashoffset: 0;
-  stroke: rgba(27, 154, 89, 0.7);
-  stroke-linecap: round;
-  -webkit-animation: dash 1.5s ease-in-out infinite;
-  animation: dash 1.5s ease-in-out infinite;
-}
-
 @keyframes rotate {
   100% { transform: rotate(360deg); }
 }

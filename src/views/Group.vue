@@ -153,8 +153,8 @@
             </div>
           </div>
           <div v-show="tab === 'results'" class="fadeIn">
-            <div v-show="data.results" class="column box">
-              <div v-show="!data.results.length" class="column">
+            <div class="column box">
+              <div v-if="!Object.keys(data.results).length" class="column">
                 <h6>{{ 'group_no_results' | t }}</h6>
               </div>
               <div class="columns is-multiline">
@@ -198,7 +198,9 @@ export default {
       tried: false,
       games: [],
       boards: [],
-      data: {},
+      data: {
+        results: []
+      },
       group: {},
       chatlast: null,
       onlineGames: [],
