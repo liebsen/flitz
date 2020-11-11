@@ -20,22 +20,22 @@
             <div class="control has-text-centered column">
               <div class="buttons levels has-addons">
                 <button class="button is-rounded" @click="gameStart(0)">
-                  <span>Niño</span>
+                  <span class="has-text-weight-bold has-text-primary">{{ 'level_0' | t }}</span>
                 </button>
                 <button class="button" @click="gameStart(4)">
-                  <span>Novato</span>
+                  <span class="has-text-weight-bold has-text-primary">{{ 'level_1' | t }}</span>
                 </button>
                 <button class="button" @click="gameStart(8)">
-                  <span>Principiante</span>
+                  <span class="has-text-weight-bold has-text-info">{{ 'level_2' | t }}</span>
                 </button>
                 <button class="button" @click="gameStart(12)">
-                  <span>Intermedio</span>
+                  <span class="has-text-weight-bold has-text-info">{{ 'level_3' | t }}</span>
                 </button>
                 <button class="button" @click="gameStart(16)">
-                  <span>Avanzado</span>
+                  <span class="has-text-weight-bold has-text-danger">{{ 'level_4' | t }}</span>
                 </button>
                 <button class="button is-rounded" @click="gameStart(20)">
-                  <span>GM</span>
+                  <span class="has-text-weight-bold has-text-danger">{{ 'level_5' | t }}</span>
                 </button>
               </div>
             </div>

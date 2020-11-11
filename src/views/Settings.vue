@@ -181,10 +181,13 @@ export default {
   },
   beforeDestroy () {
     const player = JSON.parse(localStorage.getItem('player'))
-    if (player.strongnotification) {
-      document.querySelector('.ui-snackbar').classList.add('is-strong')
-    } else {
-      document.querySelector('.ui-snackbar').classList.remove('is-strong')
+    const snackbar = document.querySelector('.ui-snackbar')
+    if (snackbar) {
+      if (player.strongnotification) {
+        snackbar.classList.add('is-strong')
+      } else {
+        snackbar.classList.remove('is-strong')
+      }
     }
     if (player.darkmode) {
       document.documentElement.classList.add('dark-mode')
@@ -219,8 +222,12 @@ export default {
         this.board.start(false)
         this.game.move('e4')
         this.board.position(this.game.fen())
-        document.querySelector('.square-e2').classList.add('highlight-move')
-        document.querySelector('.square-e4').classList.add('highlight-move')
+        if (document.querySelector('.square-e2')) {
+          document.querySelector('.square-e2').classList.add('highlight-move')
+        }
+        if (document.querySelector('.square-e4')) {
+          document.querySelector('.square-e4').classList.add('highlight-move')
+        }
       }, 100)
     },
     previewSound () {
