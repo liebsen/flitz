@@ -42,6 +42,25 @@ label {
   -moz-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+::-webkit-input-placeholder {
+  font-weight: 600;
+}
+:-moz-placeholder {
+  font-weight: 600;
+}
+::-moz-placeholder {
+  font-weight: 600;
+}
+:-ms-input-placeholder {
+  font-weight: 600;
+}
+::-ms-input-placeholder {
+  font-weight: 600;
+}
+::placeholder {
+  font-weight: 600;
+}
+
 .is-checkradio[type="checkbox"] + label::after, .is-checkradio[type="checkbox"] + label::after  {
   border-width: 0.25rem!important;
 }
