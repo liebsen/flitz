@@ -19,23 +19,23 @@
             <h4>{{ 'level' | t }}</h4>
             <div class="control has-text-centered column">
               <div class="buttons levels has-addons">
-                <button class="button is-rounded" @click="gameStart(0)">
-                  <span class="has-text-weight-bold has-text-primary">{{ 'level_0' | t }}</span>
+                <button class="button is-success is-rounded" @click="gameStart(0)">
+                  <span class="has-text-weight-bold">{{ 'level_0' | t }}</span>
                 </button>
-                <button class="button" @click="gameStart(4)">
-                  <span class="has-text-weight-bold has-text-primary">{{ 'level_1' | t }}</span>
+                <button class="button is-success" @click="gameStart(4)">
+                  <span class="has-text-weight-bold">{{ 'level_1' | t }}</span>
                 </button>
-                <button class="button" @click="gameStart(8)">
-                  <span class="has-text-weight-bold has-text-info">{{ 'level_2' | t }}</span>
+                <button class="button is-info" @click="gameStart(8)">
+                  <span class="has-text-weight-bold">{{ 'level_2' | t }}</span>
                 </button>
-                <button class="button" @click="gameStart(12)">
-                  <span class="has-text-weight-bold has-text-info">{{ 'level_3' | t }}</span>
+                <button class="button is-info" @click="gameStart(12)">
+                  <span class="has-text-weight-bold">{{ 'level_3' | t }}</span>
                 </button>
-                <button class="button" @click="gameStart(16)">
-                  <span class="has-text-weight-bold has-text-danger">{{ 'level_4' | t }}</span>
+                <button class="button is-danger" @click="gameStart(16)">
+                  <span class="has-text-weight-bold">{{ 'level_4' | t }}</span>
                 </button>
-                <button class="button is-rounded" @click="gameStart(20)">
-                  <span class="has-text-weight-bold has-text-danger">{{ 'level_5' | t }}</span>
+                <button class="button is-danger is-rounded" @click="gameStart(20)">
+                  <span class="has-text-weight-bold">{{ 'level_5' | t }}</span>
                 </button>
               </div>
             </div>
