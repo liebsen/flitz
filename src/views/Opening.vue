@@ -225,7 +225,7 @@ export default {
       }
 
       if (this.game.in_check() === true) {
-        sound = 'check.ogg'
+        sound = 'check.mp3'
       }
 
       PlaySound(sound)
@@ -334,7 +334,7 @@ export default {
             this.$root.fullscreenBoard()
           }
 
-          PlaySound('start.ogg')
+          PlaySound('start.mp3')
 
           const offset = 200
           setTimeout(() => {

@@ -272,7 +272,7 @@ export default {
           swal('¡Victoria!', winner + ' ganó esta partida', 'success')
         }
 
-        sound = 'game-end.mp3'
+        sound = 'end.mp3'
         t.announced_game_over = true
       } else {
         if (move.flags === 'c') {
@@ -288,7 +288,7 @@ export default {
         }
 
         if (t.game.in_check() === true) {
-          sound = 'check.ogg'
+          sound = 'check.mp3'
         }
 
         t.removeHighlight()
@@ -480,7 +480,7 @@ export default {
             this.$root.fullscreenBoard()
           }
 
-          PlaySound('start.ogg')
+          PlaySound('start.mp3')
           this.highlightLastMove()
           this.gameStarted = true
         }, 100)

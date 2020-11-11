@@ -401,7 +401,7 @@ export default {
             }
 
             setTimeout(() => {
-              PlaySound('start.ogg')
+              PlaySound('start.mp3')
               this.$root.loading = false
               setTimeout(() => {
                 this.gameMove()
@@ -534,7 +534,7 @@ export default {
       var sound = 'move.mp3'
 
       if (this.game.game_over()) {
-        sound = 'game-end.mp3'
+        sound = 'end.mp3'
       } else {
         if (move.flags === 'c') {
           sound = 'capture.mp3'
@@ -549,7 +549,7 @@ export default {
         }
 
         if (this.game.in_check() === true) {
-          sound = 'check.ogg'
+          sound = 'check.mp3'
         }
       }
 

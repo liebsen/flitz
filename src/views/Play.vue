@@ -323,7 +323,7 @@ export default {
         if (!t.gameStarted && !t.data.result) {
           t.gameStarted = true
           t.boardTaps()
-          PlaySound('start.ogg')
+          PlaySound('start.mp3')
         }
       }, 100)
     },
@@ -431,9 +431,9 @@ export default {
     capitulate (data) {
       var t = this
       if (data.asker === t.player.code) {
-        PlaySound('defeat.mp3')
+        PlaySound('lose.mp3')
       } else {
-        PlaySound('victory.mp3')
+        PlaySound('win.mp3')
       }
       if (t.playerColor[0] === 'w') {
         t.sendResults()
@@ -455,7 +455,7 @@ export default {
             t.sendResults(result)
             t.$socket.emit('acceptdraw', data)
             t.announced_game_over = true
-            PlaySound('game-end.mp3')
+            PlaySound('end.mp3')
           } else {
             t.$socket.emit('rejectdraw', data)
             console.log('Clicked on cancel')
@@ -472,7 +472,7 @@ export default {
       chatbox.innerHTML += `<div class="box ${cls}">${data.line}</div>`
       chatbox.scrollTop = chatbox.scrollHeight
       if (data.sender !== this.player.code) {
-        PlaySound('pop.mp3')
+        PlaySound('chat.mp3')
       }
     }
   },
@@ -978,10 +978,10 @@ export default {
           if (--t.timer[turn] < 0) {
             t.timer[turn] = 0
             if (turn === t.playerColor[0]) {
-              PlaySound('defeat.mp3')
+              PlaySound('lose.mp3')
               t.sendResults()
             } else {
-              PlaySound('victory.mp3')
+              PlaySound('win.mp3')
             }
             t.announced_game_over = true
           } else {
@@ -1257,11 +1257,11 @@ export default {
       let t = this
       if (t.game.game_over()) {
         if (t.game.in_draw() || t.game.in_stalemate() || t.game.in_threefold_repetition()) {
-          sound = 'game-end.mp3'
+          sound = 'end.mp3'
         } else if (t.game.turn() === t.playerColor[0]) {
-          sound = 'defeat.mp3'
+          sound = 'lose.mp3'
         } else {
-          sound = 'victory.mp3'
+          sound = 'win.mp3'
         }
       } else {
         if (move.flags === 'c') {
@@ -1277,7 +1277,7 @@ export default {
         }
 
         if (this.game.in_check() === true) {
-          sound = 'check.ogg'
+          sound = 'check.mp3'
         }
       }
       PlaySound(sound)

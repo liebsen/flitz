@@ -478,7 +478,7 @@ export default {
         if (document.querySelector('.movesTableContainer')) {
           document.querySelector('.movesTableContainer').style.height = (document.querySelector('.board').clientHeight - offset) + 'px'
         }
-        PlaySound('start.ogg')
+        PlaySound('start.mp3')
         t.boardTaps()
       }, 100)
     },
@@ -631,11 +631,11 @@ export default {
       let t = this
       if (t.game.game_over()) {
         if (t.game.in_draw() || t.game.in_stalemate() || t.game.in_threefold_repetition()) {
-          sound = 'game-end.mp3'
+          sound = 'end.mp3'
         } else if (t.game.turn() === t.playerColor[0]) {
-          sound = 'defeat.mp3'
+          sound = 'lose.mp3'
         } else {
-          sound = 'victory.mp3'
+          sound = 'win.mp3'
         }
       } else {
         if (move.flags === 'c') {
@@ -651,7 +651,7 @@ export default {
         }
 
         if (this.game.in_check() === true) {
-          sound = 'check.ogg'
+          sound = 'check.mp3'
         }
       }
 

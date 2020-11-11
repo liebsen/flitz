@@ -233,7 +233,7 @@ export default {
     previewSound () {
       setTimeout(() => {
         if (this.data.sound) {
-          PlaySound('check.ogg')
+          PlaySound('check.mp3')
           snackbar('success', '🔊')
         } else {
           snackbar('default', '🔇')

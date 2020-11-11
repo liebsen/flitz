@@ -330,7 +330,7 @@ export default {
             }
           })
         } else {
-          PlaySound('victory.mp3')
+          PlaySound('win.mp3')
           const template = (`
     <div class="content">
     <h4>
@@ -697,7 +697,7 @@ export default {
         owned: owned
       })
       if (!owned) {
-        PlaySound('chat.ogg')
+        PlaySound('chat.mp3')
       }
       this.scrollToBottom()
     },
@@ -768,7 +768,7 @@ export default {
           document.querySelector('.board-container.b' + id + ' .match-status').innerHTML = winner + ' ganó esta partida'
         }
 
-        sound = 'game-end.mp3'
+        sound = 'end.mp3'
         game.announced_game_over = true
       } else {
         if (move.flags === 'c') {
@@ -784,7 +784,7 @@ export default {
         }
 
         if (game.in_check() === true) {
-          sound = 'check.ogg'
+          sound = 'check.mp3'
         }
 
         this.removeHighlight(id)
