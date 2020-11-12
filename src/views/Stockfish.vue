@@ -230,14 +230,13 @@ export default {
         title: this.$root.t('restart_match'),
         text: this.$root.t('restart_match_ask'),
         buttons: [this.$root.t('no'), this.$root.t('yes')]
+      }).then(accept => {
+        if (accept) {
+          t.gameRestart()
+        } else {
+          console.log('Clicked on cancel')
+        }
       })
-        .then(accept => {
-          if (accept) {
-            t.gameRestart()
-          } else {
-            console.log('Clicked on cancel')
-          }
-        })
     },
     showPGN () {
       var pgn = this.game.pgn() + ' ' + (this.data.result ? this.data.result : '')
@@ -654,21 +653,23 @@ export default {
         if (move.flags === 'c') {
           sound = 'capture.mp3'
         }
-
         if (move.flags === 'k') {
           sound = 'castle.mp3'
         }
-
         if (move.flags === 'q') {
           sound = 'castle.mp3'
         }
-
         if (this.game.in_check() === true) {
           sound = 'check.mp3'
         }
       }
-
-      PlaySound(sound)
+      if (t.game.turn() === t.playerColor[0]) {
+        setTimeout(() => {
+          PlaySound(sound)
+        }, this.player.moveSpeed - 200)
+      } else {
+        PlaySound(sound)
+      }
     },
     removeHighlight () {
       if (document.getElementById('board')) {

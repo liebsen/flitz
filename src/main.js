@@ -112,8 +112,15 @@ new Vue({ // eslint-disable-line no-new
   sockets: {
     opponent_not_found () {
       this.isFindingOpponent = false
-      snackbar('default', this.t('opponent_not_found'))
-      this.$router.push('/stockfish')
+      swal({
+        title: this.t('opponent_not_found'),
+        text: this.t('opponent_not_found_text'),
+        buttons: [this.$root.t('no'), this.$root.t('yes')]
+      }).then(accept => {
+        if (accept) {
+          this.$router.push('/stockfish')
+        }
+      })
     },
     game_spawn (data) {
       if (data.white === this.player.code || data.black === this.player.code) {

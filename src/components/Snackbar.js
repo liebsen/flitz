@@ -1,6 +1,7 @@
+import PlaySound from '../components/PlaySound'
 var snackbarClock = null
 
-module.exports = function (type, message, options) {
+export default (type, message, options) => {
   var snackBarElement = document.querySelector('.ui-snackbar')
   if (snackbarClock) {
     clearInterval(snackbarClock)
@@ -19,7 +20,9 @@ module.exports = function (type, message, options) {
   snackBarElement.querySelector('.ui-snackbar__message').innerHTML = message
   snackBarElement.classList.add('ui-snackbar--' + type)
   snackBarElement.classList.add('ui-snackbar--is-active')
-
+  setTimeout(() => {
+    PlaySound(`${type}.mp3`)
+  }, 200)
   snackbarClock = setTimeout(() => {
     snackBarElement.classList.remove('ui-snackbar--is-active')
     snackBarElement.classList.add('ui-snackbar--is-inactive')
