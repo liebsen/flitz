@@ -31,7 +31,7 @@
                 <button class="button is-info" @click="gameStart(12)">
                   <span class="has-text-weight-bold">{{ 'level_3' | t }}</span>
                 </button>
-                <button class="button is-danger" @click="gameStart(16)">
+                <button class="button is-warning" @click="gameStart(16)">
                   <span class="has-text-weight-bold">{{ 'level_4' | t }}</span>
                 </button>
                 <button class="button is-danger is-rounded" @click="gameStart(20)">
@@ -73,7 +73,7 @@
             <div class="columns has-text-centered" v-show="pgnIndex.length">
               <div class="column preservefilter">
                 <div class="buttons levels has-addons" :title="'stockfish_options' | t">
-                  <button @click="undo()" class="button is-rounded is-warning" v-if="index > 2">
+                  <button @click="undo()" class="button is-rounded is-warning" v-if="index > 2 && !announced_game_over">
                     <span class="icon has-text-white">
                       <span class="mdi mdi-undo-variant"></span>
                     </span>
