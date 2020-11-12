@@ -210,19 +210,19 @@ export default {
       this.gamePos(this.index - 2)
     },
     gameRestart () {
-      var t = this
-      t.game.reset()
-      t.announced_game_over = false
-      t.pgnIndex = []
-      t.time.level = -1
-      t.eco = ''
-      t.opening = ''
-      t.index = -1
-      t.score = 0.10
-      t.vscore = 49
-      t.stockfishMoved = false
-      t.chart.values = [51]
+      this.game.reset()
+      this.announced_game_over = false
+      this.pgnIndex = []
+      this.time.level = -1
+      this.eco = ''
+      this.opening = ''
+      this.index = -1
+      this.score = 0.10
+      this.vscore = 49
+      this.stockfishMoved = false
+      this.chart.values = [51]
       document.querySelector('.chart').textContent = ''
+      this.gameStart(this.currentLevel)
     },
     askForRematch () {
       var t = this
@@ -362,6 +362,7 @@ export default {
       let t = this
       const pref = JSON.parse(localStorage.getItem('player')) || {}
 
+      this.currentLevel = level
       this.opponentName = 'Stockfish ' + this.$root.t('level') + ' ' + (level / 2)
       this.engine = typeof STOCKFISH === 'function' ? STOCKFISH() : new Worker('/js/stockfish.js')
       this.engineStatus = {}
@@ -995,6 +996,7 @@ export default {
       time: {
         level: -1
       },
+      currentLevel: -1,
       annotations: {},
       opponentName: 'Stockfish',
       index: -1,
