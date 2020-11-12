@@ -839,7 +839,9 @@ export default {
       this.index = pos
       const moves = this.gameMoves.slice(0, this.index)
       var move = this.gameMoves[this.index].san
-      this.vscore = this.gameMoves[this.index].vscore
+      if (!this.game.game_over()) {
+        this.vscore = this.gameMoves[this.index].vscore
+      }
 
       // ---------------
       var pgn = []
@@ -1173,28 +1175,30 @@ export default {
       }
     },
     drawChart (index) {
-      var score = this.vscore
+      if (!this.game.game_over()) {
+        var score = this.vscore
 
-      if (this.playerColor === 'white') {
-        score = 100 - score
-      }
+        if (this.playerColor === 'white') {
+          score = 100 - score
+        }
 
-      if (score < 0) {
-        score = 0
-      }
+        if (score < 0) {
+          score = 0
+        }
 
-      if (score > 100) {
-        score = 100
-      }
+        if (score > 100) {
+          score = 100
+        }
 
-      if (!isNaN(score)) {
-        this.drawChartPosition(false)
-        this.chart.values = this.chart.values.slice(0, index)
-        this.chart.values[index] = score
-        this.performance = this.performance.slice(0, index)
-        this.performance[index] = this.score
-        this.makeAnnotation(index)
-        this.updateChart()
+        if (!isNaN(score)) {
+          this.drawChartPosition(false)
+          this.chart.values = this.chart.values.slice(0, index)
+          this.chart.values[index] = score
+          this.performance = this.performance.slice(0, index)
+          this.performance[index] = this.score
+          this.makeAnnotation(index)
+          this.updateChart()
+        }
       }
     },
     makeAnnotation (index) {

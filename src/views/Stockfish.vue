@@ -73,7 +73,7 @@
             <div class="columns has-text-centered" v-show="pgnIndex.length">
               <div class="column preservefilter">
                 <div class="buttons levels has-addons" :title="'stockfish_options' | t">
-                  <button @click="undo()" class="button is-rounded is-warning">
+                  <button @click="undo()" class="button is-rounded is-warning" v-if="index > 2">
                     <span class="icon has-text-white">
                       <span class="mdi mdi-undo-variant"></span>
                     </span>
@@ -271,7 +271,9 @@ export default {
       this.index = pos
       const moves = this.gameMoves.slice(0, this.index)
       var move = this.gameMoves[this.index].san
-      this.vscore = this.gameMoves[this.index].vscore
+      if (!this.game.game_over()) {
+        this.vscore = this.gameMoves[this.index].vscore
+      }
 
       // ---------------
       var pgn = []
@@ -592,24 +594,26 @@ export default {
       }
     },
     drawChart (index) {
-      let score = this.vscore
-      if (this.playerColor === 'white') {
-        score = 100 - score
-      }
+      if (!this.game.game_over()) {
+        let score = this.vscore
+        if (this.playerColor === 'white') {
+          score = 100 - score
+        }
 
-      if (score < 0) {
-        score = 0
-      }
+        if (score < 0) {
+          score = 0
+        }
 
-      if (score > 100) {
-        score = 100
-      }
+        if (score > 100) {
+          score = 100
+        }
 
-      if (!isNaN(score)) {
-        this.drawChartPosition(false)
-        this.chart.values = this.chart.values.slice(0, index)
-        this.chart.values[index] = score.toFixed(2)
-        this.updateChart()
+        if (!isNaN(score)) {
+          this.drawChartPosition(false)
+          this.chart.values = this.chart.values.slice(0, index)
+          this.chart.values[index] = score.toFixed(2)
+          this.updateChart()
+        }
       }
     },
     updateChart () {
