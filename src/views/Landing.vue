@@ -4,7 +4,7 @@
       <div class="columns is-vcentered is-padded-bottom fadeIn">
         <div class="column is-hidden-mobile"></div>
         <div class="column is-8 has-text-centered">
-          <div class="has-text-centered">
+          <div class="has-text-centered is-padded-top">
             <form id="search" class="has-text-centered preservefilter" @submit.prevent="submit">
               <div class="field has-addons is-flex-centered">
                 <div class="control">
@@ -39,7 +39,7 @@
                 </router-link>
               </div>
             </div>
-            <div class="columns is-vcentered has-text-centered is-hidden-tablet">
+            <div class="columns is-vcentered has-text-centered has-text-aligned">
               <div class="column">
                 <a @click="$root.play" class="button is-large is-rounded is-success">
                   <span class="icon">

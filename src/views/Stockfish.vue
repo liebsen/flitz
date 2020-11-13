@@ -20,22 +20,28 @@
             <div class="control has-text-centered column">
               <div class="buttons levels has-addons">
                 <button class="button is-success is-rounded" @click="gameStart(0)">
-                  <span class="has-text-weight-bold">{{ 'level_0' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-mobile">{{ 'level_0' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-tablet">0</span>
                 </button>
                 <button class="button is-success" @click="gameStart(4)">
-                  <span class="has-text-weight-bold">{{ 'level_1' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-mobile">{{ 'level_1' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-tablet">1</span>
                 </button>
                 <button class="button is-info" @click="gameStart(8)">
-                  <span class="has-text-weight-bold">{{ 'level_2' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-mobile">{{ 'level_2' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-tablet">2</span>
                 </button>
                 <button class="button is-info" @click="gameStart(12)">
-                  <span class="has-text-weight-bold">{{ 'level_3' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-mobile">{{ 'level_3' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-tablet">3</span>
                 </button>
                 <button class="button is-warning" @click="gameStart(16)">
-                  <span class="has-text-weight-bold">{{ 'level_4' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-mobile">{{ 'level_4' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-tablet">4</span>
                 </button>
                 <button class="button is-danger is-rounded" @click="gameStart(20)">
-                  <span class="has-text-weight-bold">{{ 'level_5' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-mobile">{{ 'level_5' | t }}</span>
+                  <span class="has-text-weight-bold is-hidden-tablet">5</span>
                 </button>
               </div>
             </div>

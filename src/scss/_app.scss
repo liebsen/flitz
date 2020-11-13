@@ -73,6 +73,10 @@ label {
   padding-bottom: 2rem;
 }
 
+.is-padded-top {
+  padding-top: 2rem;
+}
+
 .buttons.has-addons {
   justify-content: center;
   .button {
@@ -1114,5 +1118,18 @@ table {
   }
   .menu-container {
     max-width: 90%; 
+  }
+}
+
+@include desktop {
+  .has-text-aligned {
+    > .column {
+      &:first-child {
+        text-align: right;
+      }
+      &:last-child {
+        text-align: left;
+      }
+    }
   }
 }
