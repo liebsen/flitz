@@ -1,5 +1,5 @@
 <template>
-  <div class="container is-widescreen">
+  <div class="container is-widescreen is-padded-bottom">
     <section class="content column fadeIn">
       <h3 class="title">
         <span class="icon">
