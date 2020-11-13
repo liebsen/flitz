@@ -123,7 +123,7 @@
         <span class="icon">
           <span class="fa fa-star"></span>
         </span>
-        {{ 'powered_by' | t }} Stockfish
+        {{ 'powered_by' | t }} <a href="https://github.com/nmrugg/stockfish.js/" class="has-text-info" target="_blank">Stockfish</a>
       </span>
     </div>
   </div>

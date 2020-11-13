@@ -21,7 +21,7 @@
             </form>
             <div class="content columns is-multiline has-text-centered">
               <div v-for="(item, index) in groups" :key="index" class="column is-6-tablet is-4-desktop">
-                <router-link :to="`/group/${item._id}`"  class="box is-marginless">
+                <router-link :to="`/group/${item._id}`" class="box">
                   <article>
                     <h2>
                       <span>{{ item.code }}</span>

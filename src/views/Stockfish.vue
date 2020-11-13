@@ -1,12 +1,12 @@
 <template>
   <div class="container is-widescreen">
     <div class="content" v-show="time.level < 0">
-      <div class="columns-centered fadeIn">
+      <div class="columns-centered fadeIn preservefilter">
         <div class="columns columns-bottom is-flex has-text-centered">
           <div class="column">
             <h3>{{ 'play_against_stockfish' | t }}</h3>
             <div class="control">
-              <div class="buttons levels has-addons preservefilter">
+              <div class="buttons levels has-addons">
                 <button class="button is-rounded is-large is-white-pieces" @click="setPlayerColor('white')" :class="{'has-background-success' : selectedColor==='white'}"></button>
                 <button class="button is-large is-random-pieces" @click="setPlayerColor('random')" :class="{'has-background-success' : selectedColor==='random'}"></button>
                 <button class="button is-large is-rounded is-black-pieces" @click="setPlayerColor('black')" :class="{'has-background-success' : selectedColor==='black'}"></button>
@@ -17,7 +17,7 @@
         <div class="columns is-flex has-text-centered">
           <div class="column">
             <h4>{{ 'level' | t }}</h4>
-            <div class="control has-text-centered column">
+            <div class="control has-text-centered column ">
               <div class="buttons levels has-addons">
                 <button class="button is-success is-rounded" @click="gameStart(0)">
                   <span class="has-text-weight-bold is-hidden-mobile">{{ 'level_0' | t }}</span>
