@@ -1089,6 +1089,10 @@ table {
 }
 
 .footprint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   padding: 0.75rem;
   text-align: center;
 }
@@ -1099,7 +1103,6 @@ table {
     bottom: 0;
     right: 1rem;
   }
-
   .chatbox-container {
     height: 60vh;
     max-height: 60vh;
