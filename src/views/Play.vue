@@ -936,7 +936,7 @@ export default {
         t.evaler = typeof STOCKFISH === 'function' ? STOCKFISH() : new Worker('/js/stockfish.js')
 
         t.evaler.onmessage = function (event) {
-          var t = window.app
+          // var t = window.app
           var line
 
           if (event && typeof event === 'object') {
@@ -945,18 +945,39 @@ export default {
             line = event
           }
 
-          // console.log("evaler: " + line);
+          if (line === 'uciok') {
+            t.engineStatus.engineLoaded = true
+          } else if (line === 'readyok') {
+            t.engineStatus.engineReady = true
+          } else {
+            // console.log("evaler: " + line);
+            // var reBestmove = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbn])?/)
+            // var reDepth = line.match(/^info .*\bdepth (\d+) .*\bnps (\d+)/)
+            /// Did the AI move?
+            var reScore = line.match(/^info .*\bscore (\w+) (-?\d+)/)
+            var reBound = line.match(/\b(upper|lower)bound\b/)
+            var obj = { max: 1000, min: -1000, value: 0 }
+            obj.m = (100 - 0) / (obj.min - obj.max)
+            if (reScore) {
+              var score = parseFloat(reScore[2]) * (t.game.turn() === 'w' ? 1 : -1)
+              /// Is it measuring in centipawns?
+              if (reScore[1] === 'cp') {
+                t.score = (score / 100.0).toFixed(2)
+                t.engineStatus.score = score
+                /// Did it find a mate?
+              } else if (reScore[1] === 'mate') {
+                const abs = Math.abs(score) - 1
+                t.engineStatus.score = abs > 0 ? 'Mate en ' + abs : 'Mate'
+              }
 
-          var match = line.match(/^Total evaluation: (-?\d+\.\d+)/)
-          if (match) {
-            let score = parseFloat(match[1])
-            t.score = score
-            t.vscore = 50 - (score / 64 * 100)
-          }
-
-          /// Ignore some output.
-          if (line === 'uciok' || line === 'readyok' || line.substr(0, 11) === 'option name') {
-
+              /// Is the score bounded?
+              if (reBound) {
+                t.engineStatus.score = ((reBound[1] === 'upper') === (t.game.turn() === 'w') ? '<= ' : '>= ') + t.engineStatus.score
+              }
+              if (!t.hintMode) {
+                t.vscore = ((obj.m * Math.max(Math.min(t.engineStatus.score, obj.max), obj.min)) + 50)
+              }
+            }
           }
         }
       })
@@ -1107,6 +1128,7 @@ export default {
       setTimeout(() => {
         this.uciCmd('position startpos moves' + this.moveList(), this.evaler)
         this.uciCmd('eval', this.evaler)
+        this.uciCmd('go depth 5')
         if (t.game.game_over()) {
           if (t.playerColor[0] === 'w') {
             t.sendResults()
@@ -1395,6 +1417,7 @@ export default {
       },
       secondsToProceed: 10,
       data: {},
+      engineStatus: {},
       tab: 'pgn',
       chat: '',
       index: -1,
