@@ -89,7 +89,7 @@
                       <span class="mdi mdi-flag"></span>
                     </span>
                   </button>
-                  <button @click="showHint()" class="button is-rounded is-success" v-if="pgnIndex.length && !announced_game_over">
+                  <button @click="showHint()" class="button is-rounded is-success" v-if="pgnIndex.length && !announced_game_over" :disabled="hintMode">
                     <span class="icon has-text-white">
                       <span class="mdi mdi-timeline-help"></span>
                     </span>
@@ -402,6 +402,7 @@ export default {
                 t.uciCmd('eval', this.engine)
                 t.uciCmd('go ' + (t.time.depth ? 'depth ' + t.time.depth : ''))
               } else {
+                t.removeHighlight()
                 document.querySelector('.square-' + move.from).classList.add('highlight-move')
                 document.querySelector('.square-' + move.to).classList.add('highlight-move')
                 t.game.undo()
@@ -415,30 +416,28 @@ export default {
           }
 
           /// Is it sending feed back with a score?
+          var obj = { max: 1000, min: -1000, value: 0 }
+          obj.m = (100 - 0) / (obj.min - obj.max)
           if (reScore) {
             var score = parseFloat(reScore[2]) * (t.game.turn() === 'w' ? 1 : -1)
             /// Is it measuring in centipawns?
             if (reScore[1] === 'cp') {
-              t.engineStatus.score = (score / 100.0).toFixed(2)
+              t.score = (score / 100.0).toFixed(2)
+              t.engineStatus.score = score
               /// Did it find a mate?
             } else if (reScore[1] === 'mate') {
-              // const abs = Math.abs(score) - 1
-              // t.engineStatus.score = abs > 0 ? 'Mate en ' + abs : "Mate"
+              const abs = Math.abs(score) - 1
+              t.engineStatus.score = abs > 0 ? 'Mate en ' + abs : 'Mate'
             }
 
             /// Is the score bounded?
             if (reBound) {
-              // t.engineStatus.score = ((reBound[1] === 'upper') === (t.game.turn() === 'w') ? '<= ' : '>= ') + t.engineStatus.score
+              t.engineStatus.score = ((reBound[1] === 'upper') === (t.game.turn() === 'w') ? '<= ' : '>= ') + t.engineStatus.score
             }
-            // t.score = t.engineStatus.score.split(' ').reverse()[0]
-            // t.vscore = 50 - (t.score / 64 * 100)
+            if (!t.hintMode) {
+              t.vscore = ((obj.m * Math.max(Math.min(t.engineStatus.score, obj.max), obj.min)) + 50)
+            }
           }
-        }
-
-        var reTotalEvaluation = line.match(/^Total evaluation: (-?\d+\.\d+)/)
-        if (reTotalEvaluation) {
-          t.score = parseFloat(reTotalEvaluation[1])
-          t.vscore = 50 - (t.score / 64 * 100)
         }
 
         // stockfish starts with white
@@ -569,13 +568,12 @@ export default {
       return moves
     },
     prepareMove () {
-      var t = this
-      if (!t.game.game_over()) {
-        t.thinking = true
-        t.isEngineRunning = true
-        t.uciCmd('position startpos moves' + t.moveList())
-        t.uciCmd('eval', this.engine)
-        t.uciCmd('go ' + (t.time.depth ? 'depth ' + t.time.depth : ''))
+      if (!this.game.game_over()) {
+        this.thinking = true
+        this.isEngineRunning = true
+        this.uciCmd('position startpos moves' + this.moveList())
+        this.uciCmd('eval', this.engine)
+        this.uciCmd('go ' + (this.time.depth ? 'depth ' + this.time.depth : ''))
       }
     },
     showHint () {
@@ -932,14 +930,14 @@ export default {
         status += 'Cargado'
       } else {
         status += 'Listo'
-      } */
+      }
 
       if (t.engineStatus.search) {
         status += '<br>' + t.engineStatus.search
         if (t.engineStatus.score && t.displayScore) {
           status += (t.engineStatus.score.substr(0, 4) === 'Mate' ? ' ' : ' Score: ') + t.engineStatus.score
         }
-      }
+      } */
 
       this.performance = this.performance.slice(0, this.index)
       this.performance[this.index] = this.score
