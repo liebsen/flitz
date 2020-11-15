@@ -399,7 +399,7 @@ export default {
                 t.board.position(t.game.fen())
                 t.updateMoves(move)
                 t.uciCmd('position startpos moves' + t.moveList())
-                t.uciCmd('eval', this.engine)
+                // t.uciCmd('eval', this.engine)
                 t.uciCmd('go ' + (t.time.depth ? 'depth ' + t.time.depth : ''))
               } else {
                 t.removeHighlight()
@@ -572,7 +572,7 @@ export default {
         this.thinking = true
         this.isEngineRunning = true
         this.uciCmd('position startpos moves' + this.moveList())
-        this.uciCmd('eval', this.engine)
+        // this.uciCmd('eval', this.engine)
         this.uciCmd('go ' + (this.time.depth ? 'depth ' + this.time.depth : ''))
       }
     },
@@ -580,7 +580,7 @@ export default {
       this.hintMode = true
       this.isEngineRunning = false
       this.uciCmd('position startpos moves' + this.moveList())
-      this.uciCmd('eval', this.engine)
+      // this.uciCmd('eval', this.engine)
       this.uciCmd('go ' + (this.time.depth ? 'depth ' + this.time.depth : ''))
     },
     calcPoints () {
@@ -695,8 +695,12 @@ export default {
           }, 200)
         }
         if (document.getElementById('board')) {
-          document.getElementById('board').querySelector('.square-' + move.from).classList.add('highlight-move')
-          document.getElementById('board').querySelector('.square-' + move.to).classList.add('highlight-move')
+          if (document.getElementById('board').querySelector('.square-' + move.from)) {
+            document.getElementById('board').querySelector('.square-' + move.from).classList.add('highlight-move')
+          }
+          if (document.getElementById('board').querySelector('.square-' + move.to)) {
+            document.getElementById('board').querySelector('.square-' + move.to).classList.add('highlight-move')
+          }
         }
       }
     },
@@ -962,7 +966,7 @@ export default {
 
       this.isEngineRunning = false
       this.uciCmd('position startpos moves' + this.moveList())
-      this.uciCmd('eval', this.engine)
+      // this.uciCmd('eval', this.engine)
       this.uciCmd('go ' + (this.time.depth ? 'depth ' + this.time.depth : ''))
       this.moveFrom = null
       this.updateMoves(move)
