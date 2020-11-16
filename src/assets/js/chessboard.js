@@ -682,6 +682,7 @@ var buildSquare = function(color, size, id) {
     var animatedPieceId = uuid()
     $('body').append(buildPiece(piece, true, animatedPieceId))
     var animatedPieceEl = $('#' + animatedPieceId)
+    animatedPieceEl.addClass('preservefilter')
     animatedPieceEl.css({
       display: '',
       position: 'absolute',
@@ -723,6 +724,7 @@ var buildSquare = function(color, size, id) {
     var pieceId = uuid()
     $('body').append(buildPiece(piece, true, pieceId))
     var animatedPieceEl = $('#' + pieceId)
+    animatedPieceEl.addClass('preservefilter')
     animatedPieceEl.css({
       display: '',
       position: 'absolute',
@@ -1160,6 +1162,7 @@ var buildSquare = function(color, size, id) {
     captureSquareOffsets()
 
     // create the dragged piece
+    draggedPieceEl.addClass('preservefilter')
     draggedPieceEl.attr('src', buildPieceImgSrc(piece))
       .css({
         display: '',
