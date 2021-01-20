@@ -434,15 +434,12 @@ export default {
         PlaySound('lose.mp3')
       } else {
         PlaySound('win.mp3')
-      }
-      if (t.playerColor[0] === 'w') {
         t.sendResults()
       }
       t.announced_game_over = true
     },
     askfordraw (data) {
       var t = this
-      var result = null
       if (data.player === t.player.code) {
         swal({
           title: '¿Aceptas tablas?',
@@ -451,8 +448,7 @@ export default {
           closeOnClickOutside: false
         }).then(accept => {
           if (accept) {
-            result = '1/2-1/2'
-            t.sendResults(result)
+            t.sendResults('1/2-1/2')
             t.$socket.emit('acceptdraw', data)
             t.announced_game_over = true
             PlaySound('end.mp3')
@@ -478,13 +474,12 @@ export default {
   },
   methods: {
     sendResults (result) {
-      console.log('sendResults')
       if (!result) {
         result = '1/2-1/2'
         if (this.game.in_draw() || this.game.in_stalemate() || this.game.in_threefold_repetition()) {
           result = '1/2-1/2'
         } else {
-          result = this.playerColor[0] === 'w' ? '1-0' : '0-1'
+          result = this.game.turn() === 'b' ? '1-0' : '0-1'
         }
       }
 
@@ -1002,9 +997,9 @@ export default {
             t.timer[turn] = 0
             if (turn === t.playerColor[0]) {
               PlaySound('lose.mp3')
-              t.sendResults()
             } else {
               PlaySound('win.mp3')
+              t.sendResults()
             }
             t.announced_game_over = true
           } else {
