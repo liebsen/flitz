@@ -995,11 +995,12 @@ export default {
           var turn = t.game.turn()
           if (--t.timer[turn] < 0) {
             t.timer[turn] = 0
+            const result = this.game.turn() === 'b' ? '1-0' : '0-1'
             if (turn === t.playerColor[0]) {
               PlaySound('lose.mp3')
             } else {
               PlaySound('win.mp3')
-              t.sendResults()
+              t.sendResults(result)
             }
             t.announced_game_over = true
           } else {
